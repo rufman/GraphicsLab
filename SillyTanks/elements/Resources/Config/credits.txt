@@ -1,0 +1,119 @@
+                               Kannonwagens
+
+
+                             Development  Team
+
+
+                              Ballistic Games
+
+
+Alex Brogger    -   Producer                         Sound and Music
+                                                     Artificial Intelligence
+
+
+Roman Timurson  -   Product Manager                  Physics
+                                                     Math Libraries
+                                                     Original Game Concept
+                                                     Model Tool
+
+
+Chad Taylor     -   Technical Director               System Architecture
+                                                     Graphics
+                                                     Visual Effects
+                                                     Level Tools
+
+
+Reed Gonsalves  -   Lead Designer                    Networking
+                                                     Device Input
+                                                     User Interface
+                                                     Game Logic
+                                                     Game Design
+
+                                                     
+                                   Testers
+                                 
+                                     
+                          Caleb Lee       Gene Siew
+                      Grant Brogger       John Theiss
+                       Tucker Weist       Cory Repp
+                        Mike Wright       Jake Repp
+                  Samuel "Lat" Ware       Josh Bouckenooghe
+                       
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+
+                        DigiPen Institute of Technology
+                                            
+                          
+                          Claude Comair - President
+
+                       Ben Ellinger - Executive Producer
+
+         
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                               Special Thanks
+
+                      Claude Comair       Ben Ellinger
+                          Matt Mead       Prasanna Ghali                            
+                        Steve Rabin       Ian Lewis
+                       Bruce Dawson       Gary Herron
+                      Michael Moore       Jen Sward
+
+
+                               Personal Thanks
+
+          Reed would like to thank, 
+                             Haldis Miller
+                             The Vladimirovs
+                             The Gonsalves
+                             The Weingartners
+                             The Repps
+
+
+          Alex would like to thank,
+                             My two best buds:
+                                Jeremy Hogan
+                                Joey Kurz
+                             All my family
+                             Marc "Remps" Rempel
+                             Katie Disharoon
+                             Anyone else that would feel left
+                              out if I didn't thank them =P
+
+          
+          Chad would like to thank,
+                             Mom and Dad
+                             Amber Waltman
+                             Adam Smith
+                             Dionicio Lopez
+                             Caleb Lee
+                             Felix Ramli
+                             All my family and friends
+                             Claude Comair and the DigiPen Staff                             
+
+
+         Roman would like to thank,
+                             My family, especially my
+                             my Mom, Mila, for always 
+                             giving me words of encouragement
+                             DigiPen faculty -- for bringing
+                             so much joy of learning through
+                             suffering ;)                            
+                             
+
+
+All content copyright (c) 2006 DigiPen(USA) Corporation, all rights reserved.
+
+
+                                  

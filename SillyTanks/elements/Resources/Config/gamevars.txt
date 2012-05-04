@@ -1,0 +1,14 @@
+$slowTime        3.0f # seconds slowed by ice weapon
+$burnTime        3.0f # seconds burned by fire weapon
+$basicDelay      1.4f # cooldown time after using basic shot
+$fireDelay       1.8f # cooldown time after using fire shot
+$iceDelay        1.0f # cooldown time after usign ice shot
+$shieldDelay     5.0f # seconds without being hit, triggers shield regeneration
+$shieldRegen     5.0f # seconds it takes for the shield to refill to full
+$turboRegen      1.0f # seconds it takes for the turbo to refill to full
+$turboTime       5.0f # seconds you can use turbo for
+$respawnTime     5.0f # seconds you must wait after you die
+$basicDamage     0.4f # amount of damage the basic shot inflicts
+$fireDamage      0.1f # amount of damage the fire shot inflicts
+$iceDamage       0.2f # amount of damage the ice shot inflicts
+$fireDoT         0.1f # amount of damage the fire shot inflicts over time

@@ -1,0 +1,101 @@
+/**
+ * plyModel.hpp
+* See plyModel.cpp
+ */
+
+#ifndef GRAPHICSLAB_PLYMODEL_HPP
+#define GRAPHICSLAB_PLYMODEL_HPP
+
+
+// common includes
+#include "Drawable.hpp"
+#include "Material.hpp"
+
+#include <string>
+#include <vector>
+#include <cfloat>
+
+
+GAME_NAMESPACE_BEGIN
+
+
+/** PLY Model */
+class PLYModel : public Drawable
+{
+public:
+    /** 
+	 * Constructor
+	 *
+	 * @param[in, out]	scene	Owning scene
+	 */
+    PLYModel( Scene &scene );
+    
+    /** Destructor */
+    ~PLYModel();
+    
+	/**
+	 * Load ply data from a file.
+	 *
+	 * @param[in]	file	File to load PLY data from
+	 */
+	void load( const std::string &file );
+	
+    /** Draw the model to the screen. */
+    void draw() const;
+
+protected:
+	void buildDisplayLists();
+	
+	void processFile( const std::string &file );
+	
+protected:
+	uint _numDisplayLists;
+	GLuint _displayLists;
+
+	Material _material;
+	
+protected:
+	struct PLYData
+	{
+		std::vector<Point> vertices;
+		struct Triangle 
+		{ 
+			uint vertex1, vertex2, vertex3;
+			
+			Triangle( uint vertex1_, uint vertex2_, uint vertex3_ ) :
+				vertex1( vertex1_ ), vertex2( vertex2_ ), vertex3( vertex3_ )
+			{}
+		};
+		std::vector<Triangle> triangles;
+		
+		std::vector<Vector3D> vertexNormals;
+		std::vector<Vector3D> triangleNormals;
+		
+		Point min, max;
+		
+		void reset()
+		{
+			vertices.clear();
+			triangles.clear();
+			vertexNormals.clear();
+			triangleNormals.clear();
+			
+			static const float minFloat = FLT_MIN;
+			static const float maxFloat = FLT_MAX;
+			min = Point( maxFloat, maxFloat, maxFloat );
+			max = Point( minFloat, minFloat, minFloat );
+		}
+		
+	} _plyData;
+	
+private:
+	Point _position;
+	float _angle;
+
+}; // class PLYModel
+
+
+GAME_NAMESPACE_END
+
+
+#endif // GRAPHICSLAB_PLYMODEL_HPP

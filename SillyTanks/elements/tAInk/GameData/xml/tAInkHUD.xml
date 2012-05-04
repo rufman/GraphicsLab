@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<GUI>	
+	<Window	  name="TankControlPanel" x="0" y="600" width="1024" height="168">		
+		
+		<Sprite name="" width="1024" height="168" x="0" y="0" color="FFFFFFFF"/>
+		<Sprite name="" width="1022" height="166" x="1" y="1" color="DD000000"/>
+		
+		<Label name="Username" x="512" y="20" text="-" color="FFDDDDDD" align="center"/>
+		
+		<Label name="" 				x="100" y="30" text="Tank Statistics" color="FFDDDDDD" align="left"/>
+		<Label name="KillsPerMin" 	x="100" y="50" text="-" color="FFDDDDDD" align="left"/>
+		<Label name="DamagePerMin"	x="100" y="70" text="-" color="FFDDDDDD" align="left"/>		
+		
+		<Label name=""				x="600" y="30" text="Next Upload:" 	color="FFDDDDDD" align="left"/>
+		<Label name="UploadTimer"	x="750" y="30" text="0" 			color="FFDDDDDD" align="left"/>
+
+	    <Button 	name="RemoveTank" x="300"	y="30" width="250" height="50" OnClick="RemoveTank">
+		  <UpState>
+	        <Sprite name="" width="250" height="50" x="0" y="0" color="FFFFFFFF"/>
+	        <Sprite name="" width="248" height="48" x="1" y="1" color="DD000000"/>
+	        <Label name="" x="125" y="25" text="Remove Tank" align="center" color="FFDDDDDD"/>
+	      </UpState>
+
+	      <DownState>
+	        <Sprite name="" width="250" height="50" x="1" y="1" color="FFFFFFFF"/>
+	        <Sprite name="" width="248" height="48" x="2" y="2" color="DD000000"/>
+	        <Label name="" x="125" y="25" text="Remove Tank" align="center" color="FFFFFFFF"/>
+	      </DownState>
+
+	      <Highlight>
+	        <Sprite name="" width="250" height="50" x="0" y="0" color="FFFFFFFF"/>
+	        <Sprite name="" width="248" height="48" x="1" y="1" color="DD000000"/>
+	        <Label name="" x="125" y="25" text="Remove Tank" align="center" color="FFFFFFFF"/>
+	      </Highlight>
+
+	      <Disabled>
+	        <Sprite name="" width="250" height="50" x="0" y="0" color="FFFFFFFF"/>
+	        <Sprite name="" width="248" height="48" x="1" y="1" color="DD000000"/>
+	        <Label name="" x="125" y="25" text="Remove Tank" align="center" color="FFDDDDDD"/>
+	      </Disabled>
+	    </Button>
+	
+		<Window   name="ScriptSelect" x="300" y="30" width="250" height="50">
+		
+			<Sprite name="" width="250" height="50" x="0" y="0" color="FFFFFFFF"/>
+			<Sprite name="" width="248" height="48" x="1" y="1" color="DD000000"/>
+			
+			<Button 	name="" 	x="175"	y="2" width="20" height="20" OnClick="CycleScriptUp">
+		      <UpState>
+		        <Sprite name="" width="20" height="20" x="0" y="0" color="FFFFFFFF"/>
+		        <Sprite name="" width="18" height="18" x="1" y="1" color="DD000000"/>
+		        <Label name="" x="10" y="10" text="U" color="FFDDDDDD" align="center"/>
+		      </UpState>
+
+		      <DownState>
+		        <Sprite name="" width="18" height="18" x="1" y="1" color="FFFFFFFF"/>
+		        <Sprite name="" width="16" height="16" x="2" y="2" color="DD000000"/>
+		        <Label name="" x="10" y="10" text="U" color="FFDDDDDD" align="center"/>
+		      </DownState>
+
+		      <Highlight>
+		        <Sprite name="" width="20" height="20" x="0" y="0" color="FFFFFFFF"/>
+		        <Sprite name="" width="18" height="18" x="1" y="1" color="DD000000"/>
+		        <Label name="" x="10" y="10" text="U" color="FFDDDDDD" align="center"/>
+		      </Highlight>
+
+		      <Disabled>
+		        <Sprite name="" width="20" height="20" x="0" y="0" color="FFFFFFFF"/>
+		        <Sprite name="" width="18" height="18" x="1" y="1" color="DD000000"/>
+		        <Label name="" x="10" y="10" text="U" color="FFDDDDDD" align="center"/>
+		      </Disabled>
+		    </Button>
+
+		    <Button 	name="" 	x="175"	y="28" width="20" height="20" OnClick="CycleScriptDown">
+		      <UpState>
+		        <Sprite name="" width="20" height="20" x="0" y="0" color="FFFFFFFF"/>
+		        <Sprite name="" width="18" height="18" x="1" y="1" color="DD000000"/>
+		        <Label name="" x="10" y="10" text="D" color="FFFFFFFF" align="center"/>
+		      </UpState>
+
+		      <DownState>
+		        <Sprite name="" width="18" height="18" x="1" y="1" color="FFFFFFFF"/>
+		        <Sprite name="" width="16" height="16" x="2" y="2" color="DD000000"/>
+		        <Label name="" x="10" y="10" text="D" color="FFFFFFFF" align="center"/>
+		      </DownState>
+
+		      <Highlight>
+		        <Sprite name="" width="20" height="20" x="0" y="0" color="FFFFFFFF"/>
+		        <Sprite name="" width="18" height="18" x="1" y="1" color="DD000000"/>
+		        <Label name="" x="10" y="10" text="D" color="FFFFFFFF" align="center"/>
+		      </Highlight>
+
+		      <Disabled>
+		        <Sprite name="" width="20" height="20" x="0" y="0" color="FFFFFFFF"/>
+		        <Sprite name="" width="18" height="18" x="1" y="1" color="DD000000"/>
+		        <Label name="" x="10" y="10" text="D" color="FFFFFFFF" align="center"/>
+		      </Disabled>
+		    </Button>	
+		
+			<Button 	name="AddTankButton" 	x="202"	y="2" width="46" height="46" OnClick="AddTank">
+		      <UpState>
+		        <Sprite name="" width="46" height="46" x="0" y="0" color="FFFFFFFF"/>
+		        <Sprite name="" width="44" height="44" x="1" y="1" color="DD000000"/>
+		        <Label name="" x="23" y="23" text="UPL" color="FFDDDDDD" align="center"/>
+		      </UpState>
+
+		      <DownState>
+		        <Sprite name="" width="44" height="44" x="1" y="1" color="FFFFFFFF"/>
+		        <Sprite name="" width="42" height="42" x="2" y="2" color="DD000000"/>
+		        <Label name="" x="23" y="23" text="UPL" color="FFFFFFFF" align="center"/>
+		      </DownState>
+
+		      <Highlight>
+		        <Sprite name="" width="46" height="46" x="0" y="0" color="FFFFFFFF"/>
+		        <Sprite name="" width="44" height="44" x="1" y="1" color="DD000000"/>
+		        <Label name="" x="23" y="23" text="UPL" color="FFFFFFFF" align="center"/>
+		      </Highlight>
+
+		      <Disabled>
+		        <Sprite name="" width="46" height="46" x="0" y="0" color="FFAAAAAA"/>
+		        <Sprite name="" width="44" height="44" x="1" y="1" color="DD000000"/>
+		        <Label name="" x="23" y="23" text="UPL" color="FFAAAAAA" align="center"/>
+		      </Disabled>
+		    </Button>	
+			
+			<Label    name="Script_Text"   x="87" y="25" text="SCRIPT.LUA" color="FFFFFFFF" align="center"/>
+		</Window>
+	</Window>
+
+	<Window   name="ESCMenu" x="0" y="0" width="1024" height="768">		
+	                                                                                      	
+		<Sprite		name="MenuBorder"	x="285"	y="248" width="454" height="154" color="FFFFFFFF"/>
+		<Sprite		name="MenuBG"		x="287"	y="250" width="450" height="150" color="DD000000"/>
+				
+		<Label name="" x="125" y="20" text="Really leave intense tank combat?" color="FFDDDDDD" align="center"/>
+	
+		<Button 	name="ESCMenu_QuitButton" 	x="512"	y="350" width="256" height="34" align="center" OnClick="QuitGame">
+	      <UpState>
+	        <Sprite name="" width="256" height="34" x="0" y="0" color="80808080"/>
+	        <Sprite name="" width="254" height="32" x="1" y="1" color="80000000"/>
+	        <Label name="" x="128" y="17" text="Quit" align="center" color="FFDDDDDD"/>
+	      </UpState>
+
+	      <DownState>
+	        <Sprite name="" width="254" height="32" x="1" y="1" color="80808080"/>
+	        <Sprite name="" width="252" height="30" x="2" y="2" color="80000000"/>
+	        <Label name="" x="128" y="17" text="Quit" align="center" color="FFFFFFFF"/>
+	      </DownState>
+
+	      <Highlight>
+	        <Sprite name="" width="256" height="34" x="0" y="0" color="80808080"/>
+	        <Sprite name="" width="254" height="32" x="1" y="1" color="80000000"/>
+	        <Label name="" x="128" y="17" text="Quit" align="center" color="FFFFFFFF"/>
+	      </Highlight>
+
+	      <Disabled>
+	        <Sprite name="" width="256" height="34" x="0" y="0" color="80808080"/>
+	        <Sprite name="" width="254" height="32" x="1" y="1" color="80000000"/>
+	        <Label name="" x="128" y="17" text="Quit" align="center" color="FFDDDDDD"/>
+	      </Disabled>
+	    </Button>
+	</Window>
+  </GUI>
+

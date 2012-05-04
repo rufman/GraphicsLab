@@ -1,0 +1,64 @@
+/**
+ * bullet.hpp
+ * See bullet.cpp
+ */
+
+#ifndef GAME_BULLET_HPP
+#define GAME_BULLET_HPP
+
+// Base class include
+#include "../../common/Drawable.hpp"
+
+// Includes
+#include "../../common/Types.hpp"
+
+GAME_NAMESPACE_BEGIN
+
+class Bullet : public Drawable
+{
+public:
+	/**
+	 * Constructor
+	 *
+	 * @param[in, out]	scene		Owning scene
+	 * @param[in]		size		Size of the bullet
+	 */
+	Bullet( Scene &scene, float size = 0.4f );
+
+	/** Destructor */
+	~Bullet();
+
+	/** Draw the object to the screen. */
+	void draw() const;
+
+	// Get/Set functions
+	float getSize() const {return _size;}
+
+	const Point &getPosition() const {return _position;}
+	void setPosition( const Point &position );
+
+	const Vector3D &getVelocity() const {return _velocity;}
+	void setVelocity( const Vector3D &velocity );
+
+	/**
+	 * Update bullet data by moving it for 'seconds' seconds
+	 *
+	 * @param[in]	seconds		Seconds to move the bullet object
+	 */
+	void move( float seconds );
+
+private:
+	/** Size of the bullet */
+	float _size;
+
+	/** Position of the bullet compared to the cannon */
+	Point _position;
+
+	/** Velocity of the bullet */
+	Vector3D _velocity;
+
+}; // class Bullet
+
+GAME_NAMESPACE_END
+
+#endif // GRAPHICSLAB_BULLET_HPP

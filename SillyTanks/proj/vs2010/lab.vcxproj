@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\application.cpp" />
+    <ClCompile Include="..\..\src\camera2D.cpp" />
+    <ClCompile Include="..\..\src\camera3D.cpp" />
+    <ClCompile Include="..\..\src\directionalLight.cpp" />
+    <ClCompile Include="..\..\src\light.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\material.cpp" />
+    <ClCompile Include="..\..\src\plyModel.cpp" />
+    <ClCompile Include="..\..\src\positionalLight.cpp" />
+    <ClCompile Include="..\..\src\scene.cpp" />
+    <ClCompile Include="..\..\src\skyDome.cpp" />
+    <ClCompile Include="..\..\src\spotLight.cpp" />
+    <ClCompile Include="..\..\src\terrain.cpp" />
+    <ClCompile Include="..\..\src\textBox.cpp" />
+    <ClCompile Include="..\..\src\texture.cpp" />
+    <ClCompile Include="..\..\src\tgaImage.cpp" />
+    <ClCompile Include="..\..\src\tgaTexture.cpp" />
+    <ClCompile Include="..\..\src\time.cpp" />
+    <ClCompile Include="..\..\src\types.cpp" />
+    <ClCompile Include="..\..\src\utils.cpp" />
+    <ClCompile Include="..\..\src\window.cpp" />
+    <ClCompile Include="..\..\src\windowManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\application.hpp" />
+    <ClInclude Include="..\..\src\camera.hpp" />
+    <ClInclude Include="..\..\src\camera2D.hpp" />
+    <ClInclude Include="..\..\src\camera3D.hpp" />
+    <ClInclude Include="..\..\src\defs.hpp" />
+    <ClInclude Include="..\..\src\directionalLight.hpp" />
+    <ClInclude Include="..\..\src\drawable.hpp" />
+    <ClInclude Include="..\..\src\exception.hpp" />
+    <ClInclude Include="..\..\src\gl_includes.hpp" />
+    <ClInclude Include="..\..\src\light.hpp" />
+    <ClInclude Include="..\..\src\material.hpp" />
+    <ClInclude Include="..\..\src\plyModel.hpp" />
+    <ClInclude Include="..\..\src\positionalLight.hpp" />
+    <ClInclude Include="..\..\src\scene.hpp" />
+    <ClInclude Include="..\..\src\skyDome.hpp" />
+    <ClInclude Include="..\..\src\spotLight.hpp" />
+    <ClInclude Include="..\..\src\terrain.hpp" />
+    <ClInclude Include="..\..\src\textBox.hpp" />
+    <ClInclude Include="..\..\src\texture.hpp" />
+    <ClInclude Include="..\..\src\tgaImage.hpp" />
+    <ClInclude Include="..\..\src\tgaTexture.hpp" />
+    <ClInclude Include="..\..\src\time.hpp" />
+    <ClInclude Include="..\..\src\types.hpp" />
+    <ClInclude Include="..\..\src\utils.hpp" />
+    <ClInclude Include="..\..\src\window.hpp" />
+    <ClInclude Include="..\..\src\windowManager.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{051E8A43-9B73-4EB6-891A-0B0E3D6D8936}</ProjectGuid>
+    <RootNamespace>lab</RootNamespace>
+    <ProjectName>lab</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <CustomBuildAfterTargets />
+    <OutDir>$(SolutionDir)\..\..\build\vs2010\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\ext\glut-3.7.6-bin;..\..\ext\glew-1.7.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\ext\glut-3.7.6-bin;..\..\ext\glew-1.7.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glut32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <CustomBuildStep>
+      <Command>copy $(ProjectDir)\..\..\ext\glut-3.7.6-bin\glut32.dll $(OutDir)\
+copy $(ProjectDir)\..\..\ext\glew-1.7.0\bin\glew32.dll $(OutDir)\</Command>
+      <Outputs>glut32.dll</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
