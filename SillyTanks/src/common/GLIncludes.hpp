@@ -26,7 +26,7 @@
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
 
-#else 
+#else
 // UNIX, Linux
 
 #include <GL/gl.h>

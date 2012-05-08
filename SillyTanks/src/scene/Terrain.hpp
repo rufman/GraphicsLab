@@ -42,7 +42,7 @@ public:
     /** Draw the sky dome to the screen. */
     void draw() const;
 
-    uint getNearestTriangleIndexAt( const Point &point) const;
+    int getNearestTriangleIndexAt( const Point &point) const;
 	
 private:
 	void buildDisplayLists();
@@ -55,8 +55,7 @@ private:
 	
 	std::vector<Point> _vertices;
 	std::vector<Point> _textureCoordinates;
-	uint _numVertices;
-	Vector3D * _vertexNormals;
+	std::vector<Vector3D> _vertexNormals;
 	
 	struct Triangle
 	{
@@ -66,8 +65,7 @@ private:
 			vertex1( vertex1_ ), vertex2( vertex2_ ), vertex3( vertex3_ ) {}
 	};
 	std::vector<Triangle> _triangles;
-	uint _numTriangles;
-	Vector3D * _triangleNormals;
+	std::vector<Vector3D> _triangleNormals;
 
 	float _width, _length;
 	uint _widthResolution, _lengthResolution;

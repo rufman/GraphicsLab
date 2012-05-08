@@ -1,6 +1,6 @@
 /**
  * terrain.cpp
-* This class creates a terrain that is read from a heightmap.
+ * This class creates a terrain that is read from a heightmap.
  */
 
 // Class declaration include
@@ -35,35 +35,36 @@ _widthResolution( widthResolution ), _lengthResolution( lengthResolution )
 	std::stringstream heightFieldFileName; heightFieldFileName << textureFilePrefix << "_hf.tga";
 	std::stringstream textureFileName; textureFileName << textureFilePrefix << "_tex.tga";
 
-	_heightData = new TGAImage();
-	_heightData->load( heightFieldFileName.str() );
+	_heightData = new TGAImage(); _heightData->load( heightFieldFileName.str() );
 	_texture = new TGATexture( textureFileName.str() );
 
 	if ( _widthResolution == 0 ) _widthResolution = _heightData->getWidth();
 	if ( _lengthResolution == 0 ) _lengthResolution = _heightData->getHeight();
 
-	_numVertices = _widthResolution*_lengthResolution;
-	_vertexNormals = new Vector3D[_numVertices];
+	int numVertices = _widthResolution*_lengthResolution;
+	for (int i=0;i<numVertices;i++) {
+		_vertices.push_back(Point());
+		_vertexNormals.push_back(Vector3D());
+	}
 
-	_numTriangles = 2*( _widthResolution - 1 )*( _lengthResolution - 1 );
-	_triangleNormals = new Vector3D[_numTriangles];
-
-	float tex_x = _texture->getWidth()/_widthResolution;
-	float tex_z = _texture->getHeight()/_lengthResolution;
+	int numTriangles = 2*( _widthResolution - 1 )*( _lengthResolution - 1 );
+	for (int i=0;i<numTriangles;i++) {
+		_triangles.push_back(Triangle(0,0,0));
+		_triangleNormals.push_back(Vector3D());
+	}
 
 	// Calculate vertices
-	for (uint widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
+	uint xSlice = _texture->getWidth()/_widthResolution;
+	uint zSlice = _texture->getHeight()/_lengthResolution;
+
+	for ( int widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
 	{
-		for ( uint lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
+		for ( int lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
 		{
-			uchar r = _heightData->getData()[ (lengthPoint + widthPoint*_lengthResolution)*4];
-			uchar g = _heightData->getData()[ (lengthPoint + widthPoint*_lengthResolution)*4 + 1];
-			uchar b = _heightData->getData()[ (lengthPoint + widthPoint*_lengthResolution)*4 + 2];
-			float greyscale = (0.30 * (float)r + 0.59 * (float)g + 0.11 * (float)b)/40;
-
-			_vertices.push_back( Point( -_width/2.0 + widthPoint*( _width/ _widthResolution  ), greyscale, -_length/2.0 + lengthPoint*( _length/_lengthResolution ) ) );
-			_textureCoordinates.push_back( Point( tex_x * lengthPoint, tex_z * widthPoint ));
-
+			Point &vertex = _vertices[_widthResolution*lengthPoint + widthPoint];
+			vertex.x = -_width/2.0 + widthPoint*( _width/( _widthResolution - 1 ) );
+			vertex.z = _length/2.0 - lengthPoint*( _length/( _lengthResolution - 1 ) );
+			vertex.y = (_heightData->getData()[_heightData->getWidth()*(lengthPoint*zSlice)*4 + widthPoint*xSlice*4])/50.0f;
 		}
 	}
 
@@ -72,12 +73,17 @@ _widthResolution( widthResolution ), _lengthResolution( lengthResolution )
 	{
 		for ( int lengthPoint = 0; lengthPoint < ( _lengthResolution - 1 ); lengthPoint++ )
 		{
+			int t1 = 2*lengthPoint*( _widthResolution - 1 ) + widthPoint*2;
+			int t2 = t1 + 1;
+			Triangle &triangle1 = _triangles[t1];
+			Triangle &triangle2 = _triangles[t2];
+
 			int v1 = ( lengthPoint )*_widthResolution + ( widthPoint );
 			int v2 = v1 + 1;
 			int v3 = v2 + _widthResolution;
 			int v4 = v3 - 1;
-			_triangles.push_back(Triangle( v1, v2, v3 ));
-			_triangles.push_back(Triangle(v1,v3,v4));
+			triangle1.vertex1 = v1; triangle1.vertex2 = v2; triangle1.vertex3 = v3;
+			triangle2.vertex1 = v1; triangle2.vertex2 = v3; triangle2.vertex3 = v4;
 		}
 	}
 
@@ -91,18 +97,18 @@ _widthResolution( widthResolution ), _lengthResolution( lengthResolution )
 			Triangle &triangle1 = _triangles[t1];
 			Triangle &triangle2 = _triangles[t2];
 
-			_triangleNormals[t1] =Utils::normal( _vertices[triangle1.vertex1], _vertices[triangle1.vertex2], _vertices[triangle1.vertex3] );
-
+			_triangleNormals[t1] = Utils::normal( _vertices[triangle1.vertex1], _vertices[triangle1.vertex2], _vertices[triangle1.vertex3] );
 			_triangleNormals[t2] = Utils::normal( _vertices[triangle2.vertex1], _vertices[triangle2.vertex2], _vertices[triangle2.vertex3] );
 		}
 	}
 
 	// Calculate vertex normals
-	for ( uint widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
+	for ( int widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
 	{
-		for ( uint lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
+		for ( int lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
 		{
 			int v = _widthResolution*lengthPoint + widthPoint;
+			Point &vertex = _vertices[v];
 			Vector3D &normal = _vertexNormals[v];
 			normal = Vector3D( 0.0, 0.0, 0.0 );
 
@@ -135,6 +141,10 @@ Terrain::~Terrain()
 
 void Terrain::buildDisplayLists()
 {
+	uint xSlice = _texture->getWidth()/_widthResolution;
+	uint zSlice = _texture->getHeight()/_lengthResolution;
+
+	int numTriangles = 2*( _widthResolution - 1 )*( _lengthResolution - 1 );
 
 	// Flat shading
 	glNewList( _displayLists, GL_COMPILE );
@@ -144,34 +154,41 @@ void Terrain::buildDisplayLists()
 	_material.setActive();
 	_texture->setActive( true );
 
+	/////////////////////////////////////////////////////////////
+	////////////////////// GRAPHICS LAB 07 //////////////////////
+	/////////////////////////////////////////////////////////////
+	// Replace code here to define the display list for flat shading.
+	// Make sure the texture coordinates are applied.
+	/////////////////////////////////////////////////////////////
 	glBegin( GL_TRIANGLES );
 
-	for ( uint triangleID = 0; triangleID < _triangles.size(); triangleID++ )
+	for ( int t = 0; t < numTriangles; t++ )
 	{
-		const Triangle &triangle = _triangles[triangleID];
 
-		const Vector3D &triangleNormal = _triangleNormals[triangleID];
-		glNormal3f(triangleNormal.x,triangleNormal.y, triangleNormal.z );
+		const Vector3D &normal = _triangleNormals[t];
+		glNormal3f( normal.x, normal.y, normal.z );
 
-		const Point &vertex1 = _vertices[triangle.vertex1];
-		const Point &texVertex1 = _textureCoordinates[triangle.vertex1];
-		const Point &vertex2 = _vertices[triangle.vertex2];
-		const Point &texVertex2 = _textureCoordinates[triangle.vertex2];
-		const Point &vertex3 = _vertices[triangle.vertex3];
-		const Point &texVertex3 = _textureCoordinates[triangle.vertex3];
+		const Point &vertex1 = _vertices[_triangles[t].vertex1];
+		const Point &vertex2 = _vertices[_triangles[t].vertex2];
+		const Point &vertex3 = _vertices[_triangles[t].vertex3];
 
-		glTexCoord2f(texVertex1.x, texVertex1.y );
+		glTexCoord2f( ((vertex1.x+_width/2.0)/( _width/( _widthResolution - 1 )))
+				*xSlice, ((-vertex1.z+_length/2.0)/(_length/( _lengthResolution - 1 )))*zSlice);
 		glVertex3f( vertex1.x, vertex1.y, vertex1.z );
 
-		glTexCoord2f( texVertex2.x, texVertex2.y);
+		glTexCoord2f( ((vertex2.x+_width/2.0)/( _width/( _widthResolution - 1 )))
+				*xSlice, ((-vertex2.z+_length/2.0)/(_length/( _lengthResolution - 1 )))*zSlice);
 		glVertex3f( vertex2.x, vertex2.y, vertex2.z );
 
-		glTexCoord2f( texVertex3.x,texVertex3.y );
+		glTexCoord2f( ((vertex3.x+_width/2.0)/( _width/( _widthResolution - 1 )))
+				*xSlice, ((-vertex3.z+_length/2.0)/(_length/( _lengthResolution - 1 )))*zSlice);
 		glVertex3f( vertex3.x, vertex3.y, vertex3.z );
 	}
 
 	glEnd();
-	_texture->setActive( false );
+	/////////////////////////////////////////////////////////////
+
+	//_texture->setActive( false );
 
 	glEndList();
 
@@ -183,80 +200,55 @@ void Terrain::buildDisplayLists()
 	_material.setActive();
 	_texture->setActive( true );
 
+	/////////////////////////////////////////////////////////////
+	////////////////////// GRAPHICS LAB 07 //////////////////////
+	/////////////////////////////////////////////////////////////
+	// Replace code here to define the display list for smooth shading.
+	// Make sure the texture coordinates are applied.
+	/////////////////////////////////////////////////////////////
 	glBegin( GL_TRIANGLES );
 
-	for ( uint triangleID = 0; triangleID < _triangles.size(); triangleID++ )
+	for ( int t = 0; t < numTriangles; t++ )
 	{
-		const Triangle &triangle = _triangles[triangleID];
 
-		const Point &vertex1 = _vertices[triangle.vertex1];
-		const Point &texVertex1 = _textureCoordinates[triangle.vertex1];
-		const Point &vertex2 = _vertices[triangle.vertex2];
-		const Point &texVertex2 = _textureCoordinates[triangle.vertex2];
-		const Point &vertex3 = _vertices[triangle.vertex3];
-		const Point &texVertex3 = _textureCoordinates[triangle.vertex3];
+		const Point &vertex1 = _vertices[_triangles[t].vertex1];
+		const Point &vertex2 = _vertices[_triangles[t].vertex2];
+		const Point &vertex3 = _vertices[_triangles[t].vertex3];
 
-		const Vector3D &vertexNormal1 = _vertexNormals[triangle.vertex1];
-		const Vector3D &vertexNormal2 = _vertexNormals[triangle.vertex2];
-		const Vector3D &vertexNormal3 = _vertexNormals[triangle.vertex3];
-
-		glNormal3f( vertexNormal1.x, vertexNormal1.y, vertexNormal1.z );
-		glTexCoord2f(texVertex1.x,texVertex1.y);
+		if ( _renderingParameters.shadeMode == RenderingParameters::SMOOTH )
+		{
+			const Vector3D &normal = _vertexNormals[_triangles[t].vertex1];
+			glNormal3f( normal.x, normal.y, normal.z );
+		}
+		glTexCoord2f( ((vertex1.x+_width/2.0)/( _width/( _widthResolution - 1 )))
+				*xSlice, ((-vertex1.z+_length/2.0)/(_length/( _lengthResolution - 1 )))*zSlice);
 		glVertex3f( vertex1.x, vertex1.y, vertex1.z );
 
-		glNormal3f( vertexNormal2.x, vertexNormal2.y, vertexNormal2.z );
-		glTexCoord2f(texVertex2.x,texVertex2.y);
+		if ( _renderingParameters.shadeMode == RenderingParameters::SMOOTH )
+		{
+			const Vector3D &normal = _vertexNormals[_triangles[t].vertex2];
+			glNormal3f( normal.x, normal.y, normal.z );
+		}
+		glTexCoord2f( ((vertex2.x+_width/2.0)/( _width/( _widthResolution - 1 )))
+				*xSlice, ((-vertex2.z+_length/2.0)/(_length/( _lengthResolution - 1 )))*zSlice);
 		glVertex3f( vertex2.x, vertex2.y, vertex2.z );
 
-		glNormal3f( vertexNormal3.x, vertexNormal3.y, vertexNormal3.z );
-		glTexCoord2f(texVertex3.x,texVertex3.y);
+		if ( _renderingParameters.shadeMode == RenderingParameters::SMOOTH )
+		{
+			const Vector3D &normal = _vertexNormals[_triangles[t].vertex3];
+			glNormal3f( normal.x, normal.y, normal.z );
+		}
+		glTexCoord2f( ((vertex3.x+_width/2.0)/( _width/( _widthResolution - 1 )))
+				*xSlice, ((-vertex3.z+_length/2.0)/(_length/( _lengthResolution - 1 )))*zSlice);
 		glVertex3f( vertex3.x, vertex3.y, vertex3.z );
 	}
 
 	glEnd();
+	/////////////////////////////////////////////////////////////
 
-	_texture->setActive( false );
+	//_texture->setActive( false );
 
 	glEndList();
-}
-
-float Terrain::getHeight( const Point &point ) const
-{
-	uint indexOfNearestTriangle = getNearestTriangleIndexAt(point);
-
-	Point p1(_vertices[_triangles[indexOfNearestTriangle].vertex1]);
-	Point p2(_vertices[_triangles[indexOfNearestTriangle].vertex2]);
-	Point p3(_vertices[_triangles[indexOfNearestTriangle].vertex3]);
-
-	Vector3D normal = _triangleNormals[indexOfNearestTriangle];
-
-	// formula to get the interpolated height of the three vertices
-	return (normal.x * (point.x - p1.x) + normal.z * (point.z - p1.z)) / - normal.y + p1.y;
-}
-
-Vector3D Terrain::getNormal( const Point &point ) const
-{
-	uint indexOfNearestTriangle = getNearestTriangleIndexAt(point);
-
-	Vector3D norm1 = _vertexNormals[_triangles[indexOfNearestTriangle].vertex1];
-	Vector3D norm2 = _vertexNormals[_triangles[indexOfNearestTriangle].vertex2];
-	Vector3D norm3 = _vertexNormals[_triangles[indexOfNearestTriangle].vertex3];
-
-	float distance1 = Utils::distance(point, _vertices[_triangles[indexOfNearestTriangle].vertex1]);
-	float distance2 = Utils::distance(point, _vertices[_triangles[indexOfNearestTriangle].vertex2]);
-	float distance3 = Utils::distance(point, _vertices[_triangles[indexOfNearestTriangle].vertex3]);
-
-	float tot_distance = distance1 + distance2 + distance3;
-
-//	Vector3D interp = Vector3D( (1.0f - distance1/tot_distance) * norm1.x + (1.0f - distance2/tot_distance) * norm2.x + (1.0f - distance3/tot_distance) * norm3.x,
-//		(1.0f - distance1/tot_distance) * norm1.y + (1.0f - distance2/tot_distance) * norm2.y + (1.0f - distance3/tot_distance) * norm3.y,
-//		(1.0f - distance1/tot_distance) * norm1.z + (1.0f - distance2/tot_distance) * norm2.z + (1.0f - distance3/tot_distance) * norm3.z);
-//
-//	//Vector3D interp = Vector3D(norm1.x+norm2.x+norm3.x,norm1.y+norm2.y+norm3.y,norm1.z+norm2.z+norm3.z);
-//	Utils::normalize(interp);
-
-	//std::cout << "x: " << interp.x << " y: " << interp.y << " z: " << interp.z << "\n";
-	return _triangleNormals[indexOfNearestTriangle];
 }
 
 void Terrain::draw() const
@@ -271,56 +263,88 @@ void Terrain::draw() const
 
 	glCallList( ( _renderingParameters.shadeMode == RenderingParameters::FLAT ) ? ( _displayLists ) : ( _displayLists + 1 ) );
 
-	//draw the normals if they are toggled
-	const float lineLength = 3.0f;
-		if(_renderingParameters.normalMode == RenderingParameters::VERTEX)
-		{
-			for(uint vertexIndex = 0; vertexIndex < _numVertices; vertexIndex++)
-			{
-				glBegin(GL_LINES);
-				glVertex3f(_vertices[vertexIndex].x,_vertices[vertexIndex].y,_vertices[vertexIndex].z);
-				glVertex3f(_vertices[vertexIndex].x + _vertexNormals[vertexIndex].x*lineLength,_vertices[vertexIndex].y+ _vertexNormals[vertexIndex].y*lineLength,_vertices[vertexIndex].z+ _vertexNormals[vertexIndex].z*lineLength);
-				glEnd();
-			}
-		}
-		else if(_renderingParameters.normalMode == RenderingParameters::TRIANGLE)
-		{
-			for(uint triangleIndex = 0; triangleIndex < _numTriangles; triangleIndex++)
-			{
-				Triangle currentTriangle = _triangles[triangleIndex];
-				Point baryPoint = Point( (_vertices[currentTriangle.vertex1].x + _vertices[currentTriangle.vertex2].x + _vertices[currentTriangle.vertex3].x) / 3.0f, (_vertices[currentTriangle.vertex1].y + _vertices[currentTriangle.vertex2].y + _vertices[currentTriangle.vertex3].y) / 3.0f, (_vertices[currentTriangle.vertex1].z + _vertices[currentTriangle.vertex2].z + _vertices[currentTriangle.vertex3].z) / 3.0f, 0);
-
-				glBegin(GL_LINES);
-
-				glVertex3f(baryPoint.x,baryPoint.y,baryPoint.z);
-				glVertex3f(baryPoint.x + _triangleNormals[triangleIndex].x*lineLength,baryPoint.y+ _triangleNormals[triangleIndex].y*lineLength,baryPoint.z+ _triangleNormals[triangleIndex].z*lineLength);
-				glEnd();
-			}
-		}
-
 	glPopMatrix();
 }
 
+float Terrain::getHeight( const Point &point ) const
+{
+	//float y = (_triangleNormals[triangleNumber].x*point.x + _triangleNormals[triangleNumber].z*point.z)/_triangleNormals[triangleNumber].y;
+	int triangleNumber = getNearestTriangleIndexAt(point);
+	Point firstPoint = _triangles[triangleNumber].vertex1;
+	Point secondPoint = _triangles[triangleNumber].vertex2;
+	Point thirdPoint = _triangles[triangleNumber].vertex3;
 
+	float dist1 = Utils::distance(point, _triangles[triangleNumber].vertex1);
+	float dist2 = Utils::distance(point, _triangles[triangleNumber].vertex2);
+	float dist3 = Utils::distance(point, _triangles[triangleNumber].vertex3);
 
- uint Terrain::getNearestTriangleIndexAt( const Point &point) const{
+	float totalDist=dist1+dist2+dist3;
 
-	 float min_distance = 1000;
-	 uint indexOfNearestTriangle = -1;
+	float ratio1 = dist1/totalDist;
+	float ratio2 = dist2/totalDist;
+	float ratio3 = dist3/totalDist;
 
-	 	for( uint triangleIndex = 0; triangleIndex < _vertices.size();triangleIndex++)
-	 	{
-	 		Point p1(_vertices[_triangles[triangleIndex].vertex1]);
-	 		Point p2(_vertices[_triangles[triangleIndex].vertex2]);
-	 		Point p3(_vertices[_triangles[triangleIndex].vertex3]);
+	float height = (ratio1*firstPoint.y)
+			+(ratio2*secondPoint.y)
+			+(ratio3*thirdPoint.y);
+	return height+2;
+}
 
-	 		float distance = Utils::distance(point,Point((p1.x+p2.x+p3.x)/3.0f,(p1.y+p2.y+p3.y)/3.0f,(p1.z+p2.z+p3.z)/3.0f));
-	 		if(distance < min_distance)
-	 		{
-	 			min_distance = distance;
-	 			indexOfNearestTriangle = triangleIndex;
-	 		}
-	 	}
-	 	return indexOfNearestTriangle;
+Vector3D Terrain::getNormal( const Point &point ) const
+{
+	int triangleNumber = getNearestTriangleIndexAt(point);
+	//std::cout << "triangle number:" << triangleNumber<< std::endl;
+
+	Vector3D norm1 = _vertexNormals[_triangles[triangleNumber].vertex1];
+	Vector3D norm2 = _vertexNormals[_triangles[triangleNumber].vertex2];
+	Vector3D norm3 = _vertexNormals[_triangles[triangleNumber].vertex3];
+
+	float dist1 = Utils::distance(point, _triangles[triangleNumber].vertex1);
+	float dist2 = Utils::distance(point, _triangles[triangleNumber].vertex2);
+	float dist3 = Utils::distance(point, _triangles[triangleNumber].vertex3);
+
+	float totalDist=dist1+dist2+dist3;
+
+	float ratio1 = dist1/totalDist;
+	float ratio2 = dist2/totalDist;
+	float ratio3 = dist3/totalDist;
+
+	//std::cout << "ratio1:" << ratio1<< std::endl;
+
+	return Vector3D( norm1.x*ratio1+norm2.x*ratio2+norm3.x*ratio3 , norm1.y*ratio1+norm2.y*ratio2+norm3.y*ratio3, norm1.z*ratio1+norm2.z*ratio2+norm3.z*ratio3 );
+}
+
+int Terrain::getNearestTriangleIndexAt( const Point &point) const {
+	/**
+	 I'm doing something wrong here, but I cannot find the problem, I'm calculating somehow the wrong trianglenumber... :S But I don't want to bruteforce
+
+	 **/
+	float widthVertDistance = _width/(_widthResolution-1);
+	float lengthVertDistance = _length/(_lengthResolution-1);
+
+	float slope = lengthVertDistance/widthVertDistance;
+
+	float columnNumber = (point.x+(_width/2))/widthVertDistance;
+	float rowNumber = (-point.z+(_length/2))/lengthVertDistance;
+
+	float restColumn = columnNumber - (int) columnNumber;
+	float restRow = rowNumber - (int) rowNumber;
+
+	int triangleNumber=1;
+	if(restRow - slope*restColumn > 0) {
+		//upper triangle
+		triangleNumber = (int) rowNumber*((_widthResolution-1)*2)+((int) columnNumber)*2+1;
+
+	} else {
+		//lower triangle
+		triangleNumber = (int) rowNumber*((_widthResolution-1)*2)+((int) columnNumber)*2;
+	}
+
+	//    std::cout << "triangle number:" << triangleNumber<< std::endl;
+	//    std::cout << "column number:" << columnNumber<< std::endl;
+	//    std::cout << "row number:" << rowNumber<< std::endl;
+	//    std::cout << "restRow number:" << restRow<< std::endl;
+	//    std::cout << "restColumn number:" << restColumn<< std::endl;
+	return triangleNumber;
 }
 GAME_NAMESPACE_END
