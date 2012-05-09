@@ -64,7 +64,7 @@ _widthResolution( widthResolution ), _lengthResolution( lengthResolution )
 			Point &vertex = _vertices[_widthResolution*lengthPoint + widthPoint];
 			vertex.x = -_width/2.0 + widthPoint*( _width/( _widthResolution - 1 ) );
 			vertex.z = _length/2.0 - lengthPoint*( _length/( _lengthResolution - 1 ) );
-			vertex.y = (_heightData->getData()[_heightData->getWidth()*(lengthPoint*zSlice)*4 + widthPoint*xSlice*4])/50.0f;
+			vertex.y = ((_heightData->getData()[_heightData->getWidth()*(lengthPoint*zSlice)*4 + widthPoint*xSlice*4])/10.0f)-20;
 		}
 	}
 
@@ -270,13 +270,13 @@ float Terrain::getHeight( const Point &point ) const
 {
 	//float y = (_triangleNormals[triangleNumber].x*point.x + _triangleNormals[triangleNumber].z*point.z)/_triangleNormals[triangleNumber].y;
 	int triangleNumber = getNearestTriangleIndexAt(point);
-	Point firstPoint = _triangles[triangleNumber].vertex1;
-	Point secondPoint = _triangles[triangleNumber].vertex2;
-	Point thirdPoint = _triangles[triangleNumber].vertex3;
+	Point firstPoint = _vertices[_triangles[triangleNumber].vertex1];
+	Point secondPoint = _vertices[_triangles[triangleNumber].vertex2];
+	Point thirdPoint = _vertices[_triangles[triangleNumber].vertex3];
 
-	float dist1 = Utils::distance(point, _triangles[triangleNumber].vertex1);
-	float dist2 = Utils::distance(point, _triangles[triangleNumber].vertex2);
-	float dist3 = Utils::distance(point, _triangles[triangleNumber].vertex3);
+	float dist1 = Utils::distance(point, firstPoint);
+	float dist2 = Utils::distance(point, secondPoint);
+	float dist3 = Utils::distance(point, thirdPoint);
 
 	float totalDist=dist1+dist2+dist3;
 
@@ -285,9 +285,12 @@ float Terrain::getHeight( const Point &point ) const
 	float ratio3 = dist3/totalDist;
 
 	float height = (ratio1*firstPoint.y)
-			+(ratio2*secondPoint.y)
-			+(ratio3*thirdPoint.y);
-	return height+2;
+	+(ratio2*secondPoint.y)
+	+(ratio3*thirdPoint.y);
+//	std::cout<<"GetHeight: "<<height<<std::endl;
+//	std::cout<<"Ratio1: "<<ratio1<<std::endl;
+//	std::cout<<"firstPoint y: "<<firstPoint.y<<std::endl;
+	return height;
 }
 
 Vector3D Terrain::getNormal( const Point &point ) const
@@ -299,10 +302,13 @@ Vector3D Terrain::getNormal( const Point &point ) const
 	Vector3D norm2 = _vertexNormals[_triangles[triangleNumber].vertex2];
 	Vector3D norm3 = _vertexNormals[_triangles[triangleNumber].vertex3];
 
-	float dist1 = Utils::distance(point, _triangles[triangleNumber].vertex1);
-	float dist2 = Utils::distance(point, _triangles[triangleNumber].vertex2);
-	float dist3 = Utils::distance(point, _triangles[triangleNumber].vertex3);
+	Point firstPoint = _vertices[_triangles[triangleNumber].vertex1];
+	Point secondPoint = _vertices[_triangles[triangleNumber].vertex2];
+	Point thirdPoint = _vertices[_triangles[triangleNumber].vertex3];
 
+	float dist1 = Utils::distance(point, firstPoint);
+	float dist2 = Utils::distance(point, secondPoint);
+	float dist3 = Utils::distance(point, thirdPoint);
 	float totalDist=dist1+dist2+dist3;
 
 	float ratio1 = dist1/totalDist;
