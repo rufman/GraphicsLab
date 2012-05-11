@@ -48,7 +48,7 @@ Scene::Scene( Window &window ):
 _window( window ),
 _gridDisplayList( 0 ),
 _firstUpdate( true ),
-_cameraMode( FREE_CAM ),
+_cameraMode( TANK_CAM ),
 _overlayCam( NULL ),
 _tankCam( NULL ),
 _skyDome( NULL ),
@@ -74,6 +74,7 @@ Scene::~Scene()
 
 	delete _overlayCam;
 	delete _tankCam;
+	delete _overviewCam;
 
 	glDeleteLists( _gridDisplayList, 1 );
 }
@@ -121,6 +122,7 @@ void Scene::initialize()
 	// Initialize scene components
 	_overlayCam = new Camera2D( *this );
 	_tankCam = new Camera3D( *this );
+	_overviewCam = new Camera3D(*this);
 
 	_skyDome = new SkyDome( *this, parameters.skyTextureFile, 500, 50, 50 );
 	_terrain = new Terrain( *this, parameters.terrainFilePrefix, 100*2, 100*2, 50, 50 );
@@ -142,7 +144,7 @@ void Scene::reset()
 
 	_firstUpdate = true;
 
-	_cameraMode = FREE_CAM;
+	_cameraMode = TANK_CAM;
 	_freeCameraParameters.reset();
 	_freeCameraParameters.applyToCamera( *_tankCam );
 
@@ -236,8 +238,20 @@ void Scene::drawScene()
 
 	// Set camera parameters
 	Camera3D *camera;
+
+	if(_cameraMode == TANK_CAM)
+	{
+
 	camera = _tankCam;
 	_tankCam->setLookAt(_tank->getLookAt());
+	}
+	else if(_cameraMode == OVERVIEW_CAM)
+	{
+		//TODO:Overview cam not working yet.
+		camera = _overviewCam;
+		camera->setLookAt(LookAt(Point(0,20,0),Point(0,0,0),Vector3D(0,1,0)));
+	}
+
 
 	// OpenGL Lighting
 	camera->setViewport( Viewport( 0, 0, width, height ) );
@@ -535,7 +549,7 @@ void Scene::handleKeyboardInput()
 		}
 	}
 
-	if(_window.keyPressed('3'))
+	if(_window.keyHit('3'))
 	{
 		drawGrid();
 	}
@@ -553,6 +567,21 @@ void Scene::handleKeyboardInput()
 		else
 		{
 			_renderingParameters.normalMode = RenderingParameters::OFF;
+		}
+		if(_window.keyHit('5'))
+		{
+			if ( _cameraMode == TANK_CAM )
+			{
+				_cameraMode = OVERVIEW_CAM ;
+			}
+			else if (_cameraMode == OVERVIEW_CAM )
+			{
+				_cameraMode = INSIDE_CAM ;
+			}
+			else
+			{
+				_cameraMode = TANK_CAM ;
+			}
 		}
 	}
 }

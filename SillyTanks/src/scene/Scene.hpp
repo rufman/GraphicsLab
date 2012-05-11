@@ -99,7 +99,9 @@ private:
 
 	enum CameraMode
 	{
-		FREE_CAM
+		INSIDE_CAM,
+		TANK_CAM,
+		OVERVIEW_CAM
 	}_cameraMode;
 
 	struct FreeCameraParameters
@@ -125,6 +127,7 @@ private:
 
 	Camera2D *_overlayCam;
 	Camera3D *_tankCam;
+	Camera3D *_overviewCam;
 
 	typedef std::vector<Light*> LightVector;
 	LightVector _lights;
