@@ -80,6 +80,7 @@ private:
 	void drawOverlay();
 	void fireBullet();
 	void handleKeyboardInput();
+	Window& getWindow();
 
 private:
 	Window &_window;
@@ -136,9 +137,6 @@ private:
 	ParticleEngine<Smoke> *_testParticles;
 
 	std::vector<Bullet*> _bullets;
-
-	bool _keyPressed[256]; // boolean map of normal keys
-	bool _specialKeyStates[246];// boolean map of special keys
 
 }; // class Scene
 

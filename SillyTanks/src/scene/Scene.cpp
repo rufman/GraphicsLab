@@ -56,11 +56,6 @@ _terrain( NULL ),
 _sunLight(NULL),
 _tank(NULL)
 {
-	//nothing is pressed at startup
-	for(int i = 0; i < 256;i++)
-	{
-		_keyPressed[i] = false;
-	}
 }
 
 Scene::~Scene()
@@ -645,6 +640,11 @@ void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Point to(newFrom.x - from.x, newFrom.y - from.y, newFrom.z - from.z);
 
 	camera.setLookAt(LookAt(newFrom, to, up));
+}
+
+Window& Scene::getWindow()
+{
+	return _window;
 }
 
 GAME_NAMESPACE_END
