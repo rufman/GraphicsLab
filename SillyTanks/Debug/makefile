@@ -50,7 +50,7 @@ all: SillyTanks
 SillyTanks: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries -L/usr/X11/lib -arch i686 -o "SillyTanks" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++  -o "SillyTanks" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
