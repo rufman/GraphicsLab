@@ -53,6 +53,11 @@ public:
     void onVisible( int state );
     void onTimer( int value );
     void onIdle();
+    void resetKeys();
+    bool keyPressed(char key);
+    bool keyHit(char key);
+    bool specialKeyPressed(int key);
+    bool specialKeyHit(int key);
     void setKey(unsigned char key,bool value);
     void setSpecialKey(int key,bool value);
     
@@ -96,7 +101,12 @@ private:
     Scene *_scene;
     
 	bool _keyPressed[256];// boolean map of normal keys
-	bool _specialKeyStates[246]; // boolean map of special keys
+	bool _keyHit[256];
+	bool _oldKeyPressed[256];
+
+	bool _specialKeyPressed[246];//boolean maps for special keys
+	bool _oldSpecialKeyPressed[246];
+	bool _specialKeyHit[246];
 
 }; // class Window
 

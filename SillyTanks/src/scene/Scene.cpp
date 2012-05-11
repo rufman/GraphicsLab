@@ -14,6 +14,7 @@
 
 //windowing includes
 #include "../windowing/Application.hpp"
+#include "../windowing/Window.hpp"
 
 //common includes
 #include "../common/Camera2D.hpp"
@@ -472,50 +473,50 @@ void Scene::handleKeyboardInput()
 	 bool ctrlPressed = ( modifier & GLUT_ACTIVE_CTRL );
 	 bool altPressed = ( modifier & GLUT_ACTIVE_ALT );*/
 
-	if(_keyPressed['w'] || _keyPressed['W'])
+	if(_window.keyPressed('w') || _window.keyPressed('W'))
 	{
 		_tank->move(SMALLTANK_SPEED);
 	}
 
-	if(_keyPressed['a'] || _keyPressed['A'])
+	if(_window.keyPressed('a') ||_window.keyPressed('A'))
 	{
 		_tank->setDirection(_tank->getDirection()-2);
 	}
 
-	if(_keyPressed['s'] || _keyPressed['S'])
+	if(_window.keyPressed('s') || _window.keyPressed('S'))
 	{
 		_tank->move(-SMALLTANK_SPEED);
 	}
 
-	if(_keyPressed['d'] || _keyPressed['D'])
+	if(_window.keyPressed('d') || _window.keyPressed('D'))
 	{
 		_tank->setDirection(_tank->getDirection()+2);
 	}
 
-	if(_keyPressed['r'] || _keyPressed['R'])
+	if(_window.keyPressed('r') || _window.keyPressed('R'))
 	{
 		reset();
 		glutPostRedisplay();
 	}
 
-	if(_keyPressed['+'])
+	if(_window.keyPressed('+'))
 	{
 		float power = _tank->getShootingPower() + 0.1;
 		_tank->setShootingPower( ( power > 1.0 ) ? 1.0 : power );
 	}
 
-	if(_keyPressed['-'])
+	if(_window.keyPressed('-'))
 	{
 		float power = _tank->getShootingPower() - 0.1;
 		_tank->setShootingPower( ( power < 0.1 ) ? 0.1 : power );
 	}
 
-	if(_keyPressed[' '])
+	if(_window.keyPressed(' '))
 	{
 		fireBullet();
 	}
 
-	if(_keyPressed['1'])
+	if(_window.keyHit('1'))
 	{
 		if ( _renderingParameters.drawMode == RenderingParameters::WIREFRAME )
 		{
@@ -527,7 +528,7 @@ void Scene::handleKeyboardInput()
 		}
 	}
 
-	if(_keyPressed['2'])
+	if(_window.keyHit('2'))
 	{
 		if ( _renderingParameters.shadeMode == RenderingParameters::SMOOTH )
 		{
@@ -539,12 +540,12 @@ void Scene::handleKeyboardInput()
 		}
 	}
 
-	if(_keyPressed['3'])
+	if(_window.keyPressed('3'))
 	{
 		drawGrid();
 	}
 
-	if(_keyPressed['4'])
+	if(_window.keyHit('4'))
 	{
 		if ( _renderingParameters.normalMode == RenderingParameters::OFF )
 		{
@@ -620,14 +621,6 @@ void Scene::onTimer(int value) {
 }
 
 void Scene::onIdle() {
-}
-
-void Scene::setKey(unsigned char key, bool value) {
-	_keyPressed[key] = value;
-}
-
-void Scene::setSpecialKey(int key, bool value) {
-	_specialKeyStates[key] = value;
 }
 
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {

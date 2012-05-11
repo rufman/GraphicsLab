@@ -1,6 +1,6 @@
 /**
  * window.cpp
-* This is the setup for our window. It handles some of the keypresses that do not have to be handled by the graphics.
+ * This is the setup for our window. It handles some of the keypresses that do not have to be handled by the graphics.
  */
 
 // Class declaration include
@@ -18,12 +18,7 @@ GAME_NAMESPACE_BEGIN
 Window::Window( const Parameters &parameters ) :
 _parameters( parameters )
 {
-	//nothing is pressed at startup
-	for(int i = 0; i < 256;i++)
-	{
-		_keyPressed[i] = false;
-	}
-
+	resetKeys();
 	_scene = new Scene( *this );
 }
 
@@ -53,15 +48,59 @@ void Window::onResize( int width, int height )
 	glutPostRedisplay();
 }
 
-void Window::setKey(unsigned char key,bool value) {
-	_keyPressed[key] = value;
+void Window::resetKeys()
+{
+	//nothing is pressed at startup
+	for(int i = 0; i < 256;i++)
+	{
+		_keyPressed[i] = false;
+		_oldKeyPressed[i] = false;
+		_keyHit[i] = false;
+	}
 
-	if(_keyPressed['q'] || _keyPressed['Q'] || _keyPressed[27] )
+	for(int i = 0;i < 246;i++)
+	{
+		_specialKeyPressed[i] = false;
+		_oldSpecialKeyPressed[i] = false;
+		_specialKeyHit[i] = false;
+	}
+}
+
+bool Window::keyPressed(char key)
+{
+	return _keyPressed[key];
+}
+
+bool Window::keyHit(char key)
+{
+	bool keyHit = _keyHit[key];
+	_keyHit[key] = false;
+	return keyHit;
+}
+
+bool Window::specialKeyPressed(int key)
+{
+	return _specialKeyPressed[key];
+}
+
+bool Window::specialKeyHit(int key)
+{
+	bool keyHit = _specialKeyHit[key];
+	_specialKeyHit[key] = false;
+	return keyHit;
+}
+
+void Window::setKey(unsigned char key,bool value) {
+	_oldKeyPressed[key] = _keyPressed[key];
+	_keyPressed[key] = value;
+	_keyHit[key] = (_oldKeyPressed[key] && !_keyPressed[key]);
+
+	if(keyPressed('q') || keyPressed('Q') || keyPressed(27) )
 	{
 		exit( EXIT_SUCCESS );
 	}
 
-	if( _keyPressed['f'] || _keyPressed['F'])
+	if( keyPressed('f') || keyPressed('F'))
 	{
 		_parameters.fullScreen = !_parameters.fullScreen;
 		if ( _parameters.fullScreen )
@@ -82,11 +121,12 @@ void Window::setKey(unsigned char key,bool value) {
 			glutReshapeWindow( _parameters.width, _parameters.height );
 		}
 	}
-	_scene->setKey(key,value);
 }
 
 void Window::setSpecialKey(int key, bool value) {
-	_scene->setSpecialKey(key, value);
+	_oldSpecialKeyPressed[key] = _specialKeyPressed[key];
+	_specialKeyPressed[key] = value;
+	_specialKeyHit[key] = (_oldSpecialKeyPressed[key] && !_specialKeyPressed[key]);
 }
 
 void Window::onMouseEntry(int state) {

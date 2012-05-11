@@ -64,8 +64,6 @@ public:
 	void onVisible( int state );
 	void onTimer( int value );
 	void onIdle();
-	void setKey(unsigned char key,bool value);
-	void setSpecialKey(int key,bool value);
 	const Terrain& getTerrain() const {return *_terrain;}
 
 private:

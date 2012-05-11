@@ -264,6 +264,44 @@ void Terrain::draw() const
 	glCallList( ( _renderingParameters.shadeMode == RenderingParameters::FLAT ) ? ( _displayLists ) : ( _displayLists + 1 ) );
 
 	glPopMatrix();
+
+	if ( _renderingParameters.normalMode == RenderingParameters::VERTEX )
+	{
+		glColor3f( Color::WHITE.r, Color::WHITE.g, Color::WHITE.b );
+		glBegin( GL_LINES );
+		for ( int widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
+		{
+			for ( int lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
+			{
+				int v = _widthResolution*lengthPoint + widthPoint;
+				const Point &vertex = _vertices[v];
+				const Vector3D &normal = _vertexNormals[v];
+				glVertex3f( vertex.x, vertex.y, vertex.z );
+				glVertex3f(vertex.x + normal.x, vertex.y + normal.y, vertex.z + normal.z );
+			}
+		}
+		glEnd();
+	}
+	else if ( _renderingParameters.normalMode == RenderingParameters::TRIANGLE )
+	{
+		int numTriangles = 2*( _widthResolution - 1 )*( _lengthResolution - 1 );
+		glColor3f( Color::TAN.r, Color::TAN.g, Color::TAN.b );
+		glBegin( GL_LINES );
+		for ( int t = 0; t < numTriangles; t++ )
+		{
+			const Point &vertex1 = _vertices[_triangles[t].vertex1];
+			const Point &vertex2 = _vertices[_triangles[t].vertex2];
+			const Point &vertex3 = _vertices[_triangles[t].vertex3];
+			Point baryCenter( ( vertex1.x + vertex2.x + vertex3.x )/3.0f,
+					( vertex1.y + vertex2.y + vertex3.y )/3.0f,
+					( vertex1.z + vertex2.z + vertex3.z )/3.0f );
+			const Vector3D &normal = _triangleNormals[t];
+
+			glVertex3f( baryCenter.x, baryCenter.y, baryCenter.z );
+			glVertex3f( baryCenter.x + normal.x, baryCenter.y + normal.y, baryCenter.z + normal.z );
+		}
+		glEnd();
+	}
 }
 
 float Terrain::getHeight( const Point &point ) const

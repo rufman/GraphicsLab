@@ -29,8 +29,9 @@ src/scene/Scene.d src/scene/Scene.o: ../src/scene/Scene.cpp \
  ../src/scene/../common/Exception.hpp ../src/scene/../common/Utils.hpp \
  ../src/scene/../windowing/Application.hpp \
  ../src/scene/../windowing/../common/Definitions.hpp \
- ../src/scene/../common/Camera2D.hpp ../src/scene/../common/Camera.hpp \
- ../src/scene/../common/Camera3D.hpp ../src/scene/../common/TextBox.hpp \
+ ../src/scene/../windowing/Window.hpp ../src/scene/../common/Camera2D.hpp \
+ ../src/scene/../common/Camera.hpp ../src/scene/../common/Camera3D.hpp \
+ ../src/scene/../common/TextBox.hpp \
  ../src/scene/../common/../common/Drawable.hpp \
  ../src/scene/../common/../scene/Scene.hpp ../src/scene/SkyDome.hpp \
  ../src/scene/../common/Drawable.hpp ../src/scene/Terrain.hpp \
@@ -119,6 +120,8 @@ src/scene/Scene.d src/scene/Scene.o: ../src/scene/Scene.cpp \
 ../src/scene/../windowing/Application.hpp:
 
 ../src/scene/../windowing/../common/Definitions.hpp:
+
+../src/scene/../windowing/Window.hpp:
 
 ../src/scene/../common/Camera2D.hpp:
 
