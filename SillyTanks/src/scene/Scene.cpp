@@ -242,16 +242,14 @@ void Scene::drawScene()
 	if(_cameraMode == TANK_CAM)
 	{
 
-	camera = _tankCam;
-	_tankCam->setLookAt(_tank->getLookAt());
+		camera = _tankCam;
+		camera->setLookAt(_tank->getLookAt());
 	}
 	else if(_cameraMode == OVERVIEW_CAM)
 	{
-		//TODO:Overview cam not working yet.
 		camera = _overviewCam;
-		camera->setLookAt(LookAt(Point(0,20,0),Point(0,0,0),Vector3D(0,1,0)));
+		camera->setLookAt(LookAt(Point(100,100,100),_tank->getPosition(),Vector3D(0,1,0)));
 	}
-
 
 	// OpenGL Lighting
 	camera->setViewport( Viewport( 0, 0, width, height ) );
@@ -568,20 +566,16 @@ void Scene::handleKeyboardInput()
 		{
 			_renderingParameters.normalMode = RenderingParameters::OFF;
 		}
-		if(_window.keyHit('5'))
+	}
+	if(_window.keyHit('5'))
+	{
+		if ( _cameraMode == TANK_CAM )
 		{
-			if ( _cameraMode == TANK_CAM )
-			{
-				_cameraMode = OVERVIEW_CAM ;
-			}
-			else if (_cameraMode == OVERVIEW_CAM )
-			{
-				_cameraMode = INSIDE_CAM ;
-			}
-			else
-			{
-				_cameraMode = TANK_CAM ;
-			}
+			_cameraMode = OVERVIEW_CAM;
+		}
+		else if (_cameraMode == OVERVIEW_CAM )
+		{
+			_cameraMode = TANK_CAM;
 		}
 	}
 }
@@ -604,11 +598,10 @@ void Scene::onMouseMove(int x, int y) {
 
 	int xMove = x - _mouseX;
 	int yMove = y - _mouseY;
-	_mouseX = width/2;
-	_mouseY = height/2;
+	_mouseX = width / 2;
+	_mouseY = height / 2;
 
-	if(abs(xMove) > 15 || abs(yMove) > 15)
-	{
+	if (abs(xMove) > 15 || abs(yMove) > 15) {
 		glutWarpPointer(width / 2, height / 2);
 	}
 
@@ -623,21 +616,20 @@ void Scene::onMousePassiveMove(int x, int y) {
 
 	int xMove = x - _mouseX;
 	int yMove = y - _mouseY;
-	_mouseX = width/2;
-	_mouseY = height/2;
-	if(abs(xMove) > 15 || abs(yMove) > 15)
-	{
+	_mouseX = width / 2;
+	_mouseY = height / 2;
+	if (abs(xMove) > 15 || abs(yMove) > 15) {
 		glutWarpPointer(width / 2, height / 2);
 	}
 
-	_tank->setElevation(_tank->getElevation() - yMove/7);
-	_tank->setAzimuth(_tank->getAzimuth() + xMove /7);
+	_tank->setElevation(_tank->getElevation() - yMove / 7);
+	_tank->setAzimuth(_tank->getAzimuth() + xMove / 7);
 	glutPostRedisplay();
 }
 
 void Scene::onVisible(int state) {
 	if (state == GLUT_VISIBLE)
-	glutPostRedisplay();
+		glutPostRedisplay();
 }
 
 void Scene::onTimer(int value) {
@@ -650,10 +642,10 @@ void Scene::onIdle() {
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Point from(
 			radius * std::cos(Utils::toRadian(elevation))
-			* std::sin(Utils::toRadian(azimuth)) * -1,
+					* std::sin(Utils::toRadian(azimuth)) * -1,
 			radius * std::sin(Utils::toRadian(elevation)),
 			radius * std::cos(Utils::toRadian(elevation))
-			* std::cos(Utils::toRadian(azimuth)) * -1);
+					* std::cos(Utils::toRadian(azimuth)) * -1);
 
 	Vector3D up(0.0, 1.0, 0.0);
 	Vector3D dir(-from.x, -from.y, -from.z);
@@ -671,8 +663,7 @@ void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	camera.setLookAt(LookAt(newFrom, to, up));
 }
 
-Window& Scene::getWindow()
-{
+Window& Scene::getWindow() {
 	return _window;
 }
 
