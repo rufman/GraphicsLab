@@ -190,9 +190,10 @@ void Scene::update( float seconds )
 		// Remove bullet if out of window
 		const Point &bulletPosition = bullet->getPosition();
 
-		if ( hitTarget || ( bulletPosition.y < 0 ))
+		if ( hitTarget || ( bulletPosition.y < _terrain->getHeight( bulletPosition ) ))
 		{
 			bulletIter = _bullets.erase( bulletIter );
+			_terrain->doDamageAt(bulletPosition);
 			delete bullet;
 		}
 		else

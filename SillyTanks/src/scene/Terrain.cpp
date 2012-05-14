@@ -322,13 +322,17 @@ float Terrain::getHeight( const Point &point ) const
 	float ratio2 = dist2/totalDist;
 	float ratio3 = dist3/totalDist;
 
-	float height = (ratio1*firstPoint.y)
-	+(ratio2*secondPoint.y)
-	+(ratio3*thirdPoint.y);
+//	float height = (ratio1*firstPoint.y)
+//	+(ratio2*secondPoint.y)
+//	+(ratio3*thirdPoint.y);
+
+	float y = (_triangleNormals[triangleNumber].x*(point.x-_vertices[_triangles[triangleNumber].vertex1].x)+_triangleNormals[triangleNumber].z*(point.z-_vertices[_triangles[triangleNumber].vertex1].z))/(-_triangleNormals[triangleNumber].y);
+	    y+=_vertices[_triangles[triangleNumber].vertex1].y;
+	return y;
 //	std::cout<<"GetHeight: "<<height<<std::endl;
 //	std::cout<<"Ratio1: "<<ratio1<<std::endl;
 //	std::cout<<"firstPoint y: "<<firstPoint.y<<std::endl;
-	return height;
+//	return height;
 }
 
 Vector3D Terrain::getNormal( const Point &point ) const
@@ -390,5 +394,21 @@ int Terrain::getNearestTriangleIndexAt( const Point &point) const {
 	//    std::cout << "restRow number:" << restRow<< std::endl;
 	//    std::cout << "restColumn number:" << restColumn<< std::endl;
 	return triangleNumber;
+}
+
+void Terrain::doDamageAt( const Point &point ) {
+	int triangleIndex = getNearestTriangleIndexAt(point);
+	const Point firstPoint = _vertices[_triangles[triangleIndex].vertex1];
+	const Point secondPoint = _vertices[_triangles[triangleIndex].vertex2];
+	const Point thirdPoint = _vertices[_triangles[triangleIndex].vertex3];
+	firstPoint.y -= .05;
+	secondPoint.y -= .05;
+	thirdPoint.y -= .05;
+	_vertices.at(_triangles[triangleIndex].vertex1) = firstPoint;
+	_vertices.at(_triangles[triangleIndex].vertex2) = secondPoint;
+	_vertices.at(_triangles[triangleIndex].vertex3) = thirdPoint;
+
+	//refresh/redraw terrain
+	buildDisplayLists();
 }
 GAME_NAMESPACE_END

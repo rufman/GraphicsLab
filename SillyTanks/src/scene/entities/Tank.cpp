@@ -77,18 +77,26 @@ void Tank::setDirection(float angle) {
 }
 
 void Tank::update(float seconds) {
+	int averagedHeight = _scene.getTerrain().getHeight(Point(_position.x-1,_position.y,_position.z-1));
+	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x+1,_position.y,_position.z-1));
+	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x,_position.y,_position.z+1));
+	averagedHeight = averagedHeight/3.0;
 
 	_position.x += _velocity.x*_speed*seconds;
-	_position.y = _scene.getTerrain().getHeight(_position);
+	_position.y = averagedHeight;
 	_position.z += _velocity.z*_speed*seconds;
 	_speed = 0;
 }
 
 LookAt Tank::getLookAt() const
 {
-
 	Point from, to;
-	Vector3D up = _scene.getTerrain().getNormal(_position);
+	Vector3D firstUp = _scene.getTerrain().getNormal(Point(_position.x-1,_position.y,_position.z-1));
+	Vector3D secondUp = _scene.getTerrain().getNormal(Point(_position.x+1,_position.y,_position.z-1));
+	Vector3D thirdUp = _scene.getTerrain().getNormal(Point(_position.x,_position.y,_position.z-1));
+	Vector3D up = Vector3D((firstUp.x+secondUp.x+thirdUp.x)/3.0,
+			(firstUp.y+secondUp.y+thirdUp.y)/3.0,
+			(firstUp.z+secondUp.z+thirdUp.z)/3.0);
 	const Vector3D &velocity = Utils::rotate(_turret->getAzimuth(),Vector3D(0,0,-1),Vector3D(0,1,0));
 	Vector3D direction = velocity;
 	Utils::normalize( direction );

@@ -43,6 +43,7 @@ public:
     void draw() const;
 
     int getNearestTriangleIndexAt( const Point &point) const;
+    void doDamageAt( const Point &point ) ;
 	
 private:
 	void buildDisplayLists();
