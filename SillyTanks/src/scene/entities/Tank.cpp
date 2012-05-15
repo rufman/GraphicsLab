@@ -10,6 +10,9 @@
 #include "../../common/GLIncludes.hpp"
 #include "../../common/Drawable.hpp"
 
+#include <math.h>
+#include <iostream>
+
 //scene includes
 #include "../../scene/Scene.hpp"
 #include "../../scene/Terrain.hpp"
@@ -77,14 +80,28 @@ void Tank::setDirection(float angle) {
 }
 
 void Tank::update(float seconds) {
-	int averagedHeight = _scene.getTerrain().getHeight(Point(_position.x-1,_position.y,_position.z-1));
+	float averagedHeight = _scene.getTerrain().getHeight(Point(_position.x-1,_position.y,_position.z-1));
 	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x+1,_position.y,_position.z-1));
 	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x,_position.y,_position.z+1));
 	averagedHeight = averagedHeight/3.0;
 
-	_position.x += _velocity.x*_speed*seconds;
+	Vector3D gravity = Vector3D( 0, 1, 0);
+	Vector3D realGravity = Vector3D( 0, -1, 0);
+	Vector3D firstNormal = _scene.getTerrain().getNormal(Point(_position.x-1,_position.y,_position.z-1));
+		Vector3D secondNormal = _scene.getTerrain().getNormal(Point(_position.x+1,_position.y,_position.z-1));
+		Vector3D thirdNormal = _scene.getTerrain().getNormal(Point(_position.x,_position.y,_position.z-1));
+		Vector3D normal = Vector3D((firstNormal.x+secondNormal.x+thirdNormal.x)/3.0,
+				(firstNormal.y+secondNormal.y+thirdNormal.y)/3.0,
+				(firstNormal.z+secondNormal.z+thirdNormal.z)/3.0);
+
+	float angleGravityNormal = acos( Utils::dot( gravity, normal ) );
+	Vector3D relativeGravity = Vector3D( angleGravityNormal * 15.0 * ( realGravity.x + normal.x ),
+			angleGravityNormal * ( realGravity.y + normal.y ),
+			angleGravityNormal * 15.0 * ( realGravity.z + normal.z ) );
+
+	_position.x += _velocity.x*_speed*seconds + relativeGravity.x*seconds;
 	_position.y = averagedHeight;
-	_position.z += _velocity.z*_speed*seconds;
+	_position.z += _velocity.z*_speed*seconds + relativeGravity.z*seconds;
 	_speed = 0;
 }
 
