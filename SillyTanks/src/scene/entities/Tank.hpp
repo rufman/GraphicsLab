@@ -12,6 +12,8 @@
 #include "../../common/PLYModel.hpp"
 #include "../../common/Camera3D.hpp"
 
+#include <math.h>
+
 //entities include
 #include "Turret.hpp"
 
