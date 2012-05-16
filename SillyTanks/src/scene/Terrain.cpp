@@ -13,8 +13,6 @@
 #include "../common/TGATexture.hpp"
 
 //pathfinding includes
-#include "pathfinding/AstarSearch.hpp"
-#include "pathfinding/SearchNode.hpp"
 #include "pathfinding/Node.hpp"
 
 #include <sstream>
@@ -69,7 +67,7 @@ _widthResolution( widthResolution ), _lengthResolution( lengthResolution )
 			Point &vertex = _vertices[_widthResolution*lengthPoint + widthPoint];
 			vertex.x = -_width/2.0 + widthPoint*( _width/( _widthResolution - 1 ) );
 			vertex.z = _length/2.0 - lengthPoint*( _length/( _lengthResolution - 1 ) );
-			vertex.y = 0; //((_heightData->getData()[_heightData->getWidth()*(lengthPoint*zSlice)*4 + widthPoint*xSlice*4])/10.0f)-20;
+			vertex.y = ((_heightData->getData()[_heightData->getWidth()*(lengthPoint*zSlice)*4 + widthPoint*xSlice*4])/10.0f)-20;
 			_nodes.push_back(new Node(Point(vertex.x,2,vertex.z),_scene));
 
 		}
