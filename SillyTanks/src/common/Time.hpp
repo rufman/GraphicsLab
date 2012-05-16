@@ -1,10 +1,6 @@
 /**
  * time.hpp
  * 
- * Author   :   Fatih Erol
- * Date     :   20.02.2012
- *
- * All rights reserved.
  */
 
 #ifndef GRAPHICSLAB_TIME_HPP

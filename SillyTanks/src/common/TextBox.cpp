@@ -6,7 +6,7 @@
 // Class declaration include
 #include "TextBox.hpp"
 
-// Includes
+// common includes
 #include "../common/GLIncludes.hpp"
 
 

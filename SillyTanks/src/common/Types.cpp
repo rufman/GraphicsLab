@@ -1,10 +1,6 @@
 /**
  * types.cpp
- * 
- * Author   :   Fatih Erol
- * Date     :   29.03.2012
- *
- * All rights reserved.
+*
  */
 
 // Class declaration include

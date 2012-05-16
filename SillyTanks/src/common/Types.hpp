@@ -1,10 +1,6 @@
 /**
  * types.hpp
- * 
- * Author   :   Fatih Erol
- * Date     :   29.03.2012
- *
- * All rights reserved.
+*
  */
 
 #ifndef GRAPHICSLAB_TYPES_HPP

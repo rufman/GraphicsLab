@@ -1,10 +1,6 @@
 /**
  * tgaImage.hpp
- * 
- * Author   :   Fatih Erol
- * Date     :   30.03.2012
- *
- * All rights reserved.
+*
  */
 
 #ifndef GRAPHICSLAB_TGAIMAGE_HPP

@@ -1,10 +1,6 @@
 /**
  * time.cpp
- * 
- * Author   :   Fatih Erol
- * Date     :   20.02.2012
- *
- * All rights reserved.
+*
  */
 
 // Class declaration include

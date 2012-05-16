@@ -1,10 +1,6 @@
 /**
  * texture.cpp
  *
- * Author   :   Fatih Erol
- * Date     :   30.03.2012
- *
- * All rights reserved.
  */
 
 // Class declaration include

@@ -1,6 +1,6 @@
 /**
  * utils.cpp
-* Utilities used in this game, most of them are used for 3D graphics rotation and measuring distances.
+* Utilities used in this game, most of them are used for 3D graphics operations and measuring distances.
  */
 
 // Class declaration include
