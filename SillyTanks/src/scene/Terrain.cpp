@@ -18,6 +18,7 @@
 #include <sstream>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 GAME_NAMESPACE_BEGIN
 
@@ -244,10 +245,10 @@ void Terrain::buildDisplayLists()
 void Terrain::draw() const
 {
 
-//	for(uint i = 0; i < _vertices.size();i++)
-//	{
-//		_nodes[i]->draw();
-//	}
+	for(uint i = 0; i < _vertices.size();i++)
+	{
+		_nodes[i]->draw();
+	}
 
 	glPolygonMode( GL_FRONT_AND_BACK, ( _renderingParameters.drawMode == RenderingParameters::WIREFRAME ) ? GL_LINE : GL_FILL );
 
@@ -419,6 +420,10 @@ void Terrain::findPath(Point startPoint,Point goalPoint)
 		_nodes.at(i)->nextNode = 0;
 	}
 
+	//Implemented the a-star algorithm as it is written in pseudo code on wikipedia.org
+	//http://en.wikipedia.org/wiki/A*_search_algorithm
+	//for the open set and closed set I use a vector sorted in-place as a heap
+
 	Node* start = getNodeFromPoint(startPoint);
 	Node* goal = getNodeFromPoint(goalPoint);
 
@@ -428,6 +433,90 @@ void Terrain::findPath(Point startPoint,Point goalPoint)
 	std::cout << "Start: " << start->_position.x << "," << start->_position.z << "\n";
 	std::cout << "Goal: " << goal->_position.x << "," << goal->_position.z << "\n";
 
+	// closed set := the empty set    // The set of nodes already evaluated.
+	std::vector<Node*> closedSet;
+
+	// open set := {start}    // The set of tentative nodes to be evaluated, initially containing the start node
+	std::vector<Node*> openSet;
+	// sort back element into heap
+	openSet.push_back(start);push_heap( openSet.begin(), openSet.end(), HeapCompare_f() );
+
+	// came_from := the empty map    // The map of navigated nodes.
+
+	// g_score[start] := 0    // Cost from start along best known path.
+	start->_g_score = 0;
+
+	// f_score[start] := g_score[start] + h_score[start]    // Estimated total cost from start to goal through y.
+	start->_f_score = start->_g_score + heuristicCostEstimate(*start,*goal);
+
+	// while open set is not empty
+	while(!openSet.empty())
+	{
+		// current := the node in open set having the lowest f_score[] value
+		// remove current from open set
+		Node * current = openSet.front();
+		pop_heap( openSet.begin(), openSet.end(), HeapCompare_f() );
+		openSet.pop_back();
+
+		// add current to closed set
+		current->_nodeState = Node::CLOSED;
+
+		// sort back element into heap
+		closedSet.push_back(current);push_heap( closedSet.begin(), closedSet.end(), HeapCompare_f() );
+
+		std::cout << "Current node: " << current->_position.x << "," << current->_position.z << " f: " << current->_f_score << "\n";
+
+		// check if the current node that we examine is the goal node
+		if(current->_pathState == Node::ENDPOINT)
+		{
+			Node* node = goal;
+			while(node->nextNode != NULL)
+			{
+				node->_pathState = Node::PARTOFPATH;
+				node = node->nextNode;
+			}
+			return;
+		}
+
+		// for each neighbor in neighbor_nodes(current)
+		std::vector<Node*> neighborhoodSet = getNeighbors(*current);
+		for(std::vector<Node*>::iterator neighborIter =neighborhoodSet.begin();neighborIter != neighborhoodSet.end();neighborIter++ )
+		{
+			Node* neighbor = *neighborIter;
+
+			// if neighbor in closed set
+			if(neighbor->_nodeState == Node::CLOSED)
+			{
+				std::cout << "Neighbor already in closed set.\n";
+				continue;
+			}
+
+			float tentative_g_score = current->_g_score + distBetween(*current,*neighbor);
+
+			// if neighbor not in open set
+			if(neighbor->_nodeState != Node::OPEN || tentative_g_score < neighbor->_g_score)
+			{
+				neighbor->_nodeState = Node::OPEN;
+
+				// sort back element into heap
+				openSet.push_back(neighbor);push_heap( openSet.begin(), openSet.end(), HeapCompare_f() );
+
+				neighbor->nextNode = current;
+				neighbor->_g_score = tentative_g_score;
+				neighbor->_f_score = neighbor->_g_score + heuristicCostEstimate(*neighbor,*goal);
+			}
+		}
+	}
+}
+
+float Terrain::heuristicCostEstimate(Node from,Node to)
+{
+	return distBetween(from,to);
+}
+
+float Terrain::distBetween(Node from,Node to)
+{
+	return sqrt(pow(from._position.x-to._position.x,2)+pow(from._position.y-to._position.y,2)+pow(from._position.z-to._position.z,2));
 }
 
 Node* Terrain::getNodeFromPoint(Point point)
@@ -445,6 +534,60 @@ Node* Terrain::getNeighborOf(Point point,int px,int pz)
 	int indexZ = (-point.z+_length/2)/sliceL;
 
 	return ((indexX+px)*_lengthResolution+(indexZ+pz) <= _nodes.size() && (indexX+px) < _widthResolution && (indexZ+pz) < _lengthResolution)? _nodes.at((indexX+px)*_lengthResolution+(indexZ+pz)):NULL;
+}
+
+std::vector<Node*> Terrain::getNeighbors(Node node)
+{
+	std::vector<Node*> neighbors;
+	// push each possible move except allowing the search to go backwards
+	Node * neighbor = getNeighborOf(node._position,-1,0);
+	if(neighbor != NULL)
+	{
+		neighbors.push_back(neighbor);
+	}
+
+	neighbor = getNeighborOf(node._position,-1,-1);
+	if(neighbor != NULL)
+	{
+		neighbors.push_back(neighbor);
+	}
+
+	neighbor = getNeighborOf(node._position,0,-1);
+	if(neighbor != NULL)
+	{
+		neighbors.push_back(neighbor);
+	}
+
+	neighbor = getNeighborOf(node._position,1,-1);
+	if(neighbor != NULL)
+	{
+		neighbors.push_back(neighbor);
+	}
+
+	neighbor = getNeighborOf(node._position,1,0);
+	if(neighbor != NULL)
+	{
+		neighbors.push_back(neighbor);
+	}
+
+	neighbor = getNeighborOf(node._position,1,1);
+	if(neighbor != NULL)
+	{
+		neighbors.push_back(neighbor);
+	}
+
+	neighbor = getNeighborOf(node._position,0,1);
+	if(neighbor != NULL)
+	{
+		neighbors.push_back(neighbor);
+	}
+
+	neighbor = getNeighborOf(node._position,-1,1);
+	if(neighbor != NULL)
+	{
+		neighbors.push_back(neighbor);
+	}
+	return neighbors;
 }
 
 GAME_NAMESPACE_END

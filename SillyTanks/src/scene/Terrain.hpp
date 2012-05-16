@@ -49,6 +49,9 @@ public:
     void findPath(Point start,Point goal);
     Node* getNodeFromPoint(Point point);
     Node * getNeighborOf(Point point,int px,int pz);
+    float heuristicCostEstimate(Node from,Node to);
+    float distBetween(Node from,Node to);
+    std::vector<Node*> getNeighbors(Node node);
 	
 private:
 	void buildDisplayLists();

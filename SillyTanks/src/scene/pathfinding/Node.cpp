@@ -98,20 +98,22 @@ void Node::draw() const {
 		case STARTPOINT:
 		{
 			_startMaterial.setActive();
+			glutSolidCube(0.5);
 			break;
 		}
 		case ENDPOINT:
 		{
 			_endMaterial.setActive();
+			glutSolidCube(0.5);
 			break;
 		}
 		case PARTOFPATH:
 		{
 			_partOfPathMaterial.setActive();
+			glutSolidCube(0.5);
 			break;
 		}
 	}
-	glutSolidCube(0.5);
 	glPopMatrix();
 }
 

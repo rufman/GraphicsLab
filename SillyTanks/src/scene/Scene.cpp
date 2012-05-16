@@ -310,7 +310,7 @@ void Scene::drawScene()
 	glPushMatrix();
 	_testParticles->draw();
 	glPopMatrix();
-	//_endNode->draw();
+	_endNode->draw();
 }
 
 void Scene::drawGrid()
