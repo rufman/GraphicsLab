@@ -7,9 +7,7 @@
 #include "Scene.hpp"
 
 //common includes
-#include "../common/GLIncludes.hpp"
 #include "../common/Exception.hpp"
-#include "../common/TGATexture.hpp"
 #include "../common/Utils.hpp"
 
 //windowing includes
@@ -33,10 +31,6 @@
 #include "entities/Bullet.hpp"
 #include "entities/SmallTank.hpp"
 
-//particle engine includes
-#include "particleEngine/ParticleEngine.hpp"
-#include "particleEngine/Smoke.hpp"
-
 #include <sstream>
 #include <cmath>
 #include <iostream>
@@ -56,6 +50,8 @@ _terrain( NULL ),
 _sunLight(NULL),
 _tank(NULL)
 {
+	_endNode = new Node(Point(1,2,1), *this);
+	_endNode->_pathState = Node::ENDPOINT;
 }
 
 Scene::~Scene()
@@ -314,6 +310,7 @@ void Scene::drawScene()
 	glPushMatrix();
 	_testParticles->draw();
 	glPopMatrix();
+	//_endNode->draw();
 }
 
 void Scene::drawGrid()
@@ -488,7 +485,7 @@ void Scene::handleKeyboardInput()
 
 	if(_window.keyPressed('a') ||_window.keyPressed('A'))
 	{
-		_tank->setDirection(_tank->getDirection()-2);
+		_tank->setDirection(_tank->getDirection()-5);
 	}
 
 	if(_window.keyPressed('s') || _window.keyPressed('S'))
@@ -498,7 +495,7 @@ void Scene::handleKeyboardInput()
 
 	if(_window.keyPressed('d') || _window.keyPressed('D'))
 	{
-		_tank->setDirection(_tank->getDirection()+2);
+		_tank->setDirection(_tank->getDirection()+5);
 	}
 
 	if(_window.keyPressed('r') || _window.keyPressed('R'))
@@ -579,6 +576,30 @@ void Scene::handleKeyboardInput()
 			_cameraMode = TANK_CAM;
 		}
 	}
+	if(_window.keyHit('p') || _window.keyHit('P'))
+	{
+		_terrain->findPath(_tank->getPosition(),_endNode->_position);
+	}
+	if(_window.specialKeyPressed(GLUT_KEY_LEFT))
+	{
+		_endNode->_position.x--;
+		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+	}
+	if(_window.specialKeyPressed(GLUT_KEY_RIGHT))
+	{
+		_endNode->_position.x++;
+		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+	}
+	if(_window.specialKeyPressed(GLUT_KEY_UP))
+	{
+		_endNode->_position.z--;
+		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+	}
+	if(_window.specialKeyPressed(GLUT_KEY_DOWN))
+	{
+		_endNode->_position.z++;
+		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+	}
 }
 
 void Scene::onMouseEntry(int state) {
@@ -630,7 +651,7 @@ void Scene::onMousePassiveMove(int x, int y) {
 
 void Scene::onVisible(int state) {
 	if (state == GLUT_VISIBLE)
-		glutPostRedisplay();
+	glutPostRedisplay();
 }
 
 void Scene::onTimer(int value) {
@@ -643,10 +664,10 @@ void Scene::onIdle() {
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Point from(
 			radius * std::cos(Utils::toRadian(elevation))
-					* std::sin(Utils::toRadian(azimuth)) * -1,
+			* std::sin(Utils::toRadian(azimuth)) * -1,
 			radius * std::sin(Utils::toRadian(elevation)),
 			radius * std::cos(Utils::toRadian(elevation))
-					* std::cos(Utils::toRadian(azimuth)) * -1);
+			* std::cos(Utils::toRadian(azimuth)) * -1);
 
 	Vector3D up(0.0, 1.0, 0.0);
 	Vector3D dir(-from.x, -from.y, -from.z);

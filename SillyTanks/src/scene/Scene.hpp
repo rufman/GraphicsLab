@@ -20,6 +20,9 @@
 #include "particleEngine/ParticleEngine.hpp"
 #include "particleEngine/Smoke.hpp"
 
+//pathfinding includes
+#include "pathfinding/Node.hpp"
+
 #include <vector>
 
 GAME_NAMESPACE_BEGIN
@@ -140,6 +143,7 @@ private:
 	ParticleEngine<Smoke> *_testParticles;
 
 	std::vector<Bullet*> _bullets;
+	Node* _endNode;
 
 }; // class Scene
 

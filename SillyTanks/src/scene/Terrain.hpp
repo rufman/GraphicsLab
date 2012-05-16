@@ -6,11 +6,13 @@
 #ifndef GRAPHICSLAB_TERRAIN_HPP
 #define GRAPHICSLAB_TERRAIN_HPP
 
-
 // common include
 #include "../common/Drawable.hpp"
 #include "../common/GLIncludes.hpp"
 #include "../common/Material.hpp"
+
+//pathfinding include
+#include "pathfinding/Node.hpp"
 
 #include <string>
 #include <vector>
@@ -44,6 +46,9 @@ public:
 
     int getNearestTriangleIndexAt( const Point &point) const;
     void doDamageAt( const Point &point ) ;
+    void findPath(Point start,Point goal);
+    Node* getNodeFromPoint(Point point);
+    Node * getNeighborOf(Point point,int px,int pz);
 	
 private:
 	void buildDisplayLists();
@@ -74,8 +79,24 @@ private:
 	TGAImage *_heightData;
 	TGATexture *_texture;
 	
+	//pathfinding debugging
+	std::vector<Node*> _nodes;
+
 }; // class Terrain
 
+
+// For sorting the heap the STL needs compare function that lets us compare
+// the f value of two nodes
+
+class HeapCompare_f
+{
+	public:
+
+		bool operator() ( const Node *x, const Node *y ) const
+		{
+			return x->_f_score > y->_f_score;
+		}
+};
 
 GAME_NAMESPACE_END
 

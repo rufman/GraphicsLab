@@ -12,6 +12,11 @@
 #include "../common/TGAImage.hpp"
 #include "../common/TGATexture.hpp"
 
+//pathfinding includes
+#include "pathfinding/AstarSearch.hpp"
+#include "pathfinding/SearchNode.hpp"
+#include "pathfinding/Node.hpp"
+
 #include <sstream>
 #include <cmath>
 #include <iostream>
@@ -57,14 +62,16 @@ _widthResolution( widthResolution ), _lengthResolution( lengthResolution )
 	uint xSlice = _texture->getWidth()/_widthResolution;
 	uint zSlice = _texture->getHeight()/_lengthResolution;
 
-	for ( int widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
+	for ( uint widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
 	{
-		for ( int lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
+		for ( uint lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
 		{
 			Point &vertex = _vertices[_widthResolution*lengthPoint + widthPoint];
 			vertex.x = -_width/2.0 + widthPoint*( _width/( _widthResolution - 1 ) );
 			vertex.z = _length/2.0 - lengthPoint*( _length/( _lengthResolution - 1 ) );
-			vertex.y = ((_heightData->getData()[_heightData->getWidth()*(lengthPoint*zSlice)*4 + widthPoint*xSlice*4])/10.0f)-20;
+			vertex.y = 0; //((_heightData->getData()[_heightData->getWidth()*(lengthPoint*zSlice)*4 + widthPoint*xSlice*4])/10.0f)-20;
+			_nodes.push_back(new Node(Point(vertex.x,2,vertex.z),_scene));
+
 		}
 	}
 
@@ -103,12 +110,11 @@ _widthResolution( widthResolution ), _lengthResolution( lengthResolution )
 	}
 
 	// Calculate vertex normals
-	for ( int widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
+	for ( uint widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
 	{
-		for ( int lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
+		for ( uint lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
 		{
 			int v = _widthResolution*lengthPoint + widthPoint;
-			Point &vertex = _vertices[v];
 			Vector3D &normal = _vertexNormals[v];
 			normal = Vector3D( 0.0, 0.0, 0.0 );
 
@@ -154,12 +160,6 @@ void Terrain::buildDisplayLists()
 	_material.setActive();
 	_texture->setActive( true );
 
-	/////////////////////////////////////////////////////////////
-	////////////////////// GRAPHICS LAB 07 //////////////////////
-	/////////////////////////////////////////////////////////////
-	// Replace code here to define the display list for flat shading.
-	// Make sure the texture coordinates are applied.
-	/////////////////////////////////////////////////////////////
 	glBegin( GL_TRIANGLES );
 
 	for ( int t = 0; t < numTriangles; t++ )
@@ -186,7 +186,6 @@ void Terrain::buildDisplayLists()
 	}
 
 	glEnd();
-	/////////////////////////////////////////////////////////////
 
 	//_texture->setActive( false );
 
@@ -200,12 +199,6 @@ void Terrain::buildDisplayLists()
 	_material.setActive();
 	_texture->setActive( true );
 
-	/////////////////////////////////////////////////////////////
-	////////////////////// GRAPHICS LAB 07 //////////////////////
-	/////////////////////////////////////////////////////////////
-	// Replace code here to define the display list for smooth shading.
-	// Make sure the texture coordinates are applied.
-	/////////////////////////////////////////////////////////////
 	glBegin( GL_TRIANGLES );
 
 	for ( int t = 0; t < numTriangles; t++ )
@@ -244,7 +237,6 @@ void Terrain::buildDisplayLists()
 	}
 
 	glEnd();
-	/////////////////////////////////////////////////////////////
 
 	//_texture->setActive( false );
 
@@ -253,6 +245,12 @@ void Terrain::buildDisplayLists()
 
 void Terrain::draw() const
 {
+
+//	for(uint i = 0; i < _vertices.size();i++)
+//	{
+//		_nodes[i]->draw();
+//	}
+
 	glPolygonMode( GL_FRONT_AND_BACK, ( _renderingParameters.drawMode == RenderingParameters::WIREFRAME ) ? GL_LINE : GL_FILL );
 
 	glEnable( GL_LIGHTING );
@@ -269,9 +267,9 @@ void Terrain::draw() const
 	{
 		glColor3f( Color::WHITE.r, Color::WHITE.g, Color::WHITE.b );
 		glBegin( GL_LINES );
-		for ( int widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
+		for ( uint widthPoint = 0; widthPoint < _widthResolution; widthPoint++ )
 		{
-			for ( int lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
+			for ( uint lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
 			{
 				int v = _widthResolution*lengthPoint + widthPoint;
 				const Point &vertex = _vertices[v];
@@ -327,7 +325,7 @@ float Terrain::getHeight( const Point &point ) const
 //	+(ratio3*thirdPoint.y);
 
 	float y = (_triangleNormals[triangleNumber].x*(point.x-_vertices[_triangles[triangleNumber].vertex1].x)+_triangleNormals[triangleNumber].z*(point.z-_vertices[_triangles[triangleNumber].vertex1].z))/(-_triangleNormals[triangleNumber].y);
-	    y+=_vertices[_triangles[triangleNumber].vertex1].y;
+	y+=_vertices[_triangles[triangleNumber].vertex1].y;
 	return y;
 //	std::cout<<"GetHeight: "<<height<<std::endl;
 //	std::cout<<"Ratio1: "<<ratio1<<std::endl;
@@ -411,4 +409,44 @@ void Terrain::doDamageAt( const Point &point ) {
 	//refresh/redraw terrain
 	buildDisplayLists();
 }
+
+void Terrain::findPath(Point startPoint,Point goalPoint)
+{
+	for(uint i = 0;i < _nodes.size();i++)
+	{
+		_nodes.at(i)->_f_score = 0;
+		_nodes.at(i)->_g_score = 0;
+		_nodes.at(i)->_nodeState = Node::FREE;
+		_nodes.at(i)->_pathState = Node::NOTHING;
+		_nodes.at(i)->nextNode = 0;
+	}
+
+	Node* start = getNodeFromPoint(startPoint);
+	Node* goal = getNodeFromPoint(goalPoint);
+
+	start->_pathState = Node::STARTPOINT;
+	goal->_pathState = Node::ENDPOINT;
+
+	std::cout << "Start: " << start->_position.x << "," << start->_position.z << "\n";
+	std::cout << "Goal: " << goal->_position.x << "," << goal->_position.z << "\n";
+
+}
+
+Node* Terrain::getNodeFromPoint(Point point)
+{
+	return getNeighborOf(point,0,0);
+
+}
+
+Node* Terrain::getNeighborOf(Point point,int px,int pz)
+{
+	float sliceW = _width/_widthResolution;
+	float sliceL = _length/_lengthResolution;
+
+	int indexX = (point.x+_width/2) /sliceW;
+	int indexZ = (-point.z+_length/2)/sliceL;
+
+	return ((indexX+px)*_lengthResolution+(indexZ+pz) <= _nodes.size() && (indexX+px) < _widthResolution && (indexZ+pz) < _lengthResolution)? _nodes.at((indexX+px)*_lengthResolution+(indexZ+pz)):NULL;
+}
+
 GAME_NAMESPACE_END
