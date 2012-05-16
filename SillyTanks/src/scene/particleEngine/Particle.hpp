@@ -1,6 +1,6 @@
 /*
  * particle.hpp
-* See particle.cpp
+*Particle is a base class for the creation of a real particle.
  */
 
 #ifndef GAME_PARTICLE_HPP

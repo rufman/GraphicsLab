@@ -1,10 +1,6 @@
 /**
  * positionalLight.hpp
- * 
- * Author   :   Fatih Erol
- * Date     :   19.03.2012
- * 
- * All rights reserved.
+*
  */
 
 

@@ -6,8 +6,11 @@
 #ifndef GAME_SPARKLE_HPP
 #define GAME_SPARKLE_HPP
 
-#include "../../common/Types.hpp"
+//base class include
 #include "Particle.hpp"
+
+//common includes
+#include "../../common/Types.hpp"
 
 GAME_NAMESPACE_BEGIN
 

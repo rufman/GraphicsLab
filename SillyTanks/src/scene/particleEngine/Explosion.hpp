@@ -6,8 +6,11 @@
 #ifndef GAME_EXPLOSION_HPP
 #define GAME_EXPLOSION_HPP
 
-#include "../../common/Types.hpp"
+//base class include
 #include "Particle.hpp"
+
+//common includes
+#include "../../common/Types.hpp"
 
 GAME_NAMESPACE_BEGIN
 

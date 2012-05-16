@@ -6,6 +6,7 @@
 #ifndef GAME_SMOKE_HPP
 #define GAME_SMOKE_HPP
 
+//base class include
 #include "Particle.hpp"
 
 //common includes

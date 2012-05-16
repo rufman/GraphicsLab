@@ -1,8 +1,6 @@
 /**
  * spotLight.hpp
- * 
- * Author   :   Fatih Erol
- * Date     :   19.03.2012
+ *
  */
 
 #ifndef GRAPHICSLAB_SPOTLIGHT_HPP

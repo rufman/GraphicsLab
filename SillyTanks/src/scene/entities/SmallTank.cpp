@@ -6,11 +6,8 @@
 #include "SmallTank.hpp"
 
 //common includes
-#include "../../common/Types.hpp"
 #include "../../common/Utils.hpp"
 #include "../../common/GLIncludes.hpp"
-#include "../../common/PLYModel.hpp"
-#include "../../common/Camera3D.hpp"
 
 //scene includes
 #include "../../scene/Scene.hpp"

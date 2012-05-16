@@ -9,7 +9,6 @@
 // common includes
 #include "../../common/GLIncludes.hpp"
 #include "../../common/Utils.hpp"
-#include "../../common/PLYModel.hpp"
 
 #include <cmath>
 

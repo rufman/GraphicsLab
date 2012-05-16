@@ -1,10 +1,6 @@
 /**
  * light.cpp
  *
- * Author   :   Fatih Erol
- * Date     :   04.04.2011
- *
- * All rights reserved.
  */
 
 // Class declaration include
