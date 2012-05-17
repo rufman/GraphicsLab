@@ -14,7 +14,7 @@
 #include <iostream>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Application *Application::_instance = NULL;
 
@@ -94,4 +94,4 @@ int Application::run()
 }
 
 
-GAME_NAMESPACE_END
+}

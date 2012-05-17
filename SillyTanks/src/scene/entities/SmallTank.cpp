@@ -6,17 +6,14 @@
 #include "SmallTank.hpp"
 
 //common includes
-#include "../../common/Types.hpp"
 #include "../../common/Utils.hpp"
 #include "../../common/GLIncludes.hpp"
-#include "../../common/PLYModel.hpp"
-#include "../../common/Camera3D.hpp"
 
 //scene includes
 #include "../../scene/Scene.hpp"
 #include "../../scene/Terrain.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 SmallTank::SmallTank(Scene & scene):Tank(scene) {
 	_baseWidth = 1.0f;
@@ -62,4 +59,4 @@ void SmallTank::draw() const
 	_turret->draw();
 }
 
-GAME_NAMESPACE_END
+}

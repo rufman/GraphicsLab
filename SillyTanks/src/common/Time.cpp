@@ -1,17 +1,13 @@
 /**
  * time.cpp
- * 
- * Author   :   Fatih Erol
- * Date     :   20.02.2012
- *
- * All rights reserved.
+*
  */
 
 // Class declaration include
 #include "Time.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 Time::Time()
@@ -47,4 +43,4 @@ float Time::getMilliseconds() const
 }
 
 
-GAME_NAMESPACE_END
+}

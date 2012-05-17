@@ -6,7 +6,7 @@
 //header include
 #include "Smoke.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Smoke::Smoke() {
 	_particleTexturePath = SMOKE_TEXTURE;
@@ -54,4 +54,4 @@ void Smoke::update(float seconds,Point startPosition,Vector3D startAcceleration)
 		}
 }
 
-GAME_NAMESPACE_END
+}

@@ -12,7 +12,7 @@
 #include "GLIncludes.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** Class to set up surface material */
@@ -58,7 +58,7 @@ private:
 }; // class Material
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif

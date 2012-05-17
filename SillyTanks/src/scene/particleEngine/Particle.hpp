@@ -1,6 +1,6 @@
 /*
  * particle.hpp
-* See particle.cpp
+*Particle is a base class for the creation of a real particle.
  */
 
 #ifndef GAME_PARTICLE_HPP
@@ -10,7 +10,7 @@
 #include "../../common/Types.hpp"
 #include "../../common/TGATexture.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 class Particle {
 public:
@@ -38,5 +38,5 @@ public:
 	std::string _particleTexturePath;
 };
 
-GAME_NAMESPACE_END
+}
 #endif /* PARTICLE_HPP_ */

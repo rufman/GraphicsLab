@@ -13,7 +13,7 @@
 
 #include <cstdlib>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Window::Window( const Parameters &parameters ) :
 _parameters( parameters )
@@ -157,4 +157,4 @@ void Window::onIdle() {
 	_scene->onIdle();
 }
 
-GAME_NAMESPACE_END
+}

@@ -14,7 +14,7 @@
 #include "Types.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** Class for some utility functions */
@@ -135,7 +135,7 @@ public:
 }; // class Utils
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_UTILS_HPP

@@ -1,23 +1,19 @@
 /**
  * tgaTexture.cpp
- * 
- * Author   :   Fatih Erol
- * Date     :   30.03.2012
- *
- * All rights reserved.
+*
  */
 
 // Class declaration include
 #include "TGATexture.hpp"
 
-// Includes
+// common includes
 #include "Exception.hpp"
 #include "TGAImage.hpp"
 
 #include <sstream>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 TGATexture::TGATexture( const std::string &file ) :
@@ -54,4 +50,4 @@ const uchar *TGATexture::getData() const
 	return _image->getData();
 }
 
-GAME_NAMESPACE_END
+}

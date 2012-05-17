@@ -9,7 +9,7 @@
 // Includes
 #include "../../common/GLIncludes.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Bullet::Bullet( Scene &scene, float size ) :
 Drawable( scene ),
@@ -64,4 +64,4 @@ void Bullet::move( float seconds )
 	_velocity.y += GRAVITATIONAL_ACCELERATION*seconds;
 }
 
-GAME_NAMESPACE_END
+}

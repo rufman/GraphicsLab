@@ -18,7 +18,7 @@
 #include "../../scene/Terrain.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Tank::Tank(Scene &scene ) :Drawable( scene ) {}
 
@@ -108,12 +108,7 @@ void Tank::update(float seconds) {
 LookAt Tank::getLookAt() const
 {
 	Point from, to;
-	Vector3D firstUp = _scene.getTerrain().getNormal(Point(_position.x-1,_position.y,_position.z-1));
-	Vector3D secondUp = _scene.getTerrain().getNormal(Point(_position.x+1,_position.y,_position.z-1));
-	Vector3D thirdUp = _scene.getTerrain().getNormal(Point(_position.x,_position.y,_position.z-1));
-	Vector3D up = Vector3D((firstUp.x+secondUp.x+thirdUp.x)/3.0,
-			(firstUp.y+secondUp.y+thirdUp.y)/3.0,
-			(firstUp.z+secondUp.z+thirdUp.z)/3.0);
+
 	const Vector3D &velocity = Utils::rotate(_turret->getAzimuth(),Vector3D(0,0,-1),Vector3D(0,1,0));
 	Vector3D direction = velocity;
 	Utils::normalize( direction );
@@ -122,7 +117,7 @@ LookAt Tank::getLookAt() const
 	from.z = to.z - direction.z*10;
 	from.y = 10;
 
-	return LookAt( from, to, up );
+	return LookAt( from, to, Vector3D(0,1,0) );
 }
 
 Point Tank::getPosition() const
@@ -130,4 +125,4 @@ Point Tank::getPosition() const
 	return _position;
 }
 
-GAME_NAMESPACE_END
+}

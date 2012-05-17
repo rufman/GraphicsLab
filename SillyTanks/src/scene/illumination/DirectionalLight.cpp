@@ -11,7 +11,7 @@
 #include "../../common/Material.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 DirectionalLight::DirectionalLight( Scene &scene ) : Light( scene )
@@ -81,4 +81,4 @@ void DirectionalLight::draw() const
 }
 
 
-GAME_NAMESPACE_END
+}

@@ -1,10 +1,6 @@
 /**
  * types.hpp
- * 
- * Author   :   Fatih Erol
- * Date     :   29.03.2012
- *
- * All rights reserved.
+*
  */
 
 #ifndef GRAPHICSLAB_TYPES_HPP
@@ -15,7 +11,7 @@
 #include "Definitions.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 // typedef for basic types
@@ -158,7 +154,7 @@ struct RenderingParameters
 }; // struct RenderingParameters
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_TYPES_HPP

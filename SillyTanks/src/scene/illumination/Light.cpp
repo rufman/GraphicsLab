@@ -1,10 +1,6 @@
 /**
  * light.cpp
  *
- * Author   :   Fatih Erol
- * Date     :   04.04.2011
- *
- * All rights reserved.
  */
 
 // Class declaration include
@@ -14,7 +10,7 @@
 #include "../../common/Exception.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 Light::Light( Scene &scene ) :
@@ -179,4 +175,4 @@ void Light::releaseLightID( GLenum id )
 }
 
 
-GAME_NAMESPACE_END
+}

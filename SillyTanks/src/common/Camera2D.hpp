@@ -10,7 +10,7 @@
 #include "Camera.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** Class to represent a 2D orthogonal camera */
@@ -34,7 +34,7 @@ public:
 }; // class Camera2D
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_CAMERA2D_HPP

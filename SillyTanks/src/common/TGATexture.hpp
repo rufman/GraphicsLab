@@ -1,10 +1,6 @@
 /**
  * tgaTexture.hpp
- * 
- * Author   :   Fatih Erol
- * Date     :   30.03.2012
- *
- * All rights reserved.
+*
  */
 
 #ifndef GRAPHICSLAB_TGATEXTURE_HPP
@@ -17,7 +13,7 @@
 // Includes
 #include <string>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 // Forward declarations
 class TGAImage;
@@ -47,7 +43,7 @@ private:
 }; // class TGATexture
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_TGATEXTURE_HPP

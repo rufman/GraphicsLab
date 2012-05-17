@@ -1,6 +1,6 @@
 /**
  * utils.cpp
-* Utilities used in this game, most of them are used for 3D graphics rotation and measuring distances.
+* Utilities used in this game, most of them are used for 3D graphics operations and measuring distances.
  */
 
 // Class declaration include
@@ -12,7 +12,7 @@
 #include <cmath>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 const float Utils::PI = 3.14159265f;
@@ -199,4 +199,4 @@ void Utils::drawBox( float xLen, float yLen, float zLen, uint xRes, uint yRes, u
 }
 
 
-GAME_NAMESPACE_END
+}

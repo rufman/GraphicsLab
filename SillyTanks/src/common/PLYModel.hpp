@@ -16,7 +16,7 @@
 #include <cfloat>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** PLY Model */
@@ -95,7 +95,7 @@ private:
 }; // class PLYModel
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_PLYMODEL_HPP

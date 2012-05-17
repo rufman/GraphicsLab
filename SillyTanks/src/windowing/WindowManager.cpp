@@ -10,7 +10,7 @@
 #include "../common/GLIncludes.hpp"
 #include "../common/Exception.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 //////////////////////////////////////////////////////////////////////////////
 // Global variable and functions for binding GLUT callbacks
@@ -246,4 +246,4 @@ void WindowManager::deleteWindow( Window &window )
 	delete ( &window );
 }
 
-GAME_NAMESPACE_END
+}

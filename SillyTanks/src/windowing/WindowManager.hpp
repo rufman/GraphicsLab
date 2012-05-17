@@ -12,7 +12,7 @@
 // Includes
 #include "Window.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 /** Class handles windows through GLUT */
 class WindowManager
@@ -65,6 +65,6 @@ private:
 
 }; // class WindowManager
 
-GAME_NAMESPACE_END
+}
 
 #endif // GRAPHICSLAB_WINDOWMANAGER_HPP
