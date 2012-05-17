@@ -12,6 +12,7 @@
 #include "../common/Types.hpp"
 #include "../common/Time.hpp"
 #include "../common/TGATexture.hpp"
+#include "../common/SoundEngine.hpp"
 
 //illumination include
 #include "illumination/DirectionalLight.hpp"
@@ -92,6 +93,8 @@ private:
 
 private:
 	Window &_window;
+
+	SoundEngine _soundEngine;
 
 	bool _gridOn;
 	GLuint _gridDisplayList;

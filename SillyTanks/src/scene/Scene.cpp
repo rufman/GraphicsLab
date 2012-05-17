@@ -18,6 +18,7 @@
 #include "../common/Camera2D.hpp"
 #include "../common/Camera3D.hpp"
 #include "../common/TextBox.hpp"
+#include "../common/SoundEngine.hpp"
 
 //scene includes
 #include "SkyDome.hpp"
@@ -42,11 +43,23 @@
 
 namespace game_space {
 
-Scene::Scene(Window &window) :
-		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(
-				TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(
-				NULL), _sunLight(NULL), _tank(NULL), _missile(NULL) {
-	_endNode = new Node(Point(1, 2, 1), *this);
+Scene::Scene( Window &window ):
+_window( window ),
+_gridDisplayList( 0 ),
+_firstUpdate( true ),
+_cameraMode( TANK_CAM ),
+_overlayCam( NULL ),
+_tankCam( NULL ),
+_skyDome( NULL ),
+_terrain( NULL ),
+_sunLight(NULL),
+_tank(NULL),
+_missile(NULL)
+{
+	_soundEngine = SoundEngine();
+
+
+	_endNode = new Node(Point(1,2,1), *this);
 	_endNode->_pathState = Node::ENDPOINT;
 }
 
@@ -610,6 +623,7 @@ void Scene::onMouseEntry(int state) {
 }
 
 void Scene::onMouseClick(int button, int state, int x, int y) {
+	_soundEngine.playGunSound();
 	fireBullet();
 }
 
