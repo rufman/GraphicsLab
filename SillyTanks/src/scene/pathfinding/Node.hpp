@@ -10,7 +10,7 @@
 #include "../../common/GLIncludes.hpp"
 #include "../../common/Material.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 class Node: public Drawable
 {
@@ -45,12 +45,12 @@ public:
 	Material _endMaterial;
 	Material _partOfPathMaterial;
 
-	Node* nextNode;
+	Node* _nextNode;
 	float _g_score;
 	float _h_score;
 	float _f_score;
 };
 
-GAME_NAMESPACE_END
+}
 
 #endif /* DOT_H_ */

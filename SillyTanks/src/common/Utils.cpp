@@ -12,7 +12,7 @@
 #include <cmath>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 const float Utils::PI = 3.14159265f;
@@ -199,4 +199,4 @@ void Utils::drawBox( float xLen, float yLen, float zLen, uint xRes, uint yRes, u
 }
 
 
-GAME_NAMESPACE_END
+}

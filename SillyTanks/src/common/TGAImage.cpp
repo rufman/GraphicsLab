@@ -19,7 +19,7 @@
 #endif
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 TGAImage::TGAImage() :
@@ -135,4 +135,4 @@ void TGAImage::load( const std::string &file )
 }
 
 
-GAME_NAMESPACE_END
+}

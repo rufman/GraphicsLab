@@ -9,12 +9,12 @@
 // Includes
 #include "../../common/Utils.hpp"
 #include "../../common/Material.hpp"
+#include "../../common/Definitions.hpp"
 
 #include <cmath>
 
 
-GAME_NAMESPACE_BEGIN
-
+namespace game_space {
 
 SpotLight::SpotLight( Scene &scene ) : 
 	Light( scene ), 
@@ -80,4 +80,4 @@ void SpotLight::draw() const
 }
 
 
-GAME_NAMESPACE_END
+}

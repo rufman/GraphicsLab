@@ -19,7 +19,7 @@
 
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 class Tank: public Drawable {
@@ -66,5 +66,5 @@ protected:
 
 };
 
-GAME_NAMESPACE_END
+}
 #endif

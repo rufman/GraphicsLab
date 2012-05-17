@@ -5,7 +5,7 @@
 
 #include "TankAI.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 TankAI::TankAI():
 _strategy(TankAI::EXPLORE){
@@ -75,4 +75,4 @@ void TankAI::aimAndFire(int target)
 
 
 
-GAME_NAMESPACE_END
+}

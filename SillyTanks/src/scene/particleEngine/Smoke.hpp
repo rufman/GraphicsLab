@@ -12,7 +12,7 @@
 //common includes
 #include "../../common/Types.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 class Smoke:virtual public Particle {
 public:
@@ -22,5 +22,5 @@ public:
 	virtual void update(float seconds,Point startPosition,Vector3D startAcceleration);
 };
 
-GAME_NAMESPACE_END
+}
 #endif

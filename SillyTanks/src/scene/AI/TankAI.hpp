@@ -8,7 +8,7 @@
 
 #include "../../common/Definitions.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 class TankAI {
 public:
@@ -57,5 +57,5 @@ public:
 	void aimAndFire(int target);
 };
 
-GAME_NAMESPACE_END
+}
 #endif /* TANKAI_H_ */

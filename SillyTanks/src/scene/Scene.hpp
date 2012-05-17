@@ -25,7 +25,7 @@
 
 #include <vector>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 // Forward declarations
 class Window;
@@ -147,6 +147,6 @@ private:
 
 }; // class Scene
 
-GAME_NAMESPACE_END
+}
 
 #endif // GRAPHICSLAB_SCENE_HPP

@@ -5,7 +5,7 @@
 
 #include "Sparkle.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Sparkle::Sparkle() {
 	// TODO Auto-generated constructor stub
@@ -16,4 +16,4 @@ Sparkle::~Sparkle() {
 	// TODO Auto-generated destructor stub
 }
 
-GAME_NAMESPACE_END
+}

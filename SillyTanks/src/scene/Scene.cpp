@@ -31,12 +31,15 @@
 #include "entities/Bullet.hpp"
 #include "entities/SmallTank.hpp"
 
+//pathfinding includes
+#include "pathfinding/Node.hpp"
+
 #include <sstream>
 #include <cmath>
 #include <iostream>
 #include <vector>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Scene::Scene( Window &window ):
 _window( window ),
@@ -689,4 +692,4 @@ Window& Scene::getWindow() {
 	return _window;
 }
 
-GAME_NAMESPACE_END
+}

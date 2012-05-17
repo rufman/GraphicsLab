@@ -7,7 +7,7 @@
 #include "Time.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 Time::Time()
@@ -43,4 +43,4 @@ float Time::getMilliseconds() const
 }
 
 
-GAME_NAMESPACE_END
+}

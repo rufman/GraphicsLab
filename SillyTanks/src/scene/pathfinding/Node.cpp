@@ -5,7 +5,7 @@
 
 #include "Node.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Node::Node(Point position,Scene & scene):
 Drawable(scene),
@@ -124,5 +124,5 @@ bool Node::equals(Node node) const {
 	&& (_position.z == node._position.z);
 }
 
-GAME_NAMESPACE_END
+}
 

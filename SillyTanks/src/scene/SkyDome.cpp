@@ -14,7 +14,7 @@
 
 #include <cmath>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 SkyDome::SkyDome( Scene &scene, const std::string &textureFile, float radius, uint numLongitudes, uint numLatitudes ) :
 Drawable( scene ),
@@ -203,4 +203,4 @@ void SkyDome::draw() const
 	glPopMatrix();
 }
 
-GAME_NAMESPACE_END
+}
