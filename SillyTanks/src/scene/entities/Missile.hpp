@@ -14,7 +14,7 @@
 // Includes
 #include "../../common/Types.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 class Missile : public Drawable
 {
@@ -63,7 +63,7 @@ private:
 
 }; // class Bullet
 
-GAME_NAMESPACE_END
+}
 
 
 #endif /* MISSILE_HPP_ */
