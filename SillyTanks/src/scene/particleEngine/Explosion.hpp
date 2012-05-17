@@ -6,10 +6,13 @@
 #ifndef GAME_EXPLOSION_HPP
 #define GAME_EXPLOSION_HPP
 
-#include "../../common/Types.hpp"
+//base class include
 #include "Particle.hpp"
 
-GAME_NAMESPACE_BEGIN
+//common includes
+#include "../../common/Types.hpp"
+
+namespace game_space {
 
 class Explosion  {
 public:
@@ -17,5 +20,5 @@ public:
 	virtual ~Explosion();
 };
 
-GAME_NAMESPACE_END
+}
 #endif

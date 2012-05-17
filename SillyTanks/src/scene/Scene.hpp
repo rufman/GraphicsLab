@@ -12,6 +12,7 @@
 #include "../common/Types.hpp"
 #include "../common/Time.hpp"
 #include "../common/TGATexture.hpp"
+#include "../common/SoundEngine.hpp"
 
 //illumination include
 #include "illumination/DirectionalLight.hpp"
@@ -20,9 +21,16 @@
 #include "particleEngine/ParticleEngine.hpp"
 #include "particleEngine/Smoke.hpp"
 
+#include "entities/Bullet.hpp"
+#include "entities/Missile.hpp"
+
+//pathfinding includes
+#include "pathfinding/Node.hpp"
+
+
 #include <vector>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 // Forward declarations
 class Window;
@@ -79,6 +87,7 @@ private:
 	void drawGrid();
 	void drawOverlay();
 	void fireBullet();
+	void fireMissile();
 	void handleKeyboardInput();
 	Window& getWindow();
 
@@ -136,13 +145,16 @@ private:
 	Terrain *_terrain;
 	DirectionalLight* _sunLight;
 	Tank *_tank;
+	Missile *_missile;
 
 	ParticleEngine<Smoke> *_testParticles;
+	ParticleEngine<Smoke> *_testParticlesMissile;
 
 	std::vector<Bullet*> _bullets;
+	Node* _endNode;
 
 }; // class Scene
 
-GAME_NAMESPACE_END
+}
 
 #endif // GRAPHICSLAB_SCENE_HPP

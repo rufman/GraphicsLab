@@ -7,9 +7,7 @@
 #include "Scene.hpp"
 
 //common includes
-#include "../common/GLIncludes.hpp"
 #include "../common/Exception.hpp"
-#include "../common/TGATexture.hpp"
 #include "../common/Utils.hpp"
 
 //windowing includes
@@ -31,18 +29,18 @@
 
 //entities includes
 #include "entities/Bullet.hpp"
+#include "entities/Missile.hpp"
 #include "entities/SmallTank.hpp"
 
-//particle engine includes
-#include "particleEngine/ParticleEngine.hpp"
-#include "particleEngine/Smoke.hpp"
+//pathfinding includes
+#include "pathfinding/Node.hpp"
 
 #include <sstream>
 #include <cmath>
 #include <iostream>
 #include <vector>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Scene::Scene( Window &window ):
 _window( window ),
@@ -54,8 +52,11 @@ _tankCam( NULL ),
 _skyDome( NULL ),
 _terrain( NULL ),
 _sunLight(NULL),
-_tank(NULL)
+_tank(NULL),
+_missile(NULL)
 {
+	_endNode = new Node(Point(1,2,1), *this);
+	_endNode->_pathState = Node::ENDPOINT;
 }
 
 Scene::~Scene()
@@ -130,6 +131,7 @@ void Scene::initialize()
 
 	_testParticles = new ParticleEngine<Smoke>(Point(0,0,50),Vector3D(5,5,5),Vector3D(0,20,0),_tankCam);
 
+
 	// Reset data
 	reset();
 }
@@ -158,6 +160,8 @@ void Scene::reset()
 		delete bullet;
 	}
 	_bullets.clear();
+
+	_missile = NULL;
 }
 
 void Scene::update( float seconds )
@@ -199,6 +203,19 @@ void Scene::update( float seconds )
 		else
 		{
 			++bulletIter;
+		}
+	}
+
+	if ( _missile != NULL ){
+		_missile->move( seconds );
+		_testParticlesMissile->setStartPosition( _missile->getPosition() );
+		_testParticlesMissile->update(seconds);
+		const Point &missilePosition = _missile->getPosition();
+		if ( missilePosition.y < _terrain->getHeight( missilePosition ) || missilePosition.x > 50){
+			_terrain->doDamageAt( missilePosition );
+			_terrain->doDamageAt( missilePosition );
+			_terrain->doDamageAt( missilePosition );
+			_missile = NULL;
 		}
 	}
 
@@ -312,8 +329,15 @@ void Scene::drawScene()
 	glPopMatrix();
 
 	glPushMatrix();
+	if ( _missile != NULL){
+		_missile->draw();
+	}
+	glPopMatrix();
+
+	glPushMatrix();
 	_testParticles->draw();
 	glPopMatrix();
+	_endNode->draw();
 }
 
 void Scene::drawGrid()
@@ -469,6 +493,24 @@ void Scene::fireBullet()
 	_bullets.push_back( bullet );
 }
 
+void Scene::fireMissile()
+{
+	if ( _missile == NULL ){
+		Missile *missile = new Missile( *this );
+
+		missile->setPosition( _tank->getMuzzlePosition() );
+
+		float velocityScale = 10;
+		Vector3D velocity( -velocityScale*_tank->getShootingPower()*std::cos( Utils::toRadian( _tank->getElevation() ) )*std::sin( Utils::toRadian( -_tank->getAzimuth() ) ),
+					velocityScale*_tank->getShootingPower()*std::sin( Utils::toRadian( _tank->getElevation() ) ),
+					-velocityScale*_tank->getShootingPower()*std::cos( Utils::toRadian( _tank->getElevation() ) )*std::cos( Utils::toRadian( -_tank->getAzimuth() ) ) );
+		missile->setVelocity( velocity );
+		_missile = missile;
+
+		_testParticlesMissile = new ParticleEngine<Smoke>(_missile->getPosition(),Vector3D(1,1,1),Vector3D(0,5,0),_tankCam);
+	}
+}
+
 void Scene::onResize( int width, int height )
 {
 	glutPostRedisplay();
@@ -488,7 +530,7 @@ void Scene::handleKeyboardInput()
 
 	if(_window.keyPressed('a') ||_window.keyPressed('A'))
 	{
-		_tank->setDirection(_tank->getDirection()-2);
+		_tank->setDirection(_tank->getDirection()-5);
 	}
 
 	if(_window.keyPressed('s') || _window.keyPressed('S'))
@@ -498,7 +540,7 @@ void Scene::handleKeyboardInput()
 
 	if(_window.keyPressed('d') || _window.keyPressed('D'))
 	{
-		_tank->setDirection(_tank->getDirection()+2);
+		_tank->setDirection(_tank->getDirection()+5);
 	}
 
 	if(_window.keyPressed('r') || _window.keyPressed('R'))
@@ -522,6 +564,11 @@ void Scene::handleKeyboardInput()
 	if(_window.keyPressed(' '))
 	{
 		fireBullet();
+	}
+
+	if(_window.keyPressed('m') || _window.keyPressed('M'))
+	{
+		fireMissile();
 	}
 
 	if(_window.keyHit('1'))
@@ -579,6 +626,30 @@ void Scene::handleKeyboardInput()
 			_cameraMode = TANK_CAM;
 		}
 	}
+	if(_window.keyHit('p') || _window.keyHit('P'))
+	{
+		_terrain->findPath(_tank->getPosition(),_endNode->_position);
+	}
+	if(_window.specialKeyPressed(GLUT_KEY_LEFT))
+	{
+		_endNode->_position.x--;
+		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+	}
+	if(_window.specialKeyPressed(GLUT_KEY_RIGHT))
+	{
+		_endNode->_position.x++;
+		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+	}
+	if(_window.specialKeyPressed(GLUT_KEY_UP))
+	{
+		_endNode->_position.z--;
+		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+	}
+	if(_window.specialKeyPressed(GLUT_KEY_DOWN))
+	{
+		_endNode->_position.z++;
+		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+	}
 }
 
 void Scene::onMouseEntry(int state) {
@@ -630,7 +701,7 @@ void Scene::onMousePassiveMove(int x, int y) {
 
 void Scene::onVisible(int state) {
 	if (state == GLUT_VISIBLE)
-		glutPostRedisplay();
+	glutPostRedisplay();
 }
 
 void Scene::onTimer(int value) {
@@ -643,10 +714,10 @@ void Scene::onIdle() {
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Point from(
 			radius * std::cos(Utils::toRadian(elevation))
-					* std::sin(Utils::toRadian(azimuth)) * -1,
+			* std::sin(Utils::toRadian(azimuth)) * -1,
 			radius * std::sin(Utils::toRadian(elevation)),
 			radius * std::cos(Utils::toRadian(elevation))
-					* std::cos(Utils::toRadian(azimuth)) * -1);
+			* std::cos(Utils::toRadian(azimuth)) * -1);
 
 	Vector3D up(0.0, 1.0, 0.0);
 	Vector3D dir(-from.x, -from.y, -from.z);
@@ -668,4 +739,4 @@ Window& Scene::getWindow() {
 	return _window;
 }
 
-GAME_NAMESPACE_END
+}

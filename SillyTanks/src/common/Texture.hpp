@@ -1,10 +1,6 @@
 /**
  * texture.hpp
- *
- * Author   :   Fatih Erol
- * Date     :   30.03.2012
- *
- * All rights reserved.
+*
  */
 
 #ifndef GRAPHICSLAB_TEXTURE_HPP
@@ -17,7 +13,7 @@
 #include "GLIncludes.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** Texture */
@@ -49,7 +45,7 @@ protected:
 }; // class Texture
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_TEXTURE_HPP

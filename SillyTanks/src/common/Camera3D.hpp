@@ -14,7 +14,7 @@
 #include "../common/Types.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 struct LookAt
@@ -56,7 +56,7 @@ private:
 }; // class Camera3D
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_CAMERA3D_HPP

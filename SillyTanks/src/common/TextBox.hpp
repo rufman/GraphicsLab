@@ -15,7 +15,7 @@
 #include <string>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** Class to draw text to the screen */
@@ -58,7 +58,7 @@ private:
 }; // class TextBox
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif  // GRAPHICSLAB_TEXTBOX_HPP

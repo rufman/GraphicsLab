@@ -6,11 +6,11 @@
 // Class declaration include
 #include "TextBox.hpp"
 
-// Includes
+// common includes
 #include "../common/GLIncludes.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 TextBox::TextBox( Scene &scene, const std::string &text, float height, float lineWidth ) : 
@@ -64,4 +64,4 @@ void TextBox::draw() const
 }
 
 
-GAME_NAMESPACE_END
+}

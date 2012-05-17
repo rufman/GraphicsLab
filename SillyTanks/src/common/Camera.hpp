@@ -12,7 +12,7 @@
 // Includes
 #include "../common/GLIncludes.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 // Forward declarations
 class Scene;
@@ -55,6 +55,6 @@ protected:
 
 };
 
-GAME_NAMESPACE_END
+}
 
 #endif // GAME_CAMERA_HPP

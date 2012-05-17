@@ -14,7 +14,7 @@
 #include <string>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 // Forward declarations
@@ -114,7 +114,7 @@ private:
 }; // class Application
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_APPLICATION_HPP

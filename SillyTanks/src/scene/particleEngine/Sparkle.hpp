@@ -6,10 +6,13 @@
 #ifndef GAME_SPARKLE_HPP
 #define GAME_SPARKLE_HPP
 
-#include "../../common/Types.hpp"
+//base class include
 #include "Particle.hpp"
 
-GAME_NAMESPACE_BEGIN
+//common includes
+#include "../../common/Types.hpp"
+
+namespace game_space {
 
 class Sparkle  {
 public:
@@ -18,5 +21,5 @@ public:
 	void update();
 };
 
-GAME_NAMESPACE_END
+}
 #endif

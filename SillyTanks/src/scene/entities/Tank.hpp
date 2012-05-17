@@ -12,12 +12,14 @@
 #include "../../common/PLYModel.hpp"
 #include "../../common/Camera3D.hpp"
 
+#include <math.h>
+
 //entities include
 #include "Turret.hpp"
 
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 class Tank: public Drawable {
@@ -64,5 +66,5 @@ protected:
 
 };
 
-GAME_NAMESPACE_END
+}
 #endif

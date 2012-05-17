@@ -9,12 +9,11 @@
 // common includes
 #include "../../common/GLIncludes.hpp"
 #include "../../common/Utils.hpp"
-#include "../../common/PLYModel.hpp"
 
 #include <cmath>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 const float Turret::_baseWidth = 1.0f;
@@ -106,4 +105,4 @@ void Turret::draw() const
 	gluCylinder( quadric, _baseWidth/8, _baseWidth/8, _baseWidth, 20, 20 );
 	gluDeleteQuadric( quadric );	
 }
-GAME_NAMESPACE_END
+}

@@ -1,17 +1,13 @@
 /**
  * texture.cpp
  *
- * Author   :   Fatih Erol
- * Date     :   30.03.2012
- *
- * All rights reserved.
  */
 
 // Class declaration include
 #include "Texture.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 Texture::Texture( GLenum target ) :
@@ -43,4 +39,4 @@ void Texture::setActive( bool on ) const
 }
 
 
-GAME_NAMESPACE_END
+}

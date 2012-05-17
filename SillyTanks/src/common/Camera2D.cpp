@@ -6,7 +6,7 @@
 // Class declaration include
 #include "Camera2D.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Camera2D::Camera2D( Scene &scene ) :
 Camera( scene ) {}
@@ -27,4 +27,4 @@ void Camera2D::applyModelview() const
 	gluLookAt( 0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0 );
 }
 
-GAME_NAMESPACE_END
+}

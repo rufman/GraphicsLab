@@ -1,10 +1,6 @@
 /**
  * positionalLight.hpp
- * 
- * Author   :   Fatih Erol
- * Date     :   19.03.2012
- * 
- * All rights reserved.
+*
  */
 
 
@@ -15,7 +11,7 @@
 #include "Light.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** Class for a positional point light source */
@@ -37,7 +33,7 @@ public:
 }; // class PositionalLight
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_POSITIONALLIGHT_HPP

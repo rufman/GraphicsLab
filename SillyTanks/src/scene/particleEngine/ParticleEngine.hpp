@@ -20,7 +20,7 @@
 //particleEngine include
 #include "Particle.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 template <class T>
 class ParticleEngine {
@@ -58,7 +58,7 @@ public:
 	}
 
 	void loadParticleTexture(const std::string &textureFilePath) {
-		_particleTexture = _particleTexture = new TGATexture(textureFilePath);
+		_particleTexture = new TGATexture(textureFilePath);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	}
@@ -190,5 +190,5 @@ private:
 	Particle* _particleType;
 };
 
-GAME_NAMESPACE_END
+}
 #endif

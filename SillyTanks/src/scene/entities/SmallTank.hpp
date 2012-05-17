@@ -9,7 +9,7 @@
 #include "../../common/Definitions.hpp"
 #include "Tank.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 class SmallTank:public Tank {
 public:
@@ -18,5 +18,5 @@ public:
 	void draw() const;
 };
 
-GAME_NAMESPACE_END
+}
 #endif
