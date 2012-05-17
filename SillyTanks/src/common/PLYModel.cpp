@@ -13,7 +13,7 @@
 #include <fstream>
 #include <sstream>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 PLYModel::PLYModel( Scene &scene ) :
 Drawable( scene ),
@@ -232,4 +232,4 @@ void PLYModel::draw() const
 	glCallList( ( _renderingParameters.shadeMode == RenderingParameters::FLAT ) ? ( _displayLists ) : ( _displayLists + 1 ) );
 }
 
-GAME_NAMESPACE_END
+}

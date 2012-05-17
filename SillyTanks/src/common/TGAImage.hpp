@@ -14,7 +14,7 @@
 #include "Types.hpp"
 #include <string>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** TGA Image */
@@ -55,7 +55,7 @@ private:
 }; // class TGAImage
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_TGAIMAGE_HPP

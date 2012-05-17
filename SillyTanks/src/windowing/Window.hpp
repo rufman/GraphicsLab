@@ -14,7 +14,7 @@
 #include <string>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 // Forward declarations
@@ -111,7 +111,7 @@ private:
 }; // class Window
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_WINDOW_HPP

@@ -10,7 +10,7 @@
 #include "../../common/Exception.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 Light::Light( Scene &scene ) :
@@ -175,4 +175,4 @@ void Light::releaseLightID( GLenum id )
 }
 
 
-GAME_NAMESPACE_END
+}

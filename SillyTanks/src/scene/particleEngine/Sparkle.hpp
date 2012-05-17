@@ -12,7 +12,7 @@
 //common includes
 #include "../../common/Types.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 class Sparkle  {
 public:
@@ -21,5 +21,5 @@ public:
 	void update();
 };
 
-GAME_NAMESPACE_END
+}
 #endif

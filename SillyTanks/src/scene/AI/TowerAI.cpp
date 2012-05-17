@@ -1,11 +1,8 @@
 /*
  * TowerAI.cpp
- *
- *  Created on: May 16, 2012
- *      Author: leviathan
  */
 
-#include "TowerAI.h"
+#include "TowerAI.hpp"
 
 namespace game_space {
 

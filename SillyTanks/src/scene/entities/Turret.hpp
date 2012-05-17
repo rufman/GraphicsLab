@@ -15,7 +15,7 @@
 #include "../../common/PLYModel.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** Cannon */
@@ -81,5 +81,5 @@ private:
 }; // class Cannon
 
 
-GAME_NAMESPACE_END
+}
 #endif

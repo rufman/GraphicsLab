@@ -20,7 +20,7 @@
 #include <iostream>
 #include <algorithm>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Terrain::Terrain( Scene &scene, const std::string &textureFilePrefix, float width, float length, uint widthResolution, uint lengthResolution ) :
 Drawable( scene ),
@@ -417,7 +417,7 @@ void Terrain::findPath(Point startPoint,Point goalPoint)
 		_nodes.at(i)->_g_score = 0;
 		_nodes.at(i)->_nodeState = Node::FREE;
 		_nodes.at(i)->_pathState = Node::NOTHING;
-		_nodes.at(i)->nextNode = 0;
+		_nodes.at(i)->_nextNode = 0;
 	}
 
 	//Implemented the a-star algorithm as it is written in pseudo code on wikipedia.org
@@ -470,10 +470,10 @@ void Terrain::findPath(Point startPoint,Point goalPoint)
 		if(current->_pathState == Node::ENDPOINT)
 		{
 			Node* node = goal;
-			while(node->nextNode != NULL)
+			while(node->_nextNode != NULL)
 			{
 				node->_pathState = Node::PARTOFPATH;
-				node = node->nextNode;
+				node = node->_nextNode;
 			}
 			return;
 		}
@@ -501,7 +501,7 @@ void Terrain::findPath(Point startPoint,Point goalPoint)
 				// sort back element into heap
 				openSet.push_back(neighbor);push_heap( openSet.begin(), openSet.end(), HeapCompare_f() );
 
-				neighbor->nextNode = current;
+				neighbor->_nextNode = current;
 				neighbor->_g_score = tentative_g_score;
 				neighbor->_f_score = neighbor->_g_score + heuristicCostEstimate(*neighbor,*goal);
 			}
@@ -590,4 +590,4 @@ std::vector<Node*> Terrain::getNeighbors(Node node)
 	return neighbors;
 }
 
-GAME_NAMESPACE_END
+}

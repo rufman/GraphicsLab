@@ -14,7 +14,7 @@
 #include "Types.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 // Forward declarations
@@ -56,7 +56,7 @@ protected:
 }; // class Drawable
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_DRAWABLE_HPP

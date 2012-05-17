@@ -11,7 +11,7 @@
 #include "Light.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** Light to simulate a spot light */
@@ -49,7 +49,7 @@ protected:
 }; // class SpotLight
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_SPOTLIGHT_HPP

@@ -18,7 +18,7 @@
 #include "../../scene/Terrain.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Tank::Tank(Scene &scene ) :Drawable( scene ) {}
 
@@ -125,4 +125,4 @@ Point Tank::getPosition() const
 	return _position;
 }
 
-GAME_NAMESPACE_END
+}

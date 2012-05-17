@@ -14,7 +14,7 @@
 #include <string>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /**
@@ -47,7 +47,7 @@ protected:
 }; // class Exception
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_EXCEPTION_HPP

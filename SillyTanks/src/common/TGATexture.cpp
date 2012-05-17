@@ -13,7 +13,7 @@
 #include <sstream>
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 TGATexture::TGATexture( const std::string &file ) :
@@ -50,4 +50,4 @@ const uchar *TGATexture::getData() const
 	return _image->getData();
 }
 
-GAME_NAMESPACE_END
+}

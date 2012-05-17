@@ -7,7 +7,7 @@
 #include "Types.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 ///////////////////////////////////////////////////////////////////
@@ -102,4 +102,4 @@ const float *Color::operator()() const
 }
 
 
-GAME_NAMESPACE_END
+}

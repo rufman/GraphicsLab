@@ -26,7 +26,7 @@
 #endif
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 /** Class to measure passed time */
@@ -53,7 +53,7 @@ private:
 }; // class Time
 
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_TIME_HPP

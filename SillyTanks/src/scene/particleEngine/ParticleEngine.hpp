@@ -20,7 +20,7 @@
 //particleEngine include
 #include "Particle.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 template <class T>
 class ParticleEngine {
@@ -190,5 +190,5 @@ private:
 	Particle* _particleType;
 };
 
-GAME_NAMESPACE_END
+}
 #endif

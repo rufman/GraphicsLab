@@ -7,7 +7,7 @@
 #include "Material.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 Material::Material() :
@@ -38,4 +38,4 @@ void Material::setActive( GLenum face ) const
 }
 
 
-GAME_NAMESPACE_END
+}

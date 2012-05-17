@@ -10,7 +10,7 @@
 #include "../../common/Material.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 PositionalLight::PositionalLight( Scene &scene ) : 
@@ -43,4 +43,4 @@ void PositionalLight::draw() const
 }
 
 
-GAME_NAMESPACE_END
+}

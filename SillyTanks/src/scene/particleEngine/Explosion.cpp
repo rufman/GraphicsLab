@@ -6,7 +6,7 @@
 #include "Explosion.hpp"
 #include "../../common/Definitions.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Explosion::Explosion() {
 	// TODO Auto-generated constructor stub
@@ -17,4 +17,4 @@ Explosion::~Explosion() {
 	// TODO Auto-generated destructor stub
 }
 
-GAME_NAMESPACE_END
+}

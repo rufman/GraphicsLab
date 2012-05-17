@@ -6,7 +6,7 @@
 // Class declaration include
 #include "Camera3D.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 Camera3D::Camera3D( Scene &scene ) :
 Camera( scene ){}
@@ -29,4 +29,4 @@ void Camera3D::applyModelview() const
 			_lookAt.up.x, _lookAt.up.y, _lookAt.up.z );
 }
 
-GAME_NAMESPACE_END
+}

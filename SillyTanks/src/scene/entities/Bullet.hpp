@@ -12,7 +12,7 @@
 // Includes
 #include "../../common/Types.hpp"
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 class Bullet : public Drawable
 {
@@ -59,6 +59,6 @@ private:
 
 }; // class Bullet
 
-GAME_NAMESPACE_END
+}
 
 #endif // GRAPHICSLAB_BULLET_HPP

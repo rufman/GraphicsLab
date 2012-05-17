@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 // Forward declarations
 class TGAImage;
@@ -101,7 +101,7 @@ class HeapCompare_f
 		}
 };
 
-GAME_NAMESPACE_END
+}
 
 
 #endif // GRAPHICSLAB_TERRAIN_HPP

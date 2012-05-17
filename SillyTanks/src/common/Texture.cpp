@@ -7,7 +7,7 @@
 #include "Texture.hpp"
 
 
-GAME_NAMESPACE_BEGIN
+namespace game_space {
 
 
 Texture::Texture( GLenum target ) :
@@ -39,4 +39,4 @@ void Texture::setActive( bool on ) const
 }
 
 
-GAME_NAMESPACE_END
+}
