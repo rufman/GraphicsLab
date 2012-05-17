@@ -94,6 +94,8 @@ private:
 private:
 	Window &_window;
 
+	SoundEngine _soundEngine;
+
 	bool _gridOn;
 	GLuint _gridDisplayList;
 	bool _dashBoardOn;

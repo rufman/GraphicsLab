@@ -18,6 +18,7 @@
 #include "../common/Camera2D.hpp"
 #include "../common/Camera3D.hpp"
 #include "../common/TextBox.hpp"
+#include "../common/SoundEngine.hpp"
 
 //scene includes
 #include "SkyDome.hpp"
@@ -55,6 +56,9 @@ _sunLight(NULL),
 _tank(NULL),
 _missile(NULL)
 {
+	_soundEngine = SoundEngine();
+
+
 	_endNode = new Node(Point(1,2,1), *this);
 	_endNode->_pathState = Node::ENDPOINT;
 }
@@ -659,6 +663,7 @@ void Scene::onMouseEntry(int state) {
 }
 
 void Scene::onMouseClick(int button, int state, int x, int y) {
+	_soundEngine.playGunSound();
 	fireBullet();
 }
 
