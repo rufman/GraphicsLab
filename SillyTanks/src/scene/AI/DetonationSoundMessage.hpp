@@ -14,7 +14,10 @@ namespace game_space {
 
 class DetonationSoundMessage: public game_space::Message {
 public:
-	DetonationSoundMessage(Point _detonationPoint);
+	Point _detonationPoint;
+	float _detonationStrength;
+public:
+	DetonationSoundMessage(Point detonationPoint,float detonationStrength);
 	virtual ~DetonationSoundMessage();
 };
 

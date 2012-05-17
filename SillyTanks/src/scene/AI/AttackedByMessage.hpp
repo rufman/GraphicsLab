@@ -11,7 +11,9 @@ namespace game_space {
 
 class AttackedByMessage: public Message {
 public:
-	AttackedByMessage(int enemyTankID);
+	int _attackingEnemyID;
+public:
+	AttackedByMessage(int attackingEnemyID);
 	virtual ~AttackedByMessage();
 };
 

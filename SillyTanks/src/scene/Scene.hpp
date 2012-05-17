@@ -20,10 +20,6 @@
 #include "particleEngine/ParticleEngine.hpp"
 #include "particleEngine/Smoke.hpp"
 
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'master' of uzh@sook.ch:GraphicsLab.git
 #include "entities/Bullet.hpp"
 #include "entities/Missile.hpp"
 
