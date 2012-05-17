@@ -9,6 +9,7 @@
 #define DETONATIONSOUNDMESSAGE_H_
 
 #include "Message.hpp"
+#include "../../common/Types.hpp"
 
 namespace game_space {
 

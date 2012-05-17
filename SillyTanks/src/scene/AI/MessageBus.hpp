@@ -19,6 +19,7 @@ public:
 
 	int addNewClient();
 	std::vector<Message>* getMessagesForClient(int clientID);
+	void sendMessageTo(Message message,int reveiverID);
 };
 
 }

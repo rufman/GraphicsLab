@@ -26,6 +26,11 @@ std::vector<Message>* MessageBus::getMessagesForClient(int clientID)
 	return messageBus.at(clientID);
 }
 
+void MessageBus::sendMessageTo(Message message,int receiverID)
+{
+	messageBus.at(receiverID)->push_back(message);
+}
+
 
 
 }

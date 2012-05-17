@@ -1,15 +1,13 @@
 /*
  * Message.cpp
  *
- *  Created on: May 17, 2012
- *      Author: leviathan
  */
 
-#include "Message.h"
+#include "Message.hpp"
 
 namespace game_space {
 
-Message::Message() {
+Message::Message(MESSAGETYPE type) {
 	// TODO Auto-generated constructor stub
 
 }
