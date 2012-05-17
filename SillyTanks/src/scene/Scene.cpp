@@ -29,6 +29,7 @@
 
 //entities includes
 #include "entities/Bullet.hpp"
+#include "entities/Missile.hpp"
 #include "entities/SmallTank.hpp"
 
 //pathfinding includes
@@ -51,7 +52,8 @@ _tankCam( NULL ),
 _skyDome( NULL ),
 _terrain( NULL ),
 _sunLight(NULL),
-_tank(NULL)
+_tank(NULL),
+_missile(NULL)
 {
 	_endNode = new Node(Point(1,2,1), *this);
 	_endNode->_pathState = Node::ENDPOINT;
@@ -157,6 +159,8 @@ void Scene::reset()
 		delete bullet;
 	}
 	_bullets.clear();
+
+	_missile = NULL;
 }
 
 void Scene::update( float seconds )
@@ -198,6 +202,15 @@ void Scene::update( float seconds )
 		else
 		{
 			++bulletIter;
+		}
+	}
+
+	if ( _missile != NULL ){
+		_missile->move( seconds );
+		const Point &missilePosition = _missile->getPosition();
+		if ( missilePosition.y < _terrain->getHeight( missilePosition ) || missilePosition.x > 50){
+			_terrain->doDamageAt( missilePosition );
+			_missile = NULL;
 		}
 	}
 
@@ -308,6 +321,12 @@ void Scene::drawScene()
 		bullet->draw();
 	}
 
+	glPopMatrix();
+
+	glPushMatrix();
+	if ( _missile != NULL){
+		_missile->draw();
+	}
 	glPopMatrix();
 
 	glPushMatrix();
@@ -469,6 +488,22 @@ void Scene::fireBullet()
 	_bullets.push_back( bullet );
 }
 
+void Scene::fireMissile()
+{
+	if ( _missile == NULL ){
+		Missile *missile = new Missile( *this );
+
+		missile->setPosition( _tank->getMuzzlePosition() );
+
+		float velocityScale = 10;
+		Vector3D velocity( -velocityScale*_tank->getShootingPower()*std::cos( Utils::toRadian( _tank->getElevation() ) )*std::sin( Utils::toRadian( -_tank->getAzimuth() ) ),
+					velocityScale*_tank->getShootingPower()*std::sin( Utils::toRadian( _tank->getElevation() ) ),
+					-velocityScale*_tank->getShootingPower()*std::cos( Utils::toRadian( _tank->getElevation() ) )*std::cos( Utils::toRadian( -_tank->getAzimuth() ) ) );
+		missile->setVelocity( velocity );
+		_missile = missile;
+	}
+}
+
 void Scene::onResize( int width, int height )
 {
 	glutPostRedisplay();
@@ -522,6 +557,11 @@ void Scene::handleKeyboardInput()
 	if(_window.keyPressed(' '))
 	{
 		fireBullet();
+	}
+
+	if(_window.keyPressed('m') || _window.keyPressed('M'))
+	{
+		fireMissile();
 	}
 
 	if(_window.keyHit('1'))

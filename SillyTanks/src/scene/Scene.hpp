@@ -20,8 +20,13 @@
 #include "particleEngine/ParticleEngine.hpp"
 #include "particleEngine/Smoke.hpp"
 
+<<<<<<< HEAD
+#include "entities/Bullet.hpp"
+#include "entities/Missile.hpp"
+=======
 //pathfinding includes
 #include "pathfinding/Node.hpp"
+>>>>>>> branch 'master' of uzh@sook.ch:GraphicsLab.git
 
 #include <vector>
 
@@ -82,6 +87,7 @@ private:
 	void drawGrid();
 	void drawOverlay();
 	void fireBullet();
+	void fireMissile();
 	void handleKeyboardInput();
 	Window& getWindow();
 
@@ -139,6 +145,7 @@ private:
 	Terrain *_terrain;
 	DirectionalLight* _sunLight;
 	Tank *_tank;
+	Missile *_missile;
 
 	ParticleEngine<Smoke> *_testParticles;
 
