@@ -58,6 +58,7 @@ private:
 
 	/** Velocity of the bullet */
 	Vector3D _velocity;
+	Vector3D _toTarget;
 
 	int _counter;
 

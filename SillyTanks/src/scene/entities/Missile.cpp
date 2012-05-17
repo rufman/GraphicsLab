@@ -33,12 +33,22 @@ void Missile::draw() const {
 	glMatrixMode(GL_MODELVIEW);
 
 	glPushMatrix();
+
 	glTranslatef(_position.x, _position.y, _position.z);
 
-	float materialAmbient[3] = { 0.4, 0.1, 0.1 };
-	float materialDiffuse[3] = { 0.6, 0.2, 0.2 };
-	float materialSpecular[3] = { 0.8, 0.4, 0.4 };
-	float materialEmission[3] = { 0.2, 0.0, 0.0 };
+	if ( _counter < 65 ){
+		Utils::applyGLRotation( Vector3D( 1, 0, 0), _velocity );
+		glRotatef( 90, 0, 1, 0);
+	}
+	else{
+		Utils::applyGLRotation( Vector3D( 1, 0, 0), _toTarget );
+		glRotatef( 90, 0, 1, 0);
+	}
+
+	float materialAmbient[3] = { 0.1, 0.1, 0.1 };
+	float materialDiffuse[3] = { 0.2, 0.2, 0.2 };
+	float materialSpecular[3] = { 0.2, 0.4, 0.4 };
+	float materialEmission[3] = { 0.1, 0.1, 0.1 };
 	int shininess = 50;
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
@@ -47,9 +57,8 @@ void Missile::draw() const {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
-	glutSolidCube (_size);
-	//glutSolidCylinder( _size/2.0, _size * 2.0, 50, 10);
-	glutSolidSphere(_size, 10, 10);
+	GLUquadricObj *quadObj = gluNewQuadric();
+	gluCylinder(quadObj, _size/2.0, _size/2.0, _size*4.0, 10, 10);
 
 	glPopMatrix();
 }
@@ -64,14 +73,13 @@ void Missile::setVelocity(const Vector3D &velocity) {
 
 void Missile::move(float seconds) {
 	//ballistics of a projectile
-	Vector3D toTarget = Vector3D((50 - _position.x), (-_position.y),
-			(50 - _position.z));
-	Utils::normalize(toTarget);
+	_toTarget = Vector3D((50 - _position.x), (-_position.y), (50 - _position.z));
+	Utils::normalize(_toTarget);
 
 	if (_counter > 65) {
-		_position.x += _velocity.x * seconds + toTarget.x;
-		_position.y += _velocity.y * seconds + toTarget.y;
-		_position.z += _velocity.z * seconds + toTarget.z;
+		_position.x += _velocity.x * seconds + _toTarget.x;
+		_position.y += _velocity.y * seconds + _toTarget.y;
+		_position.z += _velocity.z * seconds + _toTarget.z;
 	} else {
 		_position.x += _velocity.x * seconds * 5;
 		_position.y += _velocity.y * seconds * 5;

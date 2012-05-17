@@ -210,6 +210,8 @@ void Scene::update( float seconds )
 		const Point &missilePosition = _missile->getPosition();
 		if ( missilePosition.y < _terrain->getHeight( missilePosition ) || missilePosition.x > 50){
 			_terrain->doDamageAt( missilePosition );
+			_terrain->doDamageAt( missilePosition );
+			_terrain->doDamageAt( missilePosition );
 			_missile = NULL;
 		}
 	}
