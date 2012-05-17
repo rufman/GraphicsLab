@@ -7,12 +7,20 @@
 namespace game_space {
 
 MessageBus::MessageBus() {
-	// TODO Auto-generated constructor stub
 
 }
 
 MessageBus::~MessageBus() {
-	// TODO Auto-generated destructor stub
+
 }
+
+int MessageBus::addNewClient()
+{
+	messageBus.push_back(new std::vector<Message>);
+	//return the messagebus client id
+	return messageBus.size()-1;
+}
+
+
 
 }
