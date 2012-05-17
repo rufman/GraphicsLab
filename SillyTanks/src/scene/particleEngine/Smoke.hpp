@@ -19,7 +19,7 @@ public:
 	Smoke();
 	virtual ~Smoke();
 	virtual void resetParticle(Point startPosition,Vector3D startAcceleration);
-	virtual void update(float seconds,Point startPosition,Vector3D startAcceleration);
+	virtual void update(float seconds);
 };
 
 }

@@ -27,7 +27,7 @@ void Bullet::draw() const
 	glPushMatrix();
 	glTranslatef( _position.x, _position.y, _position.z );
 
-	float materialAmbient[3] = {0.4, 0.1, 0.1};
+	/*float materialAmbient[3] = {0.4, 0.1, 0.1};
 	float materialDiffuse[3] = {0.6, 0.2, 0.2};
 	float materialSpecular[3] = {0.8, 0.4, 0.4};
 	float materialEmission[3] = {0.2, 0.0, 0.0};
@@ -37,7 +37,7 @@ void Bullet::draw() const
 	glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse );
 	glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular );
 	glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, materialEmission );
-	glMaterialf ( GL_FRONT_AND_BACK, GL_SHININESS, shininess );
+	glMaterialf ( GL_FRONT_AND_BACK, GL_SHININESS, shininess );*/
 
 	glutSolidCube( _size );
 

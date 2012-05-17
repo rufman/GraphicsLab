@@ -146,8 +146,8 @@ private:
 	Tank *_tank;
 	Missile *_missile;
 
-	ParticleEngine<Smoke> *_testParticles;
-	ParticleEngine<Smoke> *_testParticlesMissile;
+	ParticleEngine<Smoke> *_tankSmokeParticleEngine;
+	ParticleEngine<Smoke> *_missileSmokeParticleEngine;
 
 	std::vector<Bullet*> _bullets;
 	Node* _endNode;

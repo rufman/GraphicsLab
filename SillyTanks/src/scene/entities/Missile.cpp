@@ -38,13 +38,12 @@ void Missile::draw() const {
 
 	if ( _counter < 65 ){
 		Utils::applyGLRotation( Vector3D( 1, 0, 0), _velocity );
-		glRotatef( 90, 0, 1, 0);
 	}
 	else{
 		Utils::applyGLRotation( Vector3D( 1, 0, 0), _toTarget );
-		glRotatef( 90, 0, 1, 0);
 	}
-
+	glRotatef(90,0,1,0);
+	/*
 	float materialAmbient[3] = { 0.1, 0.1, 0.1 };
 	float materialDiffuse[3] = { 0.2, 0.2, 0.2 };
 	float materialSpecular[3] = { 0.2, 0.4, 0.4 };
@@ -56,9 +55,13 @@ void Missile::draw() const {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+	*/
 
 	GLUquadricObj *quadObj = gluNewQuadric();
 	gluCylinder(quadObj, _size/2.0, _size/2.0, _size*4.0, 10, 10);
+
+	glTranslatef(-_position.x,- _position.y,- _position.z);
+	glRotatef(-90,0,1,0);
 
 	glPopMatrix();
 }
