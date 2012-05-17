@@ -131,6 +131,7 @@ void Scene::initialize()
 
 	_testParticles = new ParticleEngine<Smoke>(Point(0,0,50),Vector3D(5,5,5),Vector3D(0,20,0),_tankCam);
 
+
 	// Reset data
 	reset();
 }
@@ -207,6 +208,8 @@ void Scene::update( float seconds )
 
 	if ( _missile != NULL ){
 		_missile->move( seconds );
+		_testParticlesMissile->setStartPosition( _missile->getPosition() );
+		_testParticlesMissile->update(seconds);
 		const Point &missilePosition = _missile->getPosition();
 		if ( missilePosition.y < _terrain->getHeight( missilePosition ) || missilePosition.x > 50){
 			_terrain->doDamageAt( missilePosition );
@@ -503,6 +506,8 @@ void Scene::fireMissile()
 					-velocityScale*_tank->getShootingPower()*std::cos( Utils::toRadian( _tank->getElevation() ) )*std::cos( Utils::toRadian( -_tank->getAzimuth() ) ) );
 		missile->setVelocity( velocity );
 		_missile = missile;
+
+		_testParticlesMissile = new ParticleEngine<Smoke>(_missile->getPosition(),Vector3D(1,1,1),Vector3D(0,5,0),_tankCam);
 	}
 }
 

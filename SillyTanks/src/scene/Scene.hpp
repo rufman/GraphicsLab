@@ -147,6 +147,7 @@ private:
 	Missile *_missile;
 
 	ParticleEngine<Smoke> *_testParticles;
+	ParticleEngine<Smoke> *_testParticlesMissile;
 
 	std::vector<Bullet*> _bullets;
 	Node* _endNode;
