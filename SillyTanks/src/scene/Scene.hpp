@@ -20,13 +20,12 @@
 #include "particleEngine/ParticleEngine.hpp"
 #include "particleEngine/Smoke.hpp"
 
-<<<<<<< HEAD
 #include "entities/Bullet.hpp"
 #include "entities/Missile.hpp"
-=======
+
 //pathfinding includes
 #include "pathfinding/Node.hpp"
->>>>>>> branch 'master' of uzh@sook.ch:GraphicsLab.git
+
 
 #include <vector>
 
