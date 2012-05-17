@@ -4,6 +4,7 @@
  */
 
 #include "Explosion.hpp"
+#include "../../common/Definitions.hpp"
 
 GAME_NAMESPACE_BEGIN
 
