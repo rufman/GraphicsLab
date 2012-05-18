@@ -55,6 +55,7 @@ protected:
 	Material _material;
 	
 protected:
+	Point _position;
 	struct PLYData
 	{
 		std::vector<Point> vertices;
@@ -89,7 +90,6 @@ protected:
 	} _plyData;
 	
 private:
-	Point _position;
 	float _angle;
 
 }; // class PLYModel

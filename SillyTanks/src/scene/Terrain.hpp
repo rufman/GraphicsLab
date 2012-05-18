@@ -10,18 +10,24 @@
 #include "../common/Drawable.hpp"
 #include "../common/GLIncludes.hpp"
 #include "../common/Material.hpp"
+#include "../common/Definitions.hpp"
+#include "../common/Utils.hpp"
+#include "../common/TGAImage.hpp"
+#include "../common/TGATexture.hpp"
+#include "../common/PLYModel.hpp"
 
-//pathfinding include
+//pathfinding includes
 #include "pathfinding/Node.hpp"
+#include "entities/PineTree.hpp"
 
+#include <sstream>
+#include <cmath>
+#include <iostream>
+#include <algorithm>
 #include <string>
 #include <vector>
 
 namespace game_space {
-
-// Forward declarations
-class TGAImage;
-class TGATexture;
 
 /** Terrain */
 class Terrain : public Drawable
@@ -75,11 +81,13 @@ private:
 	};
 	std::vector<Triangle> _triangles;
 	std::vector<Vector3D> _triangleNormals;
+	std::vector<PLYModel*> _models;
 
 	float _width, _length;
 	uint _widthResolution, _lengthResolution;
 	
 	TGAImage *_heightData;
+	TGAImage *_objectData;
 	TGATexture *_texture;
 	
 	//pathfinding debugging

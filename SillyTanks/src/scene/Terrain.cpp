@@ -6,20 +6,6 @@
 // Class declaration include
 #include "Terrain.hpp"
 
-// common includes
-#include "../common/GLIncludes.hpp"
-#include "../common/Utils.hpp"
-#include "../common/TGAImage.hpp"
-#include "../common/TGATexture.hpp"
-
-//pathfinding includes
-#include "pathfinding/Node.hpp"
-
-#include <sstream>
-#include <cmath>
-#include <iostream>
-#include <algorithm>
-
 namespace game_space {
 
 Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix,
@@ -36,11 +22,17 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix,
 
 	std::stringstream heightFieldFileName;
 	heightFieldFileName << textureFilePrefix << "_hf.tga";
+	std::stringstream objectDataFileName;
+	objectDataFileName << textureFilePrefix << "_od.tga";
 	std::stringstream textureFileName;
 	textureFileName << textureFilePrefix << "_tex.tga";
 
 	_heightData = new TGAImage();
 	_heightData->load(heightFieldFileName.str());
+
+	_objectData = new TGAImage();
+	_objectData->load(objectDataFileName.str());
+
 	_texture = new TGATexture(textureFileName.str());
 
 	if (_widthResolution == 0)
@@ -73,11 +65,21 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix,
 					+ widthPoint * (_width / (_widthResolution - 1));
 			vertex.z = _length / 2.0
 					- lengthPoint * (_length / (_lengthResolution - 1));
-			vertex.y = ((_heightData->getData()[_heightData->getWidth()
-					* (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4])
-					/ 10.0f) - 20;
-			_nodes.push_back(new Node(Point(vertex.x, 2, vertex.z), _scene));
 
+			int heightDataIndex = _heightData->getWidth()
+					* (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
+			int objectDataIndex = _objectData->getWidth()
+					* (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
+			vertex.y = ((_heightData->getData()[heightDataIndex]) / 10.0f) - 20;
+
+			//ObjectData mapping
+			if (_objectData->getData()[objectDataIndex] == PINETREE_MAPNR) {
+				PineTree *treeModel = new PineTree(_scene);
+				Point modelPosition(vertex.x,vertex.y,vertex.z);
+				treeModel->setPosition(modelPosition);
+				_models.push_back(treeModel);
+			}
+			_nodes.push_back(new Node(Point(vertex.x, 2, vertex.z), _scene));
 		}
 	}
 
@@ -291,6 +293,10 @@ void Terrain::draw() const {
 
 	for (uint i = 0; i < _vertices.size(); i++) {
 		_nodes[i]->draw();
+	}
+
+	for (uint i = 0; i < _models.size(); i++) {
+		_models[i]->draw();
 	}
 
 	glPolygonMode(GL_FRONT_AND_BACK,

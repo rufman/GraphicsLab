@@ -47,6 +47,12 @@ namespace game_space {
 #define SMALLTANK_SPEED 8
 #define SMALLTANK_BOOST 15
 
+//#################
+// Game Graphics definitions
+//#################
+#define PINETREE_MODEL "resources/GFX/models/pinetree.ply"
+#define PINETREE_MAPNR 8
+
 //###########
 // Particle engine
 //###########
