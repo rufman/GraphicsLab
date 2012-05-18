@@ -42,7 +42,8 @@ public:
 	
     /** Draw the model to the screen. */
     void draw() const;
-
+    void setPosition(Point &position);
+    Point &getPosition();
 protected:
 	void buildDisplayLists();
 	

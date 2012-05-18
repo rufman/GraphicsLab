@@ -232,4 +232,12 @@ void PLYModel::draw() const
 	glCallList( ( _renderingParameters.shadeMode == RenderingParameters::FLAT ) ? ( _displayLists ) : ( _displayLists + 1 ) );
 }
 
+void PLYModel::setPosition(Point &position) {
+	_position = position;
+}
+
+Point& PLYModel::getPosition() {
+	return _position;
+}
+
 }

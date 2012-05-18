@@ -7,6 +7,7 @@
 #include "../../common/Utils.hpp"
 #include "../../common/GLIncludes.hpp"
 #include "../../common/Types.hpp"
+#include "../../common/TGATexture.hpp"
 //scene includes
 #include "../../scene/Scene.hpp"
 #include "../../scene/Terrain.hpp"
@@ -18,7 +19,6 @@ public:
 	PineTree(Scene &scene);
 	virtual ~PineTree();
 	void draw() const;
-	void setPosition(Point &position);
 };
 
 }

@@ -59,6 +59,8 @@ public:
     float heuristicCostEstimate(Node from,Node to);
     float distBetween(Node from,Node to);
     std::vector<Node*> getNeighbors(Node node);
+
+    bool checkBorder(const Point &point) const;
 	
 private:
 	void buildDisplayLists();
