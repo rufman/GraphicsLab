@@ -469,6 +469,8 @@ void Scene::drawOverlay() {
 void Scene::fireBullet() {
 	Bullet *bullet = new Bullet(*this);
 
+	_soundEngine.playMuzzleSound();
+
 	bullet->setPosition(_tank->getMuzzlePosition());
 
 	float velocityScale = 30;
@@ -506,6 +508,9 @@ void Scene::fireMissile() {
 						* std::cos(Utils::toRadian(_tank->getElevation()))
 						* std::cos(Utils::toRadian(-_tank->getAzimuth())));
 		_missile->setVelocity(velocity);
+
+		_soundEngine.playExplosionSound();
+
 	}
 }
 
@@ -623,7 +628,7 @@ void Scene::onMouseEntry(int state) {
 }
 
 void Scene::onMouseClick(int button, int state, int x, int y) {
-	_soundEngine.playGunSound();
+
 	fireBullet();
 }
 
