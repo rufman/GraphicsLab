@@ -1,1 +1,4 @@
 -sky "resources/GFX/textures/dusk.tga" -terrain "resources/GFX/levels/terrain"
+
+arguments so that debugger works:
+-sky resources/GFX/textures/dusk.tga -terrain resources/GFX/levels/terrain
