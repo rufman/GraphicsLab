@@ -60,6 +60,23 @@ void Missile::draw() const {
 	GLUquadricObj *quadObj = gluNewQuadric();
 	gluCylinder(quadObj, _size/2.0, _size/2.0, _size*4.0, 10, 10);
 
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0,-_size,0);
+	glVertex3f(0, 0, _size);
+	glVertex3f(0, _size, 0);
+
+	glVertex3f(-_size,0,0);
+	glVertex3f(_size, 0, 0);
+	glVertex3f(0, 0, _size);
+	glEnd();
+
+	glutSolidCone( _size/2.0, 0, 10,10);
+
+	glPushMatrix();
+	glTranslatef( 0, 0, _size*4.0);
+	glutSolidSphere( _size/2.0, 10, 10 );
+	glPopMatrix();
+
 	glTranslatef(-_position.x,- _position.y,- _position.z);
 	glRotatef(-90,0,1,0);
 
