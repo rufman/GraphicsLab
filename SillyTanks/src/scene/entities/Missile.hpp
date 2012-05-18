@@ -42,6 +42,8 @@ public:
 	const Vector3D &getVelocity() const {return _velocity;}
 	void setVelocity( const Vector3D &velocity );
 
+	void setTargetPosition(const Point targetPosition);
+
 	/**
 	 * Update bullet data by moving it for 'seconds' seconds
 	 *
@@ -59,6 +61,7 @@ private:
 	/** Velocity of the bullet */
 	Vector3D _velocity;
 	Vector3D _toTarget;
+	Point _targetPosition;
 
 	int _counter;
 

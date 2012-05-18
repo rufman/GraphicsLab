@@ -119,7 +119,7 @@ struct Color
 	static const Color &SKY_BLUE;
 	static const Color &SADDLE_BROWN;
 	static const Color &TAN;
-	
+
 private:
 	float _arr[4];
 }; // struct Color

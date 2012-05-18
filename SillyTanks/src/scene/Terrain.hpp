@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <iterator>
 
 namespace game_space {
 
@@ -52,7 +53,7 @@ public:
 
     int getNearestTriangleIndexAt( const Point &point) const;
     void doDamageAt( const Point &point ) ;
-    void findPath(Point start,Point goal);
+    std::vector<Point>* findPath(Point start,Point goal);
     Node* getNodeFromPoint(Point point);
     Node * getNeighborOf(Point point,int px,int pz);
     float heuristicCostEstimate(Node from,Node to);

@@ -12,13 +12,13 @@ namespace game_space {
 
 class MessageBus {
 public:
-	std::vector<std::vector<Message>*> messageBus;
+	std::vector<std::vector<Message*>*> messageBus;
 public:
 	MessageBus();
 	virtual ~MessageBus();
 
 	int addNewClient();
-	std::vector<Message>* getMessagesForClient(int clientID);
+	std::vector<Message*>* getMessagesForClient(int clientID);
 	void sendMessageTo(Message message,int reveiverID);
 };
 

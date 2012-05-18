@@ -74,9 +74,14 @@ void Missile::setVelocity(const Vector3D &velocity) {
 	_velocity = velocity;
 }
 
+void Missile::setTargetPosition(const Point targetPosition)
+{
+	_targetPosition = targetPosition;
+}
+
 void Missile::move(float seconds) {
 	//ballistics of a projectile
-	_toTarget = Vector3D((50 - _position.x), (-_position.y), (50 - _position.z));
+	_toTarget = Vector3D((_targetPosition.x - _position.x), (_targetPosition.y-_position.y), (_targetPosition.z - _position.z));
 	Utils::normalize(_toTarget);
 
 	if (_counter > 65) {
@@ -84,9 +89,9 @@ void Missile::move(float seconds) {
 		_position.y += _velocity.y * seconds + _toTarget.y;
 		_position.z += _velocity.z * seconds + _toTarget.z;
 	} else {
-		_position.x += _velocity.x * seconds * 5;
-		_position.y += _velocity.y * seconds * 5;
-		_position.z += _velocity.z * seconds * 5;
+		_position.x += _velocity.x * seconds*50;
+		_position.y += _velocity.y * seconds *50;
+		_position.z += _velocity.z * seconds*50;
 	}
 
 	_counter++;

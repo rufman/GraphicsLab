@@ -15,7 +15,7 @@
 
 namespace game_space {
 
-SmallTank::SmallTank(Scene & scene):Tank(scene) {
+SmallTank::SmallTank(Scene & scene,int id):Tank(scene,id) {
 	_baseWidth = 1.0f;
 
 	//create a new chassis

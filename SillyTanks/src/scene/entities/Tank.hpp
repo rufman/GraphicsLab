@@ -24,7 +24,7 @@ namespace game_space {
 
 class Tank: public Drawable {
 public:
-	Tank(Scene &scene);
+	Tank(Scene &scene,int id);
 	virtual ~Tank();
 	void reset();
 
@@ -46,6 +46,7 @@ public:
     void setDirection(float angle);
     LookAt getLookAt() const;
     Point getPosition() const;
+    int getID() const;
 
 protected:
 	Turret* _turret;
@@ -63,6 +64,8 @@ protected:
 	float _direction;
 
 	float _baseWidth;
+
+	int _tankId;
 
 };
 

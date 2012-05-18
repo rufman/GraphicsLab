@@ -128,7 +128,7 @@ void Scene::initialize() {
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 2,
 			100 * 2, 50, 50);
-	_tank = new SmallTank(*this);
+	_tank = new SmallTank(*this,0);
 
 	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam);
 	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
@@ -208,12 +208,11 @@ void Scene::update(float seconds) {
 	if (_missile != NULL) {
 		_missile->move(seconds);
 		_missileSmokeParticleEngine->setStartPosition(_missile->getPosition());
-		const Point &missilePosition = _missile->getPosition();
-		if (missilePosition.y < _terrain->getHeight(missilePosition)) {
-			_terrain->doDamageAt(missilePosition);
-			_terrain->doDamageAt(missilePosition);
-			_terrain->doDamageAt(missilePosition);
-			_missile->~Missile();
+		if (_missile->getPosition().y < _terrain->getHeight(_missile->getPosition())) {
+			_terrain->doDamageAt(_missile->getPosition());
+			_terrain->doDamageAt(_missile->getPosition());
+			_terrain->doDamageAt(_missile->getPosition());
+			delete _missile;
 			_missile = NULL;
 			_missileSmokeParticleEngine->setActive(false);
 		}
@@ -497,14 +496,14 @@ void Scene::fireMissile() {
 		_missileSmokeParticleEngine->setActive(true);
 		_missileSmokeParticleEngine->setStartPosition(_missile->getPosition());
 
-		float velocityScale = 10;
+		//float velocityScale = 10;
 		Vector3D velocity(
-				-velocityScale * _tank->getShootingPower()
+				- _tank->getShootingPower()
 						* std::cos(Utils::toRadian(_tank->getElevation()))
 						* std::sin(Utils::toRadian(-_tank->getAzimuth())),
-				velocityScale * _tank->getShootingPower()
+				_tank->getShootingPower()
 						* std::sin(Utils::toRadian(_tank->getElevation())),
-				-velocityScale * _tank->getShootingPower()
+				-_tank->getShootingPower()
 						* std::cos(Utils::toRadian(_tank->getElevation()))
 						* std::cos(Utils::toRadian(-_tank->getAzimuth())));
 		_missile->setVelocity(velocity);

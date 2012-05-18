@@ -20,7 +20,7 @@
 
 namespace game_space {
 
-Tank::Tank(Scene &scene ) :Drawable( scene ) {}
+Tank::Tank(Scene &scene,int id ) :Drawable( scene ),_tankId(id) {}
 
 Tank::~Tank() {}
 
@@ -123,6 +123,11 @@ LookAt Tank::getLookAt() const
 Point Tank::getPosition() const
 {
 	return _position;
+}
+
+int Tank::getID() const
+{
+	return _tankId;
 }
 
 }

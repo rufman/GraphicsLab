@@ -13,7 +13,7 @@ namespace game_space {
 
 class SmallTank:public Tank {
 public:
-	SmallTank(Scene &scene);
+	SmallTank(Scene &scene,int id);
 	virtual ~SmallTank();
 	void draw() const;
 };

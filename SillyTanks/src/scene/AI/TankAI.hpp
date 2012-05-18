@@ -9,6 +9,7 @@
 #include "../../common/Definitions.hpp"
 #include "Message.hpp"
 #include <vector>
+#include "../entities/Tank.hpp"
 
 namespace game_space {
 
@@ -23,9 +24,10 @@ public:
 		RAMPAGE
 	}_strategy;
 
-	std::vector<Message>* _aiMessages;
+	std::vector<Message*>* _aiMessages;
+	Tank* _tank;
 public:
-	TankAI(std::vector<Message>* aiMessages);
+	TankAI(Tank* tank,std::vector<Message*>* aiMessages);
 	virtual ~TankAI();
 	//ai methods
 	//main method of the ai, activates all the other ai methods, represents one single reflection
