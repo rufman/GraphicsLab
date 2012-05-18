@@ -22,10 +22,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alut.h>
-
+// common includes
+#include "../common/ALIncludes.hpp"
 
 class SoundEngine {
 

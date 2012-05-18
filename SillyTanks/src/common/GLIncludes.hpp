@@ -19,7 +19,7 @@
 #include <windows.h>
 #include <glut.h>
 
-#else 
+#else
 // MacOS X
 #ifdef __APPLE__
 
