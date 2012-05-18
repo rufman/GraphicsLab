@@ -1,22 +1,20 @@
-/*
- * Missile.hpp
- *
- *  Created on: 16.05.2012
- *      Author: gregory
+/**
+ * bullet.hpp
+ * See bullet.cpp
  */
 
-#ifndef MISSILE_HPP_
-#define MISSILE_HPP_
+#ifndef GAME_BULLET_HPP
+#define GAME_BULLET_HPP
 
 // Base class include
-#include "../../common/Drawable.hpp"
+#include "../../../common/Drawable.hpp"
 
 // Includes
-#include "../../common/Types.hpp"
+#include "../../../common/Types.hpp"
 
 namespace game_space {
 
-class Missile : public Drawable
+class Bullet : public Drawable
 {
 public:
 	/**
@@ -25,10 +23,10 @@ public:
 	 * @param[in, out]	scene		Owning scene
 	 * @param[in]		size		Size of the bullet
 	 */
-	Missile( Scene &scene, float size = 0.4f );
+	Bullet( Scene &scene, float size = 0.4f );
 
 	/** Destructor */
-	~Missile();
+	~Bullet();
 
 	/** Draw the object to the screen. */
 	void draw() const;
@@ -41,8 +39,6 @@ public:
 
 	const Vector3D &getVelocity() const {return _velocity;}
 	void setVelocity( const Vector3D &velocity );
-
-	void setTargetPosition(const Point targetPosition);
 
 	/**
 	 * Update bullet data by moving it for 'seconds' seconds
@@ -60,14 +56,9 @@ private:
 
 	/** Velocity of the bullet */
 	Vector3D _velocity;
-	Vector3D _toTarget;
-	Point _targetPosition;
-
-	int _counter;
 
 }; // class Bullet
 
 }
 
-
-#endif /* MISSILE_HPP_ */
+#endif // GRAPHICSLAB_BULLET_HPP

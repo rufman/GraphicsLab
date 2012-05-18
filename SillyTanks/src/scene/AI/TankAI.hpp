@@ -9,7 +9,7 @@
 #include "../../common/Definitions.hpp"
 #include "Message.hpp"
 #include <vector>
-#include "../entities/Tank.hpp"
+#include "../entities/targets/Tank.hpp"
 #include "../Scene.hpp"
 
 namespace game_space {

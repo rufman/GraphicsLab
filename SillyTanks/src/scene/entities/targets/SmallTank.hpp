@@ -6,9 +6,9 @@
 #ifndef GAME_SMALLTANK_HPP
 #define GAME_SMALLTANK_HPP
 
-#include "../../common/Definitions.hpp"
+#include "../../../common/Definitions.hpp"
 #include "Tank.hpp"
-#include "../AI/TankAI.hpp"
+#include "../../AI/TankAI.hpp"
 
 namespace game_space {
 

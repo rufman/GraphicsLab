@@ -8,11 +8,11 @@
 
 
 // Base class include
-#include "../../common/Drawable.hpp"
+#include "../../../common/Drawable.hpp"
 
-// Includes
-#include "../../common/Types.hpp"
-#include "../../common/PLYModel.hpp"
+// common includes
+#include "../../../common/Types.hpp"
+#include "../../../common/PLYModel.hpp"
 
 
 namespace game_space {

@@ -21,8 +21,8 @@
 #include "particleEngine/ParticleEngine.hpp"
 #include "particleEngine/Smoke.hpp"
 
-#include "entities/Bullet.hpp"
-#include "entities/Missile.hpp"
+#include "entities/projectiles/Bullet.hpp"
+#include "entities/projectiles/Missile.hpp"
 
 //pathfinding includes
 #include "pathfinding/Node.hpp"

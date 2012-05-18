@@ -29,9 +29,7 @@
 #include "illumination/PositionalLight.hpp"
 
 //entities includes
-#include "entities/Bullet.hpp"
-#include "entities/Missile.hpp"
-#include "entities/SmallTank.hpp"
+#include "entities/targets/SmallTank.hpp"
 
 //pathfinding includes
 #include "pathfinding/Node.hpp"
@@ -142,7 +140,7 @@ void Scene::reset() {
 	_freeCameraParameters.applyToCamera(*_tankCam);
 
 	_skyDome->reset();
-	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter) {
+	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter++) {
 		Tank* tank = *tankIter;
 		tank->reset();
 	}
@@ -160,7 +158,7 @@ void Scene::update(float seconds) {
 
 	_skyDome->update(seconds);
 
-	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter) {
+	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter++) {
 		Tank* tank = *tankIter;
 		tank->update(seconds);
 	}
@@ -212,7 +210,7 @@ void Scene::update(float seconds) {
 	_missileSmokeParticleEngine->update(seconds);
 
 	//TODO migrate smoke engine into tank
-	_tankSmokeParticleEngine->setStartPosition(_tanks.front()->getPosition());
+	_tankSmokeParticleEngine->setStartPosition(_playerTank->getPosition());
 	_tankSmokeParticleEngine->update(seconds);
 }
 
@@ -246,15 +244,11 @@ void Scene::drawScene() {
 	Camera3D *camera;
 
 	if (_cameraMode == TANK_CAM) {
-
 		camera = _tankCam;
-		//TODO:set tank always on the player's tank
-		camera->setLookAt(_tanks.front()->getLookAt());
+		camera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		camera = _overviewCam;
-
-		//TODO: set look at of overviewcam always on the player's tank
-		camera->setLookAt(LookAt(Point(100, 100, 100), _tanks.front()->getPosition(), Vector3D(0, 1, 0)));
+		camera->setLookAt(LookAt(Point(100, 100, 100), _playerTank->getPosition(), Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL Lighting
@@ -294,7 +288,7 @@ void Scene::drawScene() {
 	_terrain->draw();
 
 	//Draw the tank
-	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter) {
+	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter++) {
 		Tank* tank = *tankIter;
 		tank->setRenderingParameters(_renderingParameters);
 		tank->draw();
@@ -501,12 +495,8 @@ void Scene::handleKeyboardInput() {
 		_playerTank->setShootingPower((power < 0.1) ? 0.1 : power);
 	}
 
-	if (_window.keyPressed(' ')) {
-		fireBullet();
-	}
-
 	if (_window.keyPressed('m') || _window.keyPressed('M')) {
-		fireMissile();
+		_playerTank->fireMissile();
 	}
 
 	if (_window.keyHit('1')) {
@@ -574,12 +564,12 @@ void Scene::onMouseEntry(int state) {
 
 void Scene::onMouseClick(int button, int state, int x, int y) {
 
-	fireBullet();
+	_playerTank->fireBullet();
 }
 
 void Scene::onMouseMove(int x, int y) {
 	//TODO:onMouseMove does not work as expected
-	fireBullet();
+	_playerTank->fireBullet();
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 

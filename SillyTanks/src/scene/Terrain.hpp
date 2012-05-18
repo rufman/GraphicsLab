@@ -18,7 +18,7 @@
 
 //pathfinding includes
 #include "pathfinding/Node.hpp"
-#include "entities/PineTree.hpp"
+#include "entities/targets/PineTree.hpp"
 
 #include <sstream>
 #include <cmath>

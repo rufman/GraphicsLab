@@ -7,19 +7,20 @@
 #define TANK_HPP_
 
 // common includes
-#include "../../common/Drawable.hpp"
-#include "../../common/Types.hpp"
-#include "../../common/PLYModel.hpp"
-#include "../../common/Camera3D.hpp"
+#include "../../../common/Drawable.hpp"
+#include "../../../common/Types.hpp"
+#include "../../../common/PLYModel.hpp"
+#include "../../../common/Camera3D.hpp"
+
+#include "../../AI/TankAI.hpp"
 
 #include <math.h>
-
-#include "../AI/TankAI.hpp"
 
 //entities include
 #include "Turret.hpp"
 
-
+//forward declaration
+class TankAI;
 
 namespace game_space {
 

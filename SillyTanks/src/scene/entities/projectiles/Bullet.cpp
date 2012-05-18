@@ -7,7 +7,7 @@
 #include "Bullet.hpp"
 
 // Includes
-#include "../../common/GLIncludes.hpp"
+#include "../../../common/GLIncludes.hpp"
 
 namespace game_space {
 

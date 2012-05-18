@@ -6,19 +6,19 @@
 #include "Tank.hpp"
 
 //common includes
-#include "../../common/Utils.hpp"
-#include "../../common/GLIncludes.hpp"
-#include "../../common/Drawable.hpp"
+#include "../../../common/Utils.hpp"
+#include "../../../common/GLIncludes.hpp"
+#include "../../../common/Drawable.hpp"
 
 #include <math.h>
 #include <iostream>
 
 //scene includes
-#include "../../scene/Scene.hpp"
-#include "../../scene/Terrain.hpp"
+#include "../../../scene/Scene.hpp"
+#include "../../../scene/Terrain.hpp"
 
-#include "Bullet.hpp"
-#include "Missile.hpp"
+#include "../projectiles/Bullet.hpp"
+#include "../projectiles/Missile.hpp"
 
 
 namespace game_space {

@@ -7,8 +7,8 @@
 #include "Turret.hpp"
 
 // common includes
-#include "../../common/GLIncludes.hpp"
-#include "../../common/Utils.hpp"
+#include "../../../common/GLIncludes.hpp"
+#include "../../../common/Utils.hpp"
 
 #include <cmath>
 

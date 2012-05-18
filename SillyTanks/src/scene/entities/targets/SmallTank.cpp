@@ -6,12 +6,14 @@
 #include "SmallTank.hpp"
 
 //common includes
-#include "../../common/Utils.hpp"
-#include "../../common/GLIncludes.hpp"
+#include "../../../common/Utils.hpp"
+#include "../../../common/GLIncludes.hpp"
 
 //scene includes
-#include "../../scene/Scene.hpp"
-#include "../../scene/Terrain.hpp"
+#include "../../../scene/Scene.hpp"
+#include "../../../scene/Terrain.hpp"
+
+#include "../../AI/TankAI.hpp"
 
 namespace game_space {
 

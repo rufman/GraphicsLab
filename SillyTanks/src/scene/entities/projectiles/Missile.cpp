@@ -8,8 +8,8 @@
 #include "Missile.hpp"
 
 // Includes
-#include "../../common/GLIncludes.hpp"
-#include "../../common/Utils.hpp"
+#include "../../../common/GLIncludes.hpp"
+#include "../../../common/Utils.hpp"
 
 namespace game_space {
 
