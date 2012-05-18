@@ -85,8 +85,7 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix, float width
 			//ObjectData mapping
 			if (_objectData->getData()[objectDataIndex] == PINETREE_MAPNR) {
 				PineTree *treeModel = new PineTree(_scene);
-				Point modelPosition(vertex.x, vertex.y, vertex.z);
-				treeModel->setPosition(modelPosition);
+				treeModel->setPosition(vertex);
 				_models.push_back(treeModel);
 			}
 			_nodes.push_back(new Node(Point(vertex.x, 2, vertex.z), _scene));
@@ -569,6 +568,18 @@ std::vector<Node*> Terrain::getNeighbors(Node node) {
 
 Point Terrain::getRandomPointOnMap(){
 	return Point(-_width+_width/(rand()%20),0,-_length+_length/(rand()%20));
+}
+
+bool Terrain::checkBorder(const Point &point) const{
+	float threshold = 5.0;
+
+	for (uint i = 0; i < _models.size(); i++) {
+		if(Utils::distance(_models[i]->getPosition(),point)<=threshold){
+			return true;
+		}
+	}
+
+	return false;
 }
 
 }

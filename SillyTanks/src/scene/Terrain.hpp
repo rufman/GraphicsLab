@@ -60,6 +60,8 @@ public:
     float distBetween(Node from,Node to);
     std::vector<Node*> getNeighbors(Node node);
     Point getRandomPointOnMap();
+
+    bool checkBorder(const Point &point) const;
 	
 private:
 	void buildDisplayLists();
