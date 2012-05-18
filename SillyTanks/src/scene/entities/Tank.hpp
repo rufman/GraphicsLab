@@ -14,6 +14,8 @@
 
 #include <math.h>
 
+#include "../AI/TankAI.hpp"
+
 //entities include
 #include "Turret.hpp"
 
@@ -24,7 +26,7 @@ namespace game_space {
 
 class Tank: public Drawable {
 public:
-	Tank(Scene &scene,int id);
+	Tank(Scene &scene,int id,TankAI* ai);
 	virtual ~Tank();
 	void reset();
 
@@ -47,6 +49,10 @@ public:
     LookAt getLookAt() const;
     Point getPosition() const;
     int getID() const;
+    bool isAIControlled() const;
+    TankAI* getAI() const;
+    void fireBullet();
+    void fireMissile();
 
 protected:
 	Turret* _turret;
@@ -66,6 +72,7 @@ protected:
 	float _baseWidth;
 
 	int _tankId;
+	TankAI* _controllingAI;
 
 };
 

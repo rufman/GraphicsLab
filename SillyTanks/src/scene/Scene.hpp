@@ -72,7 +72,10 @@ public:
 	void onVisible( int state );
 	void onTimer( int value );
 	void onIdle();
-	const Terrain& getTerrain() const {return *_terrain;}
+	Terrain& getTerrain() const {return *_terrain;}
+	SoundEngine getSoundEngine();
+	void setPlayerTank(Tank* tank);
+	Tank* getPlayerTank();
 
 private:
 	/**
@@ -90,6 +93,11 @@ private:
 	void fireMissile();
 	void handleKeyboardInput();
 	Window& getWindow();
+
+public:
+	std::vector<Tank*> _tanks;
+	std::vector<Missile*> _missiles;
+	std::vector<Bullet*> _bullets;
 
 private:
 	Window &_window;
@@ -146,14 +154,13 @@ private:
 	SkyDome *_skyDome;
 	Terrain *_terrain;
 	DirectionalLight* _sunLight;
-	Tank *_tank;
-	Missile *_missile;
 
 	ParticleEngine<Smoke> *_tankSmokeParticleEngine;
 	ParticleEngine<Smoke> *_missileSmokeParticleEngine;
 
-	std::vector<Bullet*> _bullets;
 	Node* _endNode;
+
+	Tank* _playerTank;
 
 }; // class Scene
 

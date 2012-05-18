@@ -17,10 +17,13 @@
 #include "../../scene/Scene.hpp"
 #include "../../scene/Terrain.hpp"
 
+#include "Bullet.hpp"
+#include "Missile.hpp"
+
 
 namespace game_space {
 
-Tank::Tank(Scene &scene,int id ) :Drawable( scene ),_tankId(id) {}
+Tank::Tank(Scene &scene,int id,TankAI* ai ) :Drawable( scene ),_tankId(id),_controllingAI(ai) {}
 
 Tank::~Tank() {}
 
@@ -120,6 +123,11 @@ LookAt Tank::getLookAt() const
 	return LookAt( from, to, Vector3D(0,1,0) );
 }
 
+bool Tank::isAIControlled() const
+{
+	return (_controllingAI != NULL);
+}
+
 Point Tank::getPosition() const
 {
 	return _position;
@@ -128,6 +136,56 @@ Point Tank::getPosition() const
 int Tank::getID() const
 {
 	return _tankId;
+}
+
+TankAI* Tank::getAI() const
+{
+	return _controllingAI;
+}
+
+void Tank::fireBullet() {
+	Bullet* bullet = new Bullet(_scene);
+
+	_scene.getSoundEngine().playMuzzleSound();
+	bullet->setPosition(getMuzzlePosition());
+
+	float velocityScale = 30;
+	Vector3D velocity(
+			-velocityScale * getShootingPower()
+					* std::cos(Utils::toRadian(getElevation()))
+					* std::sin(Utils::toRadian(-getAzimuth())),
+			velocityScale * getShootingPower()
+					* std::sin(Utils::toRadian(getElevation())),
+			-velocityScale * getShootingPower()
+					* std::cos(Utils::toRadian(getElevation()))
+					* std::cos(Utils::toRadian(-getAzimuth())));
+	bullet->setVelocity(velocity);
+
+	_scene._bullets.push_back(bullet);
+}
+
+void Tank::fireMissile() {
+		Missile* missile = new Missile(_scene);
+
+		missile->setPosition(getMuzzlePosition());
+
+		//TODO move this
+		//_missileSmokeParticleEngine->setActive(true);
+		//_missileSmokeParticleEngine->setStartPosition(_missile->getPosition());
+
+		Vector3D velocity(
+				-getShootingPower()
+						* std::cos(Utils::toRadian(getElevation()))
+						* std::sin(Utils::toRadian(-getAzimuth())),
+				getShootingPower()
+						* std::sin(Utils::toRadian(getElevation())),
+				-getShootingPower()
+						* std::cos(Utils::toRadian(getElevation()))
+						* std::cos(Utils::toRadian(-getAzimuth())));
+		missile->setVelocity(velocity);
+
+		_scene.getSoundEngine().playExplosionSound();
+		_scene._missiles.push_back(missile);
 }
 
 }

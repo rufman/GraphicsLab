@@ -10,6 +10,7 @@
 #include "Message.hpp"
 #include <vector>
 #include "../entities/Tank.hpp"
+#include "../Scene.hpp"
 
 namespace game_space {
 
@@ -19,15 +20,18 @@ public:
 	{
 		EXPLORE,
 		HUNT,
-		ESCAPE,
-		REINFORCEMENT,
-		RAMPAGE
+		//RAMPAGE,
+		//REINFORCEMENT,
+		ESCAPE
 	}_strategy;
 
 	std::vector<Message*>* _aiMessages;
 	Tank* _tank;
+	int _currentTarget;
+	std::vector<Point>* _path;
+	Scene* _scene;
 public:
-	TankAI(Tank* tank,std::vector<Message*>* aiMessages);
+	TankAI(Scene* scene,Tank* tank,std::vector<Message*>* aiMessages);
 	virtual ~TankAI();
 	//ai methods
 	//main method of the ai, activates all the other ai methods, represents one single reflection
@@ -50,10 +54,10 @@ public:
 	void hunt();
 
 	//the tank is damaged or out of special weapons and the hunt takes quite long, so some reinforcement could be of use.
-	void reinforcement();
+	//void reinforcement();
 
 	//the tank can not flee and tries to defend itself with its entire force (higher precision shots and all the weapons are used)
-	void rampage();
+	//void rampage();
 
 	//the tank has lost a lot of energy or the hunt took a lot of time, the tank flees from its enemy.
 	void escape();

@@ -6,6 +6,7 @@
 #include "TankAI.hpp"
 #include "../../common/Utils.hpp"
 #include "../../common/Types.hpp"
+#include "../Terrain.hpp"
 #include <iostream>
 
 #include "DetonationSoundMessage.hpp"
@@ -13,8 +14,8 @@
 
 namespace game_space {
 
-TankAI::TankAI(Tank* tank, std::vector<Message*>* aiMessages) :
-		_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _tank(tank) {
+TankAI::TankAI(Scene * scene, Tank* tank, std::vector<Message*>* aiMessages) :
+		_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _tank(tank), _currentTarget(-1), _scene(scene) {
 
 }
 
@@ -25,7 +26,7 @@ void TankAI::brainTick() {
 
 	sense();
 	// if pickTarget is null, sensing failed and we have to explore further
-	if (pickTarget() == NULL) {
+	if (pickTarget() == -1) {
 		switchStrategy(EXPLORE, -1);
 	}
 
@@ -43,20 +44,17 @@ void TankAI::brainTick() {
 		escape();
 		break;
 	}
-	case RAMPAGE:{
-		rampage();
-		break;
-	}
 	}
 
 }
 
 void TankAI::switchStrategy(enum TANKAI_STRATEGY newStrategy, int target) {
-
+	_strategy = newStrategy;
+	_currentTarget = target;
 }
 
 int TankAI::pickTarget() {
-	return -1;
+	return _currentTarget;
 }
 
 void TankAI::sense() {
@@ -65,13 +63,13 @@ void TankAI::sense() {
 		switch (message->_messageType) {
 		case Message::ATTACKED_BY: {
 			AttackedByMessage* abMessage = static_cast<AttackedByMessage*>(message);
-			std::cout << "Tank " << _tank->getID() << " is attacked by some other tank.";
+			std::cout << "Tank " << _tank->getID() << " is attacked by Tank " << abMessage->_attackingEnemyID;
 			break;
 		}
 		case Message::DETONATION_SOUND: {
 			DetonationSoundMessage* dsMessage = static_cast<DetonationSoundMessage*>(message);
-			if (Utils::distance(_tank->getPosition(), dsMessage->_detonationPoint) <dsMessage->_detonationStrength) {
-				std::cout << "Tank " << _tank->getID() << " heard some detonation!";
+			if (Utils::distance(_tank->getPosition(), dsMessage->_detonationPoint) < dsMessage->_detonationStrength) {
+				std::cout << "Tank " << _tank->getID() << " heard some detonation at point " << dsMessage->_detonationPoint.x << "," << dsMessage->_detonationPoint.z;
 			}
 			break;
 		}
@@ -80,18 +78,17 @@ void TankAI::sense() {
 }
 
 void TankAI::explore() {
+	//choose some random position on the map and find a way from here to this position
+	if (_path == NULL) {
+		Point randomGoal = _scene->getTerrain().getRandomPointOnMap();
+		_path = _scene->getTerrain().findPath(_tank->getPosition(), randomGoal);
+	}
+	//follow path
+	followPath();
 
 }
 
 void TankAI::hunt() {
-
-}
-
-void TankAI::reinforcement() {
-
-}
-
-void TankAI::rampage() {
 
 }
 
@@ -103,7 +100,29 @@ void TankAI::escape() {
 //////////////////////
 
 void TankAI::followPath() {
+	Point nextCheckPoint;
+	for (std::vector<Point>::iterator pathIter = _path->begin(); pathIter != _path->end(); pathIter++) {
+		nextCheckPoint = *pathIter;
+		if (Utils::distance(_tank->getPosition(), nextCheckPoint) > 1) {
+			// the currently chosen point is the next we should try to get to.
+			break;
+		} else {
+			//we already reached that point
+			_path->pop_back();
+		}
+	}
 
+	Vector3D directionToCheckPoint;
+	directionToCheckPoint.x = nextCheckPoint.x - _tank->getPosition().x;
+	directionToCheckPoint.y = nextCheckPoint.y - _tank->getPosition().y;
+	directionToCheckPoint.z = nextCheckPoint.z - _tank->getPosition().z;
+
+	Utils::normalize(directionToCheckPoint);
+	float rotationAngle = Utils::dot(_tank->getDirection(), directionToCheckPoint);
+	if (rotationAngle != 0) {
+		_tank->setDirection(_tank->getDirection() + Utils::toDegree(rotationAngle));
+	}
+	_tank->move(2);
 }
 
 void TankAI::aimAndFire(int target) {

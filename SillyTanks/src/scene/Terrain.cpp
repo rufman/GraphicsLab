@@ -303,26 +303,12 @@ void Terrain::draw() const {
 }
 
 float Terrain::getHeight(const Point &point) const {
-	//float y = (_triangleNormals[triangleNumber].x*point.x + _triangleNormals[triangleNumber].z*point.z)/_triangleNormals[triangleNumber].y;
+
 	int triangleNumber = getNearestTriangleIndexAt(point);
 	if (triangleNumber != -1) {
 		Point firstPoint = _vertices[_triangles[triangleNumber].vertex1];
 		Point secondPoint = _vertices[_triangles[triangleNumber].vertex2];
 		Point thirdPoint = _vertices[_triangles[triangleNumber].vertex3];
-
-		float dist1 = Utils::distance(point, firstPoint);
-		float dist2 = Utils::distance(point, secondPoint);
-		float dist3 = Utils::distance(point, thirdPoint);
-
-		float totalDist = dist1 + dist2 + dist3;
-
-		float ratio1 = dist1 / totalDist;
-		float ratio2 = dist2 / totalDist;
-		float ratio3 = dist3 / totalDist;
-
-//	float height = (ratio1*firstPoint.y)
-//	+(ratio2*secondPoint.y)
-//	+(ratio3*thirdPoint.y);
 
 		float y = (_triangleNormals[triangleNumber].x * (point.x - _vertices[_triangles[triangleNumber].vertex1].x) + _triangleNormals[triangleNumber].z * (point.z - _vertices[_triangles[triangleNumber].vertex1].z)) / (-_triangleNormals[triangleNumber].y);
 		y += _vertices[_triangles[triangleNumber].vertex1].y;
@@ -330,10 +316,6 @@ float Terrain::getHeight(const Point &point) const {
 	} else {
 		return 0;
 	}
-//	std::cout<<"GetHeight: "<<height<<std::endl;
-//	std::cout<<"Ratio1: "<<ratio1<<std::endl;
-//	std::cout<<"firstPoint y: "<<firstPoint.y<<std::endl;
-//	return height;
 }
 
 Vector3D Terrain::getNormal(const Point &point) const {
@@ -476,7 +458,7 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 
 		// check if the current node that we examine is the goal node
 		if (current->_pathState == Node::ENDPOINT) {
-			std::vector<Point>* path;
+			std::vector<Point>* path = new std::vector<Point>();
 			Node* node = goal;
 			while (node->_nextNode != NULL) {
 				node->_pathState = Node::PARTOFPATH;
@@ -583,6 +565,10 @@ std::vector<Node*> Terrain::getNeighbors(Node node) {
 		neighbors.push_back(neighbor);
 	}
 	return neighbors;
+}
+
+Point Terrain::getRandomPointOnMap(){
+	return Point(-_width+_width/(rand()%20),0,-_length+_length/(rand()%20));
 }
 
 }

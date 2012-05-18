@@ -59,6 +59,7 @@ public:
     float heuristicCostEstimate(Node from,Node to);
     float distBetween(Node from,Node to);
     std::vector<Node*> getNeighbors(Node node);
+    Point getRandomPointOnMap();
 	
 private:
 	void buildDisplayLists();

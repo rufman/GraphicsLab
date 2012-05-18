@@ -43,23 +43,11 @@
 
 namespace game_space {
 
-Scene::Scene( Window &window ):
-_window( window ),
-_gridDisplayList( 0 ),
-_firstUpdate( true ),
-_cameraMode( TANK_CAM ),
-_overlayCam( NULL ),
-_tankCam( NULL ),
-_skyDome( NULL ),
-_terrain( NULL ),
-_sunLight(NULL),
-_tank(NULL),
-_missile(NULL)
-{
+Scene::Scene(Window &window) :
+		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _sunLight(NULL){
 	_soundEngine = SoundEngine();
 
-
-	_endNode = new Node(Point(1,2,1), *this);
+	_endNode = new Node(Point(1, 2, 1), *this);
 	_endNode->_pathState = Node::ENDPOINT;
 }
 
@@ -67,8 +55,7 @@ Scene::~Scene() {
 	delete _skyDome;
 	delete _terrain;
 
-	for (LightVector::iterator lightIter = _lights.begin();
-			lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		delete light;
 	}
@@ -126,9 +113,9 @@ void Scene::initialize() {
 	_overviewCam = new Camera3D(*this);
 
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
-	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 2,
-			100 * 2, 50, 50);
-	_tank = new SmallTank(*this,0);
+	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 2, 100 * 2, 50, 50);
+	_playerTank = new SmallTank(*this, 0,NULL);
+	_tanks.push_back(_playerTank);
 
 	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam);
 	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
@@ -155,25 +142,30 @@ void Scene::reset() {
 	_freeCameraParameters.applyToCamera(*_tankCam);
 
 	_skyDome->reset();
-	_tank->reset();
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
-			bulletIter != _bullets.end(); ++bulletIter) {
+	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter) {
+		Tank* tank = *tankIter;
+		tank->reset();
+	}
+
+	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end(); ++bulletIter) {
 		Bullet *bullet = *bulletIter;
 		delete bullet;
 	}
 	_bullets.clear();
 
-	_missile = NULL;
 }
 
 void Scene::update(float seconds) {
 	handleKeyboardInput();
 
 	_skyDome->update(seconds);
-	_tank->update(seconds);
 
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
-			bulletIter != _bullets.end();) {
+	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter) {
+		Tank* tank = *tankIter;
+		tank->update(seconds);
+	}
+
+	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end();) {
 		Bullet *bullet = *bulletIter;
 		bullet->move(seconds);
 
@@ -195,8 +187,7 @@ void Scene::update(float seconds) {
 		// Remove bullet if out of window
 		const Point &bulletPosition = bullet->getPosition();
 
-		if (hitTarget
-				|| (bulletPosition.y < _terrain->getHeight(bulletPosition))) {
+		if (hitTarget || (bulletPosition.y < _terrain->getHeight(bulletPosition))) {
 			bulletIter = _bullets.erase(bulletIter);
 			_terrain->doDamageAt(bulletPosition);
 			delete bullet;
@@ -205,6 +196,7 @@ void Scene::update(float seconds) {
 		}
 	}
 
+	/*
 	if (_missile != NULL) {
 		_missile->move(seconds);
 		_missileSmokeParticleEngine->setStartPosition(_missile->getPosition());
@@ -216,10 +208,11 @@ void Scene::update(float seconds) {
 			_missile = NULL;
 			_missileSmokeParticleEngine->setActive(false);
 		}
-	}
+	}*/
 	_missileSmokeParticleEngine->update(seconds);
 
-	_tankSmokeParticleEngine->setStartPosition(_tank->getPosition());
+	//TODO migrate smoke engine into tank
+	_tankSmokeParticleEngine->setStartPosition(_tanks.front()->getPosition());
 	_tankSmokeParticleEngine->update(seconds);
 }
 
@@ -255,12 +248,13 @@ void Scene::drawScene() {
 	if (_cameraMode == TANK_CAM) {
 
 		camera = _tankCam;
-		camera->setLookAt(_tank->getLookAt());
+		//TODO:set tank always on the player's tank
+		camera->setLookAt(_tanks.front()->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		camera = _overviewCam;
-		camera->setLookAt(
-				LookAt(Point(100, 100, 100), _tank->getPosition(),
-						Vector3D(0, 1, 0)));
+
+		//TODO: set look at of overviewcam always on the player's tank
+		camera->setLookAt(LookAt(Point(100, 100, 100), _tanks.front()->getPosition(), Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL Lighting
@@ -278,8 +272,7 @@ void Scene::drawScene() {
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-	for (LightVector::iterator lightIter = _lights.begin();
-			lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}
@@ -301,16 +294,18 @@ void Scene::drawScene() {
 	_terrain->draw();
 
 	//Draw the tank
-	_tank->setRenderingParameters(_renderingParameters);
-	_tank->draw();
+	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter) {
+		Tank* tank = *tankIter;
+		tank->setRenderingParameters(_renderingParameters);
+		tank->draw();
+	}
 
 	glPopMatrix();
 
 	glPushMatrix();
 
 	// Draw bullets
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
-			bulletIter != _bullets.end(); ++bulletIter) {
+	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end(); ++bulletIter) {
 		Bullet *bullet = *bulletIter;
 		bullet->setRenderingParameters(_renderingParameters);
 		bullet->draw();
@@ -319,9 +314,10 @@ void Scene::drawScene() {
 	glPopMatrix();
 
 	glPushMatrix();
+	/*
 	if (_missile != NULL) {
 		_missile->draw();
-	}
+	}*/
 	glPopMatrix();
 
 	glPushMatrix();
@@ -437,8 +433,7 @@ void Scene::drawOverlay() {
 	int height = glutGet(GLUT_WINDOW_HEIGHT) / 4;
 
 	// Set camera parameters
-	_overlayCam->setViewport(
-			Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
+	_overlayCam->setViewport(Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
 
 	_overlayCam->applyViewport();
 	_overlayCam->applyProjection();
@@ -465,54 +460,6 @@ void Scene::drawOverlay() {
 	glPopMatrix();
 }
 
-void Scene::fireBullet() {
-	Bullet *bullet = new Bullet(*this);
-
-	_soundEngine.playMuzzleSound();
-
-	bullet->setPosition(_tank->getMuzzlePosition());
-
-	float velocityScale = 30;
-	Vector3D velocity(
-			-velocityScale * _tank->getShootingPower()
-					* std::cos(Utils::toRadian(_tank->getElevation()))
-					* std::sin(Utils::toRadian(-_tank->getAzimuth())),
-			velocityScale * _tank->getShootingPower()
-					* std::sin(Utils::toRadian(_tank->getElevation())),
-			-velocityScale * _tank->getShootingPower()
-					* std::cos(Utils::toRadian(_tank->getElevation()))
-					* std::cos(Utils::toRadian(-_tank->getAzimuth())));
-	bullet->setVelocity(velocity);
-
-	_bullets.push_back(bullet);
-}
-
-void Scene::fireMissile() {
-	if (_missile == NULL) {
-		_missile = new Missile(*this);
-
-		_missile->setPosition(_tank->getMuzzlePosition());
-
-		_missileSmokeParticleEngine->setActive(true);
-		_missileSmokeParticleEngine->setStartPosition(_missile->getPosition());
-
-		//float velocityScale = 10;
-		Vector3D velocity(
-				- _tank->getShootingPower()
-						* std::cos(Utils::toRadian(_tank->getElevation()))
-						* std::sin(Utils::toRadian(-_tank->getAzimuth())),
-				_tank->getShootingPower()
-						* std::sin(Utils::toRadian(_tank->getElevation())),
-				-_tank->getShootingPower()
-						* std::cos(Utils::toRadian(_tank->getElevation()))
-						* std::cos(Utils::toRadian(-_tank->getAzimuth())));
-		_missile->setVelocity(velocity);
-
-		_soundEngine.playExplosionSound();
-
-	}
-}
-
 void Scene::onResize(int width, int height) {
 	glutPostRedisplay();
 }
@@ -524,19 +471,19 @@ void Scene::handleKeyboardInput() {
 	 bool altPressed = ( modifier & GLUT_ACTIVE_ALT );*/
 
 	if (_window.keyPressed('w') || _window.keyPressed('W')) {
-		_tank->move(SMALLTANK_SPEED);
+		_playerTank->move(SMALLTANK_SPEED);
 	}
 
 	if (_window.keyPressed('a') || _window.keyPressed('A')) {
-		_tank->setDirection(_tank->getDirection() - 5);
+		_playerTank->setDirection(_playerTank->getDirection() - 5);
 	}
 
 	if (_window.keyPressed('s') || _window.keyPressed('S')) {
-		_tank->move(-SMALLTANK_SPEED);
+		_playerTank->move(-SMALLTANK_SPEED);
 	}
 
 	if (_window.keyPressed('d') || _window.keyPressed('D')) {
-		_tank->setDirection(_tank->getDirection() + 5);
+		_playerTank->setDirection(_playerTank->getDirection() + 5);
 	}
 
 	if (_window.keyPressed('r') || _window.keyPressed('R')) {
@@ -545,13 +492,13 @@ void Scene::handleKeyboardInput() {
 	}
 
 	if (_window.keyPressed('+')) {
-		float power = _tank->getShootingPower() + 0.1;
-		_tank->setShootingPower((power > 1.0) ? 1.0 : power);
+		float power = _playerTank->getShootingPower() + 0.1;
+		_playerTank->setShootingPower((power > 1.0) ? 1.0 : power);
 	}
 
 	if (_window.keyPressed('-')) {
-		float power = _tank->getShootingPower() - 0.1;
-		_tank->setShootingPower((power < 0.1) ? 0.1 : power);
+		float power = _playerTank->getShootingPower() - 0.1;
+		_playerTank->setShootingPower((power < 0.1) ? 0.1 : power);
 	}
 
 	if (_window.keyPressed(' ')) {
@@ -585,8 +532,7 @@ void Scene::handleKeyboardInput() {
 	if (_window.keyHit('4')) {
 		if (_renderingParameters.normalMode == RenderingParameters::OFF) {
 			_renderingParameters.normalMode = RenderingParameters::VERTEX;
-		} else if (_renderingParameters.normalMode
-				== RenderingParameters::VERTEX) {
+		} else if (_renderingParameters.normalMode == RenderingParameters::VERTEX) {
 			_renderingParameters.normalMode = RenderingParameters::TRIANGLE;
 		} else {
 			_renderingParameters.normalMode = RenderingParameters::OFF;
@@ -600,7 +546,7 @@ void Scene::handleKeyboardInput() {
 		}
 	}
 	if (_window.keyHit('p') || _window.keyHit('P')) {
-		_terrain->findPath(_tank->getPosition(), _endNode->_position);
+		_terrain->findPath(_playerTank->getPosition(), _endNode->_position);
 	}
 	if (_window.specialKeyPressed(GLUT_KEY_LEFT)) {
 		_endNode->_position.x--;
@@ -646,8 +592,8 @@ void Scene::onMouseMove(int x, int y) {
 		glutWarpPointer(width / 2, height / 2);
 	}
 
-	_tank->setElevation(_tank->getElevation() - yMove / 3);
-	_tank->setAzimuth(_tank->getAzimuth() + xMove / 3);
+	_playerTank->setElevation(_playerTank->getElevation() - yMove / 3);
+	_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove / 3);
 	glutPostRedisplay();
 }
 
@@ -663,8 +609,8 @@ void Scene::onMousePassiveMove(int x, int y) {
 		glutWarpPointer(width / 2, height / 2);
 	}
 
-	_tank->setElevation(_tank->getElevation() - yMove / 7);
-	_tank->setAzimuth(_tank->getAzimuth() + xMove / 7);
+	_playerTank->setElevation(_playerTank->getElevation() - yMove / 7);
+	_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove / 7);
 	glutPostRedisplay();
 }
 
@@ -681,12 +627,7 @@ void Scene::onIdle() {
 }
 
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
-	Point from(
-			radius * std::cos(Utils::toRadian(elevation))
-					* std::sin(Utils::toRadian(azimuth)) * -1,
-			radius * std::sin(Utils::toRadian(elevation)),
-			radius * std::cos(Utils::toRadian(elevation))
-					* std::cos(Utils::toRadian(azimuth)) * -1);
+	Point from(radius * std::cos(Utils::toRadian(elevation)) * std::sin(Utils::toRadian(azimuth)) * -1, radius * std::sin(Utils::toRadian(elevation)), radius * std::cos(Utils::toRadian(elevation)) * std::cos(Utils::toRadian(azimuth)) * -1);
 
 	Vector3D up(0.0, 1.0, 0.0);
 	Vector3D dir(-from.x, -from.y, -from.z);
@@ -697,8 +638,7 @@ void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Vector3D upMove = up;
 	upMove *= moveY;
 
-	Point newFrom(from.x + normalMove.x + upMove.x,
-			from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
+	Point newFrom(from.x + normalMove.x + upMove.x, from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
 	Point to(newFrom.x - from.x, newFrom.y - from.y, newFrom.z - from.z);
 
 	camera.setLookAt(LookAt(newFrom, to, up));
@@ -708,4 +648,18 @@ Window& Scene::getWindow() {
 	return _window;
 }
 
+SoundEngine Scene::getSoundEngine()
+{
+	return _soundEngine;
+}
+
+void Scene::setPlayerTank(Tank* tank)
+{
+	_playerTank = tank;
+}
+
+Tank* Scene::getPlayerTank()
+{
+	return _playerTank;
+}
 }
