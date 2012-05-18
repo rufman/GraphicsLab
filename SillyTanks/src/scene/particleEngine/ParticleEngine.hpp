@@ -25,10 +25,10 @@ namespace game_space {
 template <class T>
 class ParticleEngine {
 public:
-	ParticleEngine(Point startPosition,Vector3D startVelocity,Vector3D startAcceleration,Camera3D* camera) {
-		_startPosition = startPosition;
-		_startVelocity = startVelocity;
-		_startAcceleration = startAcceleration;
+	ParticleEngine(Camera3D* camera) {
+		_startPosition = Point(0,0,0);
+		_startAcceleration = Vector3D(0,1,0);
+		_engineActive = false;
 
 		_camera = camera;
 		Point from(_camera->getLookAt().from);
@@ -40,6 +40,7 @@ public:
 		{
 			T* particle = new T();
 			particle->resetParticle(_startPosition,_startAcceleration);
+			particle->active = false;
 			_particles.push_back(particle);
 		}
 
@@ -73,11 +74,6 @@ public:
 	Point getStartPosition()
 	{
 		return _startPosition;
-	}
-
-	void setStartVelocity(Vector3D velocity)
-	{
-		_startVelocity = velocity;
 	}
 
 	void setStartAcceleration(Vector3D acceleration)
@@ -115,12 +111,37 @@ public:
 		return Vector3D(_directionOfCamera.x,_directionOfCamera.y,_directionOfCamera.z);
 	}
 
+	void setCamera(Camera3D* camera)
+	{
+		_camera = camera;
+	}
+
+	void setActive(bool active)
+	{
+		_engineActive = active;
+	}
+
 	void update(float seconds)
 	{
+
 		// Loop through all the particles
 		for (std::vector<Particle*>::iterator particleIterator = _particles.begin();particleIterator != _particles.end(); ++particleIterator) {
 			Particle* particle = *particleIterator;
-			particle->update(seconds,_startPosition,_startAcceleration);
+
+			if(_engineActive)
+			{
+				particle->active = true;
+			}
+
+			if(particle->timeToLive < 0)
+			{
+				particle->resetParticle(_startPosition,_startAcceleration);
+				if(!_engineActive)
+				{
+					particle->active = false;
+				}
+			}
+			particle->update(seconds);
 		}
 	}
 
@@ -142,7 +163,7 @@ public:
 			// If the particle is active
 			if (particle->active) {
 				// Draw the particle using the RGB values, fade the particle based on its time to live
-				//glColor4f(particle->r, particle->g,particle->b,particle->timeToLive);
+				glColor4f(particle->r, particle->g,particle->b,particle->timeToLive);
 
 				float size = _minSize + rand()%1 * (_maxSize - _minSize);
 
@@ -183,11 +204,11 @@ private:
 	Camera3D* _camera;
 
 	Point _startPosition;
-	Vector3D _startVelocity;
 	Vector3D _startAcceleration;
 
 	TGATexture* _particleTexture;
 	Particle* _particleType;
+	bool _engineActive;
 };
 
 }

@@ -41,13 +41,12 @@ SoundEngine::SoundEngine(){
 
 	if(LoadALData() == AL_FALSE){
 		std::cerr << "ERROR during loading of AL data" << std::endl;
-		exit(1);
+		//exit(1);
 	}
 
 
 	SetListenerValues();
 
-	// Setup an exit procedure.
 
 
 }
@@ -79,18 +78,20 @@ ALboolean SoundEngine::LoadALData(){
 
 	alGenBuffers(NUM_BUFFERS, Buffers);
 
-	if(alGetError() != AL_NO_ERROR)
+	if(alGetError() != AL_NO_ERROR){
 		return AL_FALSE;
+	}
 
-	alutLoadWAVFile((ALbyte*)"wavdata/bomb2.wav", &format, &data, &size, &freq, &loop);
+
+	alutLoadWAVFile((ALbyte*)"resources/sounds/bomb2.wav", &format, &data, &size, &freq, &loop);
 	alBufferData(Buffers[EXPLOSION], format, data, size, freq);
 	alutUnloadWAV(format, data, size, freq);
 
-	alutLoadWAVFile((ALbyte*)"wavdata/Gun1.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*)"resources/sounds/Gun1.wav", &format, &data, &size, &freq, &loop);
 	alBufferData(Buffers[GUN], format, data, size, freq);
 	alutUnloadWAV(format, data, size, freq);
 
-	alutLoadWAVFile((ALbyte*)"wavdata/muzzleshot.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*)"resources/sounds/muzzleshot.wav", &format, &data, &size, &freq, &loop);
 	alBufferData(Buffers[MUZZLE], format, data, size, freq);
 	alutUnloadWAV(format, data, size, freq);
 
@@ -98,8 +99,10 @@ ALboolean SoundEngine::LoadALData(){
 
 	alGenSources(NUM_SOURCES, Sources);
 
-	if(alGetError() != AL_NO_ERROR)
+	if(alGetError() != AL_NO_ERROR){
 		return AL_FALSE;
+	}
+
 
 	alSourcei (Sources[EXPLOSION], AL_BUFFER,   Buffers[EXPLOSION]   );
 	alSourcef (Sources[EXPLOSION], AL_PITCH,    1.0f              );
@@ -124,8 +127,10 @@ ALboolean SoundEngine::LoadALData(){
 
 	// Do another error check and return.
 
-	if(alGetError() != AL_NO_ERROR)
+	if(alGetError() != AL_NO_ERROR){
 		return AL_FALSE;
+	}
+
 
 	return AL_TRUE;
 }

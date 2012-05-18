@@ -7,6 +7,8 @@
 #define TANKAI_H_
 
 #include "../../common/Definitions.hpp"
+#include "Message.hpp"
+#include <vector>
 
 namespace game_space {
 
@@ -20,8 +22,10 @@ public:
 		REINFORCEMENT,
 		RAMPAGE
 	}_strategy;
+
+	std::vector<Message>* _aiMessages;
 public:
-	TankAI();
+	TankAI(std::vector<Message>* aiMessages);
 	virtual ~TankAI();
 	//ai methods
 	//main method of the ai, activates all the other ai methods, represents one single reflection

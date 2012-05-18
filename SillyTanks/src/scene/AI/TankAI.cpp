@@ -7,8 +7,8 @@
 
 namespace game_space {
 
-TankAI::TankAI():
-_strategy(TankAI::EXPLORE){
+TankAI::TankAI(std::vector<Message>* aiMessages):
+_strategy(TankAI::EXPLORE),_aiMessages(aiMessages){
 
 }
 
