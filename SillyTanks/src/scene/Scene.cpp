@@ -121,6 +121,10 @@ void Scene::initialize() {
 
 	// Reset data
 	reset();
+
+	//hiding the default cursor and putting the cursor position to the middle of the window
+	glutSetCursor(GLUT_CURSOR_NONE);
+	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
 }
 
 void Scene::reset() {
