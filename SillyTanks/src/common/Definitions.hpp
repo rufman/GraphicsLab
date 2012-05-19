@@ -50,8 +50,14 @@ namespace game_space {
 //#################
 // Game Graphics definitions
 //#################
-#define PINETREE_MODEL "resources/GFX/models/fir-tree.ply"
-#define PINETREE_MAPNR 8
+#define PINETREE_MODEL "resources/GFX/models/pinetree.ply"
+#define PINETREE_MAPNR 0
+
+#define PALMTREE_MODEL "resources/GFX/models/palmtree.ply"
+#define PALMTREE_MAPNR 20
+
+#define ROUNDTREE_MODEL "resources/GFX/models/roundtree.ply"
+#define ROUNDTREE_MAPNR 40
 
 //###########
 // Particle engine

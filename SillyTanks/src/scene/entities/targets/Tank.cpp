@@ -119,6 +119,8 @@ void Tank::update(float seconds) {
 
 	if (_scene.getTerrain().checkBorder(nextPosition)) {
 		_speed = 0;
+		relativeGravity.x = 0;
+		relativeGravity.z = 0;
 	}
 
 	_position.x += _velocity.x * _speed * seconds + relativeGravity.x * seconds;
