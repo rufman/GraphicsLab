@@ -466,7 +466,7 @@ void Scene::handleKeyboardInput() {
 	}
 
 	if (_window.keyPressed('s') || _window.keyPressed('S')) {
-		_playerTank->move(-SMALLTANK_SPEED);
+		_playerTank->move(SMALLTANK_SPEED);
 	}
 
 	if (_window.keyPressed('d') || _window.keyPressed('D')) {

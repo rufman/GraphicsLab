@@ -78,11 +78,11 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix, float width
 			Point &vertex = _vertices[_widthResolution * lengthPoint + widthPoint];
 			vertex.x = -_width / 2.0 + widthPoint * (_width / (_widthResolution - 1));
 			vertex.z = _length / 2.0 - lengthPoint * (_length / (_lengthResolution - 1));
-			//vertex.y = ((_heightData->getData()[_heightData->getWidth() * (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4]) / 10.0f) - 20;
 
 			int heightDataIndex = _heightData->getWidth() * (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
 			int objectDataIndex = _objectData->getWidth() * (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
-			vertex.y = ((_heightData->getData()[heightDataIndex]) / 10.0f) - 20;
+			float heightScaling = 7.0f;
+			vertex.y = ((_heightData->getData()[heightDataIndex]) / heightScaling) - 200/heightScaling;
 
 			//ObjectData mapping
 			if (_objectData->getData()[objectDataIndex] == PINETREE_MAPNR) {
@@ -596,7 +596,7 @@ Point Terrain::getRandomPointOnMap() {
 }
 
 bool Terrain::checkBorder(const Point &point) const {
-	float threshold = 5.0;
+	float threshold = 3.0;
 
 	float angleGravityNormal = acos(Utils::dot(Vector3D(0, 1, 0), getNormal(point)));
 

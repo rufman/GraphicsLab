@@ -100,7 +100,7 @@ void Missile::setTargetPosition(const Point targetPosition) {
 
 void Missile::move(float seconds) {
 	//ballistics of a projectile
-	_toTarget = Vector3D((_targetPosition.x - _position.x), (_targetPosition.y - _position.y), (_targetPosition.z - _position.z));
+	_toTarget = Vector3D((_targetPosition.x - _position.x), (_scene.getTerrain().getHeight(_position) - _position.y), (_targetPosition.z - _position.z));
 	Utils::normalize(_toTarget);
 
 	if (_waitBeforeAimingCounter > 65) {
