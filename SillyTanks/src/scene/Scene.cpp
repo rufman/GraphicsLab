@@ -42,7 +42,7 @@
 namespace game_space {
 
 Scene::Scene(Window &window) :
-		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _sunLight(NULL){
+		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _sunLight(NULL) {
 	_soundEngine = SoundEngine();
 
 	_endNode = new Node(Point(1, 2, 1), *this);
@@ -112,7 +112,7 @@ void Scene::initialize() {
 
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 2, 100 * 2, 50, 50);
-	_playerTank = new SmallTank(*this, 0,NULL);
+	_playerTank = new SmallTank(*this, 0, NULL);
 	_tanks.push_back(_playerTank);
 
 	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam);
@@ -194,8 +194,7 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for(std::vector<Missile*>::iterator missileIter = _missiles.begin();missileIter != _missiles.end();missileIter++)
-	{
+	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end(); missileIter++) {
 		(*missileIter)->move(seconds);
 	}
 
@@ -301,8 +300,7 @@ void Scene::drawScene() {
 
 	glPushMatrix();
 
-	for(std::vector<Missile*>::iterator missileIter = _missiles.begin();missileIter != _missiles.end();missileIter++)
-	{
+	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end(); missileIter++) {
 		(*missileIter)->draw();
 	}
 	glPopMatrix();
@@ -488,10 +486,6 @@ void Scene::handleKeyboardInput() {
 		_playerTank->setShootingPower((power < 0.1) ? 0.1 : power);
 	}
 
-	if (_window.keyPressed('m') || _window.keyPressed('M')) {
-		_playerTank->fireMissile();
-	}
-
 	if (_window.keyHit('1')) {
 		if (_renderingParameters.drawMode == RenderingParameters::WIREFRAME) {
 			_renderingParameters.drawMode = RenderingParameters::POLYGON;
@@ -557,12 +551,47 @@ void Scene::onMouseEntry(int state) {
 
 void Scene::onMouseClick(int button, int state, int x, int y) {
 
-	_playerTank->fireBullet();
+	// do not change these as they are defined like that from the mouse api of opengl, I just did not find the constants
+	const int leftButton = 0;
+	const int middleButton = 1;
+	const int rightButton = 2;
+	const int mouseDown = 0;
+	const int mouseUp = 1;
+
+	if (state == mouseDown) {
+		switch (button) {
+		case leftButton: {
+			switch (_playerTank->getSelectedWeapon()) {
+						case Tank::BULLET: {
+							_playerTank->fireBullet();
+							break;
+						}
+						case Tank::MISSILE: {
+							_playerTank->fireMissile();
+							break;
+						}
+						}
+
+			break;
+		}
+		case rightButton: {
+			switch (_playerTank->getSelectedWeapon()) {
+			case Tank::BULLET: {
+				_playerTank->setSelectedWeapon(Tank::MISSILE);
+				break;
+			}
+			case Tank::MISSILE: {
+				_playerTank->setSelectedWeapon(Tank::BULLET);
+				break;
+			}
+			}
+			break;
+		}
+		}
+	}
 }
 
 void Scene::onMouseMove(int x, int y) {
-	//TODO:onMouseMove does not work as expected
-	_playerTank->fireBullet();
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
@@ -631,18 +660,15 @@ Window& Scene::getWindow() {
 	return _window;
 }
 
-SoundEngine Scene::getSoundEngine()
-{
+SoundEngine Scene::getSoundEngine() {
 	return _soundEngine;
 }
 
-void Scene::setPlayerTank(Tank* tank)
-{
+void Scene::setPlayerTank(Tank* tank) {
 	_playerTank = tank;
 }
 
-Tank* Scene::getPlayerTank()
-{
+Tank* Scene::getPlayerTank() {
 	return _playerTank;
 }
 }

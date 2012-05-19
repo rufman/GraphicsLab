@@ -1,6 +1,6 @@
 /*
  * tank.hpp
-* See tank.cpp
+ * See tank.cpp
  */
 
 #ifndef TANK_HPP_
@@ -24,37 +24,11 @@ class TankAI;
 
 namespace game_space {
 
-
 class Tank: public Drawable {
 public:
-	Tank(Scene &scene,int id,TankAI* ai);
-	virtual ~Tank();
-	void reset();
-
-    /** Draw the object to the screen. */
-    void draw() const;
-
-	Point getMuzzlePosition() const;
-    float getShootingPower() const;
-    void setShootingPower(float power);
-
-    float getElevation() const;
-    void setElevation( float elevation );
-
-    float getAzimuth() const;
-    void setAzimuth( float azimuth );
-    void move(float speed);
-    void update(float seconds);
-    float getDirection() const;
-    void setDirection(float angle);
-    LookAt getLookAt() const;
-    Point getPosition() const;
-    int getID() const;
-    bool isAIControlled() const;
-    TankAI* getAI() const;
-    void fireBullet();
-    void fireMissile();
-
+	enum SELECTEDWEAPON {
+		BULLET, MISSILE
+	};
 protected:
 	Turret* _turret;
 
@@ -75,7 +49,41 @@ protected:
 	int _tankId;
 	TankAI* _controllingAI;
 
-};
+	SELECTEDWEAPON _selectedWeapon;
 
+public:
+	Tank(Scene &scene, int id, TankAI* ai);
+	virtual ~Tank();
+	void reset();
+
+	/** Draw the object to the screen. */
+	void draw() const;
+
+	Point getMuzzlePosition() const;
+	float getShootingPower() const;
+	void setShootingPower(float power);
+
+	float getElevation() const;
+	void setElevation(float elevation);
+
+	float getAzimuth() const;
+	void setAzimuth(float azimuth);
+	void move(float speed);
+	void update(float seconds);
+	float getDirection() const;
+	void setDirection(float angle);
+	LookAt getLookAt() const;
+	Point getPosition() const;
+	int getID() const;
+	bool isAIControlled() const;
+	TankAI* getAI() const;
+	void fireBullet();
+	void fireMissile();
+
+	//only used for a human player
+	SELECTEDWEAPON getSelectedWeapon();
+	void setSelectedWeapon(SELECTEDWEAPON weapon);
+
+};
 }
 #endif
