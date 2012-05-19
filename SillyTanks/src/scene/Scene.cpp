@@ -111,7 +111,7 @@ void Scene::initialize() {
 	_overviewCam = new Camera3D(*this);
 
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
-	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 2, 100 * 2, 50, 50);
+	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50,50 );
 	_playerTank = new SmallTank(*this, 0, NULL);
 	_tanks.push_back(_playerTank);
 

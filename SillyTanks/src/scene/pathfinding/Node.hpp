@@ -15,12 +15,6 @@ namespace game_space {
 class Node: public Drawable
 {
 public:
-	Node(Point position,Scene &scene);
-	virtual ~Node();
-	void draw() const;
-	bool  equals(Node) const;
-
-public:
 	enum NodeState{
 		FREE,
 		OPEN,
@@ -49,8 +43,14 @@ public:
 	float _g_score;
 	float _h_score;
 	float _f_score;
-};
 
+public:
+	Node(Point position,Scene &scene);
+	virtual ~Node();
+	void draw() const;
+	bool  equals(Node) const;
+	void setNodeState(NodeState nodestate);
+};
 }
 
 #endif /* DOT_H_ */

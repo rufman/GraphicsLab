@@ -124,5 +124,10 @@ bool Node::equals(Node node) const {
 	&& (_position.z == node._position.z);
 }
 
+void Node::setNodeState(NodeState nodestate)
+{
+	_nodeState = nodestate;
+}
+
 }
 
