@@ -50,7 +50,7 @@ namespace game_space {
 //#################
 // Game Graphics definitions
 //#################
-#define PINETREE_MODEL "resources/GFX/models/cartoon-tree.ply"
+#define PINETREE_MODEL "resources/GFX/models/fir-tree.ply"
 #define PINETREE_MAPNR 8
 
 //###########
