@@ -110,11 +110,6 @@ void Tank::update(float seconds) {
 			angleGravityNormal * (realGravity.y + normal.y),
 			angleGravityNormal * 15.0 * (realGravity.z + normal.z));
 
-	//std::cout<<"angleGravityNormal: "<<angleGravityNormal<<std::endl;
-	if(angleGravityNormal>0.45){
-		_speed = 0;
-	}
-
 	Point nextPosition(
 			_position.x
 					+ (_velocity.x * _speed * seconds

@@ -567,11 +567,23 @@ std::vector<Node*> Terrain::getNeighbors(Node node) {
 }
 
 Point Terrain::getRandomPointOnMap(){
-	return Point(-_width+_width/(rand()%20),0,-_length+_length/(rand()%20));
+	srand((unsigned)time(0));
+
+	float x = (-_width / 2.0) + ((float)rand()/(float)_width);
+	float z = (_length / 2.0) - ((float)rand()/(float)_length);
+	float y = getHeight(Point(x,0,y));
+
+	return Point(x,y,z);
 }
 
 bool Terrain::checkBorder(const Point &point) const{
 	float threshold = 5.0;
+
+	float angleGravityNormal = acos(Utils::dot(Vector3D(0,1,0), getNormal(point)));
+
+	if(angleGravityNormal>0.45){
+		return true;
+	}
 
 	for (uint i = 0; i < _models.size(); i++) {
 		if(Utils::distance(_models[i]->getPosition(),point)<=threshold){
