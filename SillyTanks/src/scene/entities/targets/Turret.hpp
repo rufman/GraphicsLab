@@ -53,7 +53,7 @@ public:
      *
      * @return      Coordinates of the tip of the cannon muzzle
      */
-    Point getMuzzlePosition(Point point) const;
+    Point getMuzzlePosition() const;
     
     Point getPosition() const;
     void setPosition(Point position);

@@ -35,6 +35,7 @@ SmallTank::~SmallTank() {}
 
 void SmallTank::draw() const
 {
+	glPushMatrix();
 	glTranslatef(_position.x,_position.y,_position.z);
 
 	//a little bit higher over the ground because otherwise the model sinks into the ground
@@ -44,21 +45,21 @@ void SmallTank::draw() const
 
 	glScalef(_baseWidth*5,_baseWidth*5,_baseWidth*5);
 	glRotatef(-90,1,0,0);
+
+	//glRotation seems to be counter intuitive as we have to rotate in negative direction (check Utils::applyRotation)
 	glRotatef(-getDirection(),0,0,1);
 	glTranslatef(0,-0.5,0);
 
 	_chassis->setRenderingParameters(_renderingParameters);
 	_chassis->draw();
+	glPopMatrix();
 
-	//clear operations from above
-	glTranslatef(0,0.5,0);
-	glRotatef(getDirection(),0,0,1);
-	glRotatef(90,1,0,0);
-
-	glRotatef( -_turret->getAzimuth()+180, 0.0, 1.0, 0.0 );
-	glScalef(_baseWidth*0.5,_baseWidth*0.5,_baseWidth*0.5);
+	glPushMatrix();
 	_turret->setRenderingParameters(_renderingParameters);
+	Point tankPosition = getPosition();
+	_turret->setPosition(Point(tankPosition.x,tankPosition.y+0.5,tankPosition.z));
 	_turret->draw();
+	glPopMatrix();
 }
 
 }
