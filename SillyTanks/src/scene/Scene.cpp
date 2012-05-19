@@ -194,20 +194,12 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	/*
-	if (_missile != NULL) {
-		_missile->move(seconds);
-		_missileSmokeParticleEngine->setStartPosition(_missile->getPosition());
-		if (_missile->getPosition().y < _terrain->getHeight(_missile->getPosition())) {
-			_terrain->doDamageAt(_missile->getPosition());
-			_terrain->doDamageAt(_missile->getPosition());
-			_terrain->doDamageAt(_missile->getPosition());
-			delete _missile;
-			_missile = NULL;
-			_missileSmokeParticleEngine->setActive(false);
-		}
-	}*/
-	_missileSmokeParticleEngine->update(seconds);
+	for(std::vector<Missile*>::iterator missileIter = _missiles.begin();missileIter != _missiles.end();missileIter++)
+	{
+		(*missileIter)->move(seconds);
+	}
+
+	//_missileSmokeParticleEngine->update(seconds);
 
 	//TODO migrate smoke engine into tank
 	_tankSmokeParticleEngine->setStartPosition(_playerTank->getPosition());
@@ -308,10 +300,11 @@ void Scene::drawScene() {
 	glPopMatrix();
 
 	glPushMatrix();
-	/*
-	if (_missile != NULL) {
-		_missile->draw();
-	}*/
+
+	for(std::vector<Missile*>::iterator missileIter = _missiles.begin();missileIter != _missiles.end();missileIter++)
+	{
+		(*missileIter)->draw();
+	}
 	glPopMatrix();
 
 	glPushMatrix();

@@ -11,6 +11,9 @@
 #include "../../../common/GLIncludes.hpp"
 #include "../../../common/Utils.hpp"
 
+#include "../../Scene.hpp"
+#include "../../Terrain.hpp"
+
 namespace game_space {
 
 Missile::Missile(Scene &scene, float size) :
@@ -23,12 +26,8 @@ Missile::~Missile() {
 }
 
 void Missile::draw() const {
-	glShadeModel(
-			_renderingParameters.shadeMode == RenderingParameters::FLAT ?
-					GL_FLAT : GL_SMOOTH);
-	glPolygonMode(GL_FRONT_AND_BACK,
-			_renderingParameters.drawMode == RenderingParameters::WIREFRAME ?
-					GL_LINE : GL_FILL);
+	glShadeModel(_renderingParameters.shadeMode == RenderingParameters::FLAT ? GL_FLAT : GL_SMOOTH);
+	glPolygonMode(GL_FRONT_AND_BACK, _renderingParameters.drawMode == RenderingParameters::WIREFRAME ? GL_LINE : GL_FILL);
 
 	glMatrixMode(GL_MODELVIEW);
 
@@ -36,49 +35,48 @@ void Missile::draw() const {
 
 	glTranslatef(_position.x, _position.y, _position.z);
 
-	if ( _counter < 65 ){
-		Utils::applyGLRotation( Vector3D( 1, 0, 0), _velocity );
+	if (_counter < 65) {
+		Utils::applyGLRotation(Vector3D(1, 0, 0), _velocity);
+	} else {
+		Utils::applyGLRotation(Vector3D(1, 0, 0), _toTarget);
 	}
-	else{
-		Utils::applyGLRotation( Vector3D( 1, 0, 0), _toTarget );
-	}
-	glRotatef(90,0,1,0);
+	glRotatef(90, 0, 1, 0);
 	/*
-	float materialAmbient[3] = { 0.1, 0.1, 0.1 };
-	float materialDiffuse[3] = { 0.2, 0.2, 0.2 };
-	float materialSpecular[3] = { 0.2, 0.4, 0.4 };
-	float materialEmission[3] = { 0.1, 0.1, 0.1 };
-	int shininess = 50;
+	 float materialAmbient[3] = { 0.1, 0.1, 0.1 };
+	 float materialDiffuse[3] = { 0.2, 0.2, 0.2 };
+	 float materialSpecular[3] = { 0.2, 0.4, 0.4 };
+	 float materialEmission[3] = { 0.1, 0.1, 0.1 };
+	 int shininess = 50;
 
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-	*/
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
+	 glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+	 */
 
 	GLUquadricObj *quadObj = gluNewQuadric();
-	gluCylinder(quadObj, _size/2.0, _size/2.0, _size*4.0, 10, 10);
+	gluCylinder(quadObj, _size / 2.0, _size / 2.0, _size * 4.0, 10, 10);
 
 	glBegin(GL_TRIANGLES);
-	glVertex3f(0,-_size,0);
+	glVertex3f(0, -_size, 0);
 	glVertex3f(0, 0, _size);
 	glVertex3f(0, _size, 0);
 
-	glVertex3f(-_size,0,0);
+	glVertex3f(-_size, 0, 0);
 	glVertex3f(_size, 0, 0);
 	glVertex3f(0, 0, _size);
 	glEnd();
 
-	glutSolidCone( _size/2.0, 0, 10,10);
+	glutSolidCone(_size / 2.0, 0, 10, 10);
 
 	glPushMatrix();
-	glTranslatef( 0, 0, _size*4.0);
-	glutSolidSphere( _size/2.0, 10, 10 );
+	glTranslatef(0, 0, _size * 4.0);
+	glutSolidSphere(_size / 2.0, 10, 10);
 	glPopMatrix();
 
-	glTranslatef(-_position.x,- _position.y,- _position.z);
-	glRotatef(-90,0,1,0);
+	glTranslatef(-_position.x, -_position.y, -_position.z);
+	glRotatef(-90, 0, 1, 0);
 
 	glPopMatrix();
 }
@@ -91,14 +89,13 @@ void Missile::setVelocity(const Vector3D &velocity) {
 	_velocity = velocity;
 }
 
-void Missile::setTargetPosition(const Point targetPosition)
-{
+void Missile::setTargetPosition(const Point targetPosition) {
 	_targetPosition = targetPosition;
 }
 
 void Missile::move(float seconds) {
 	//ballistics of a projectile
-	_toTarget = Vector3D((_targetPosition.x - _position.x), (_targetPosition.y-_position.y), (_targetPosition.z - _position.z));
+	_toTarget = Vector3D((_targetPosition.x - _position.x), (_targetPosition.y - _position.y), (_targetPosition.z - _position.z));
 	Utils::normalize(_toTarget);
 
 	if (_counter > 65) {
@@ -106,12 +103,21 @@ void Missile::move(float seconds) {
 		_position.y += _velocity.y * seconds + _toTarget.y;
 		_position.z += _velocity.z * seconds + _toTarget.z;
 	} else {
-		_position.x += _velocity.x * seconds*50;
-		_position.y += _velocity.y * seconds *50;
-		_position.z += _velocity.z * seconds*50;
+		_position.x += _velocity.x * seconds * 50;
+		_position.y += _velocity.y * seconds * 50;
+		_position.z += _velocity.z * seconds * 50;
 	}
 
 	_counter++;
+
+	//_missileSmokeParticleEngine->setStartPosition(_missile->getPosition());
+	if (_position.y < _scene.getTerrain().getHeight(_position)) {
+		_scene.getTerrain().doDamageAt(_position);
+		_scene.getTerrain().doDamageAt(_position);
+		_scene.getTerrain().doDamageAt(_position);
+
+		//_missileSmokeParticleEngine->setActive(false);
+	}
 
 	//_velocity.y += GRAVITATIONAL_ACCELERATION*seconds;
 }
