@@ -76,6 +76,7 @@ public:
 	SoundEngine getSoundEngine();
 	void setPlayerTank(Tank* tank);
 	Tank* getPlayerTank();
+	Camera3D* getTankCam();
 
 private:
 	/**
@@ -93,6 +94,7 @@ private:
 	void fireMissile();
 	void handleKeyboardInput();
 	Window& getWindow();
+
 
 public:
 	std::vector<Tank*> _tanks;
@@ -156,7 +158,6 @@ private:
 	DirectionalLight* _sunLight;
 
 	ParticleEngine<Smoke> *_tankSmokeParticleEngine;
-	ParticleEngine<Smoke> *_missileSmokeParticleEngine;
 
 	Node* _endNode;
 

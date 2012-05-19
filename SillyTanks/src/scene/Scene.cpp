@@ -118,9 +118,6 @@ void Scene::initialize() {
 	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam);
 	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_tankSmokeParticleEngine->setActive(true);
-	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam);
-	_missileSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
-	_missileSmokeParticleEngine->setActive(false);
 
 	// Reset data
 	reset();
@@ -194,8 +191,18 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end(); missileIter++) {
+	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end();) {
 		(*missileIter)->move(seconds);
+		if((*missileIter)->isDetonated())
+		{
+			Missile* missile = *missileIter;
+			missileIter = _missiles.erase(missileIter);
+			delete missile;
+		}
+		else
+		{
+			missileIter++;
+		}
 	}
 
 	//_missileSmokeParticleEngine->update(seconds);
@@ -307,10 +314,6 @@ void Scene::drawScene() {
 
 	glPushMatrix();
 	_tankSmokeParticleEngine->draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	_missileSmokeParticleEngine->draw();
 	glPopMatrix();
 	_endNode->draw();
 }
@@ -670,5 +673,9 @@ void Scene::setPlayerTank(Tank* tank) {
 
 Tank* Scene::getPlayerTank() {
 	return _playerTank;
+}
+Camera3D* Scene::getTankCam()
+{
+	return _tankCam;
 }
 }
