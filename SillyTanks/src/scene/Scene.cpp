@@ -115,7 +115,7 @@ void Scene::initialize() {
 	_playerTank = new SmallTank(*this, 0, NULL);
 	_tanks.push_back(_playerTank);
 
-	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam);
+	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam,20);
 	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_tankSmokeParticleEngine->setActive(true);
 
@@ -239,21 +239,20 @@ void Scene::drawScene() {
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
 	// Set camera parameters
-	Camera3D *camera;
 
 	if (_cameraMode == TANK_CAM) {
-		camera = _tankCam;
-		camera->setLookAt(_playerTank->getLookAt());
+		_currentlyActiveCamera = _tankCam;
+		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
-		camera = _overviewCam;
-		camera->setLookAt(LookAt(Point(100, 100, 100), _playerTank->getPosition(), Vector3D(0, 1, 0)));
+		_currentlyActiveCamera = _overviewCam;
+		_currentlyActiveCamera->setLookAt(LookAt(Point(100, 100, 100), _playerTank->getPosition(), Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL Lighting
-	camera->setViewport(Viewport(0, 0, width, height));
-	camera->applyViewport();
-	camera->applyProjection();
-	camera->applyModelview();
+	_currentlyActiveCamera->setViewport(Viewport(0, 0, width, height));
+	_currentlyActiveCamera->applyViewport();
+	_currentlyActiveCamera->applyProjection();
+	_currentlyActiveCamera->applyModelview();
 
 	// Grid
 	if (_gridOn)
@@ -677,5 +676,10 @@ Tank* Scene::getPlayerTank() {
 Camera3D* Scene::getTankCam()
 {
 	return _tankCam;
+}
+
+Camera3D* Scene::getCurrentlyActiveCamera()
+{
+	return _currentlyActiveCamera;
 }
 }

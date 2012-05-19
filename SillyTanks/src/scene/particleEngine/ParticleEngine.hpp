@@ -25,7 +25,7 @@ namespace game_space {
 template <class T>
 class ParticleEngine {
 public:
-	ParticleEngine(Camera3D* camera):_numberOfRenderedParticles(200) {
+	ParticleEngine(Camera3D* camera,int maxNumberOfParticles):_numberOfRenderedParticles(maxNumberOfParticles) {
 		_startPosition = Point(0,0,0);
 		_startAcceleration = Vector3D(0,1,0);
 		_engineActive = false;
@@ -34,7 +34,7 @@ public:
 		Point from(_camera->getLookAt().from);
 		_directionOfCamera = from - _startPosition;
 
-		_maxNumberOfParticles = 300;
+		_maxNumberOfParticles = maxNumberOfParticles;
 
 		for (int i = 0; i < _maxNumberOfParticles; i++) // Initialize all the particles
 		{

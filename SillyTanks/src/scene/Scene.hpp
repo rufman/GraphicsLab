@@ -77,6 +77,7 @@ public:
 	void setPlayerTank(Tank* tank);
 	Tank* getPlayerTank();
 	Camera3D* getTankCam();
+	Camera3D* getCurrentlyActiveCamera();
 
 private:
 	/**
@@ -149,6 +150,7 @@ private:
 	Camera2D *_overlayCam;
 	Camera3D *_tankCam;
 	Camera3D *_overviewCam;
+	Camera3D* _currentlyActiveCamera;
 
 	typedef std::vector<Light*> LightVector;
 	LightVector _lights;
