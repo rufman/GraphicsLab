@@ -77,6 +77,7 @@ float Tank::getDirection() const
 {
 	return _direction;
 }
+
 void Tank::setDirection(float angle) {
 	_velocity = Utils::rotate( angle, Vector3D( 0.0, 0.0, -1.0 ), Vector3D( 0.0, 1.0, 0.0 ) );
 	_direction = angle;
@@ -208,6 +209,16 @@ void Tank::fireMissile() {
 
 		_scene.getSoundEngine().playExplosionSound();
 		_scene._missiles.push_back(missile);
+}
+
+Tank::SELECTEDWEAPON Tank::getSelectedWeapon()
+{
+	return _selectedWeapon;
+}
+
+void Tank::setSelectedWeapon(SELECTEDWEAPON weapon)
+{
+	_selectedWeapon = weapon;
 }
 
 }
