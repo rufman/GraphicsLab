@@ -23,12 +23,14 @@
 // MacOS X
 #ifdef __APPLE__
 
+#include <GLUT/glew.h>
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
 
 #else
 // UNIX, Linux
 
+#include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>

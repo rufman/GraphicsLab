@@ -40,7 +40,11 @@ float Turret::getElevation() const {
 }
 
 void Turret::setElevation(float elevation) {
-	_elevation = elevation;
+	//stop the turret from pointing to strange angles.
+	if(elevation < 210 && elevation > 120)
+	{
+		_elevation = elevation;
+	}
 }
 
 float Turret::getAzimuth() const {

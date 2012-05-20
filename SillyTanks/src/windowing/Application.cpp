@@ -1,6 +1,6 @@
 /**
  * application.cpp
- * This class parses the arguments, initializes glut and the window used for drawing and runs the glut main loop.
+ * This class parses the arguments, initializes glut and glew and the window used for drawing and runs the glut main loop.
  */
 // Class declaration include
 #include "Application.hpp"
@@ -9,89 +9,83 @@
 #include "../common/Exception.hpp"
 #include "../common/GLIncludes.hpp"
 #include "../windowing/WindowManager.hpp"
+#include <stdio.h>
 
 #include <cstdlib>
 #include <iostream>
-
 
 namespace game_space {
 
 Application *Application::_instance = NULL;
 
-Application &Application::getInstance()
-{
-    if ( _instance == NULL )
-    {
-        _instance = new Application();
-    }
-    
-    return ( *_instance );
+Application &Application::getInstance() {
+	if (_instance == NULL) {
+		_instance = new Application();
+	}
+
+	return (*_instance);
 }
 
 Application::Application() :
-    _mainWindow( NULL )
-{
+		_mainWindow(NULL) {
 }
 
-Application::~Application()
-{
-    WindowManager &windowManager = WindowManager::getInstance();
-    windowManager.deleteWindow( *_mainWindow );
-    _mainWindow = NULL;
+Application::~Application() {
+	WindowManager &windowManager = WindowManager::getInstance();
+	windowManager.deleteWindow(*_mainWindow);
+	_mainWindow = NULL;
 }
 
 Application::Parameters::Parameters() :
 		//set the window title to GUI TITLE
-    windowTitle(std::string( WINDOW_TITLE ))
-{
+		windowTitle(std::string(WINDOW_TITLE)) {
 }
 
-void Application::Parameters::parse( int argc, char **argv )
-{    
+void Application::Parameters::parse(int argc, char **argv) {
 	// Parse arguments (they will be set later on by the menu)
-    for ( int argID = 1; argID < argc; )
-    {
-        std::string arg = argv[argID++];
-        if ( arg == "-s" || arg == "-sky" )
-        {
-            skyTextureFile = argv[argID++];
-        }		
-		else if ( arg == "-t" || arg == "-terrain" )
-        {
-            terrainFilePrefix = argv[argID++];
-        }
-        else
-        {
-            std::cerr << "WARNING: Unknown application parameter \"" << arg << "\"" << std::endl;
-        }
-    }
+	for (int argID = 1; argID < argc;) {
+		std::string arg = argv[argID++];
+		if (arg == "-s" || arg == "-sky") {
+			skyTextureFile = argv[argID++];
+		} else if (arg == "-t" || arg == "-terrain") {
+			terrainFilePrefix = argv[argID++];
+		} else {
+			std::cerr << "WARNING: Unknown application parameter \"" << arg << "\"" << std::endl;
+		}
+	}
 }
 
-void Application::initialize( int argc, char **argv )
-{
-    WindowManager &windowManager = WindowManager::getInstance();
-    if ( _mainWindow )
-    {
-        windowManager.deleteWindow( *_mainWindow );
-        _mainWindow = NULL;
-    }
-    
-    _parameters.parse( argc, argv );
-    
-    // Initialize GLUT
-    glutInit( &argc, argv );
-    glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH );
-	
-    Window::Parameters windowParameters;
-    windowParameters.title = _parameters.windowTitle;
-    _mainWindow = windowManager.createWindow( windowParameters );
+void Application::initialize(int argc, char **argv) {
+	WindowManager &windowManager = WindowManager::getInstance();
+	if (_mainWindow) {
+		windowManager.deleteWindow(*_mainWindow);
+		_mainWindow = NULL;
+	}
+
+	_parameters.parse(argc, argv);
+
+	// Initialize GLUT
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+
+	Window::Parameters windowParameters;
+	windowParameters.title = _parameters.windowTitle;
+	_mainWindow = windowManager.createWindow(windowParameters);
+
+	glewInit();
+	if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
+	{
+		printf("Ready for GLSL\n");
+	}
+	else {
+		printf("No GLSL support\n");
+		exit(1);
+	}
 }
 
-int Application::run()
-{    
-    glutMainLoop();
-    return EXIT_SUCCESS;
+int Application::run() {
+	glutMainLoop();
+	return EXIT_SUCCESS;
 }
-
 
 }
