@@ -23,12 +23,12 @@
 
 namespace game_space {
 
-Tank::Tank(Scene &scene,int id,TankAI* ai ) :Drawable( scene ),_tankId(id),_controllingAI(ai) {}
+Tank::Tank(Scene &scene,int id,TankAI* ai ) :Drawable( scene ),_tankId(id),_controllingAI(ai),_direction(0),_velocity(Vector3D( 0.0, 0.0, 1.0 )) {}
 
 Tank::~Tank() {}
 
 void Tank::reset() {
-	_velocity = Vector3D( 0.0, 0.0, -1.0 );
+	_velocity = Vector3D( 0.0, 0.0, 1.0 );
 	_direction = 0;
 }
 
@@ -39,7 +39,7 @@ void Tank::draw() const
 
 Point Tank::getMuzzlePosition() const
 {
-	return _turret->getMuzzlePosition(_position);
+	return _turret->getMuzzlePosition();
 }
 
 
@@ -79,7 +79,7 @@ float Tank::getDirection() const
 }
 
 void Tank::setDirection(float angle) {
-	_velocity = Utils::rotate( angle, Vector3D( 0.0, 0.0, -1.0 ), Vector3D( 0.0, 1.0, 0.0 ) );
+	_velocity = Utils::rotate(angle, Vector3D( 0.0, 0.0, 1.0 ), Vector3D( 0.0, 1.0, 0.0 ) );
 	_direction = angle;
 }
 
@@ -191,10 +191,6 @@ void Tank::fireMissile() {
 		Missile* missile = new Missile(_scene);
 
 		missile->setPosition(getMuzzlePosition());
-
-		//TODO move this
-		//_missileSmokeParticleEngine->setActive(true);
-		//_missileSmokeParticleEngine->setStartPosition(_missile->getPosition());
 
 		Vector3D velocity(
 				-getShootingPower()

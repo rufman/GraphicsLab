@@ -14,6 +14,9 @@
 // Includes
 #include "../../../common/Types.hpp"
 
+#include "../../particleEngine/ParticleEngine.hpp"
+#include "../../particleEngine/Smoke.hpp"
+
 namespace game_space {
 
 class Missile : public Drawable
@@ -43,6 +46,7 @@ public:
 	void setVelocity( const Vector3D &velocity );
 
 	void setTargetPosition(const Point targetPosition);
+	bool isDetonated();
 
 	/**
 	 * Update bullet data by moving it for 'seconds' seconds
@@ -63,7 +67,9 @@ private:
 	Vector3D _toTarget;
 	Point _targetPosition;
 
-	int _counter;
+	int _waitBeforeAimingCounter;
+	ParticleEngine<Smoke> *_missileSmokeParticleEngine;
+	bool _detonated;
 
 }; // class Bullet
 

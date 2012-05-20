@@ -17,9 +17,10 @@
 namespace game_space {
 
 Missile::Missile(Scene &scene, float size) :
-		Drawable(scene), _size(size), _counter(0) {
-	// @ Test
-	// draw a test target
+		Drawable(scene), _size(size), _waitBeforeAimingCounter(0), _detonated(false) {
+	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getTankCam(),100);
+	_missileSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
+	_missileSmokeParticleEngine->setActive(true);
 }
 
 Missile::~Missile() {
@@ -35,13 +36,14 @@ void Missile::draw() const {
 
 	glTranslatef(_position.x, _position.y, _position.z);
 
-	if (_counter < 65) {
+	if (_waitBeforeAimingCounter < 65) {
 		Utils::applyGLRotation(Vector3D(1, 0, 0), _velocity);
 	} else {
 		Utils::applyGLRotation(Vector3D(1, 0, 0), _toTarget);
 	}
 	glRotatef(90, 0, 1, 0);
 	/*
+	 * TODO:: Enable that later on as it colors somehow the particles. As soon as that is fixed, reenable it.
 	 float materialAmbient[3] = { 0.1, 0.1, 0.1 };
 	 float materialDiffuse[3] = { 0.2, 0.2, 0.2 };
 	 float materialSpecular[3] = { 0.2, 0.4, 0.4 };
@@ -79,6 +81,9 @@ void Missile::draw() const {
 	glRotatef(-90, 0, 1, 0);
 
 	glPopMatrix();
+	glPushMatrix();
+	_missileSmokeParticleEngine->draw();
+	glPopMatrix();
 }
 
 void Missile::setPosition(const Point &position) {
@@ -95,10 +100,10 @@ void Missile::setTargetPosition(const Point targetPosition) {
 
 void Missile::move(float seconds) {
 	//ballistics of a projectile
-	_toTarget = Vector3D((_targetPosition.x - _position.x), (_targetPosition.y - _position.y), (_targetPosition.z - _position.z));
+	_toTarget = Vector3D((_targetPosition.x - _position.x), (_scene.getTerrain().getHeight(_position) - _position.y), (_targetPosition.z - _position.z));
 	Utils::normalize(_toTarget);
 
-	if (_counter > 65) {
+	if (_waitBeforeAimingCounter > 65) {
 		_position.x += _velocity.x * seconds + _toTarget.x;
 		_position.y += _velocity.y * seconds + _toTarget.y;
 		_position.z += _velocity.z * seconds + _toTarget.z;
@@ -108,18 +113,25 @@ void Missile::move(float seconds) {
 		_position.z += _velocity.z * seconds * 50;
 	}
 
-	_counter++;
+	_waitBeforeAimingCounter++;
 
-	//_missileSmokeParticleEngine->setStartPosition(_missile->getPosition());
+	_missileSmokeParticleEngine->setStartPosition(_position);
+	_missileSmokeParticleEngine->update(seconds);
 	if (_position.y < _scene.getTerrain().getHeight(_position)) {
 		_scene.getTerrain().doDamageAt(_position);
 		_scene.getTerrain().doDamageAt(_position);
 		_scene.getTerrain().doDamageAt(_position);
-
-		//_missileSmokeParticleEngine->setActive(false);
+		_missileSmokeParticleEngine->setActive(false);
 	}
+	if(_missileSmokeParticleEngine->getNumberOfRenderedParticles() == 0)
+	{
+		_detonated = true;
+	}
+}
 
-	//_velocity.y += GRAVITATIONAL_ACCELERATION*seconds;
+bool Missile::isDetonated()
+{
+	return _detonated;
 }
 
 }

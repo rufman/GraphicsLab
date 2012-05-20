@@ -111,19 +111,20 @@ void Scene::initialize() {
 	_overviewCam = new Camera3D(*this);
 
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
-	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 2, 100 * 2, 50, 50);
+	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
 	_playerTank = new SmallTank(*this, 0, NULL);
 	_tanks.push_back(_playerTank);
 
-	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam);
+	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam, 20);
 	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_tankSmokeParticleEngine->setActive(true);
-	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam);
-	_missileSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
-	_missileSmokeParticleEngine->setActive(false);
 
 	// Reset data
 	reset();
+
+	//hiding the default cursor and putting the cursor position to the middle of the window
+	glutSetCursor(GLUT_CURSOR_NONE);
+	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
 }
 
 void Scene::reset() {
@@ -194,11 +195,16 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end(); missileIter++) {
+	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end();) {
 		(*missileIter)->move(seconds);
+		if ((*missileIter)->isDetonated()) {
+			Missile* missile = *missileIter;
+			missileIter = _missiles.erase(missileIter);
+			delete missile;
+		} else {
+			missileIter++;
+		}
 	}
-
-	//_missileSmokeParticleEngine->update(seconds);
 
 	//TODO migrate smoke engine into tank
 	_tankSmokeParticleEngine->setStartPosition(_playerTank->getPosition());
@@ -232,21 +238,20 @@ void Scene::drawScene() {
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
 	// Set camera parameters
-	Camera3D *camera;
 
 	if (_cameraMode == TANK_CAM) {
-		camera = _tankCam;
-		camera->setLookAt(_playerTank->getLookAt());
+		_currentlyActiveCamera = _tankCam;
+		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
-		camera = _overviewCam;
-		camera->setLookAt(LookAt(Point(100, 100, 100), _playerTank->getPosition(), Vector3D(0, 1, 0)));
+		_currentlyActiveCamera = _overviewCam;
+		_currentlyActiveCamera->setLookAt(LookAt(Point(100, 100, 100), _playerTank->getPosition(), Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL Lighting
-	camera->setViewport(Viewport(0, 0, width, height));
-	camera->applyViewport();
-	camera->applyProjection();
-	camera->applyModelview();
+	_currentlyActiveCamera->setViewport(Viewport(0, 0, width, height));
+	_currentlyActiveCamera->applyViewport();
+	_currentlyActiveCamera->applyProjection();
+	_currentlyActiveCamera->applyModelview();
 
 	// Grid
 	if (_gridOn)
@@ -307,10 +312,6 @@ void Scene::drawScene() {
 
 	glPushMatrix();
 	_tankSmokeParticleEngine->draw();
-	glPopMatrix();
-
-	glPushMatrix();
-	_missileSmokeParticleEngine->draw();
 	glPopMatrix();
 	_endNode->draw();
 }
@@ -562,15 +563,15 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 		switch (button) {
 		case leftButton: {
 			switch (_playerTank->getSelectedWeapon()) {
-						case Tank::BULLET: {
-							_playerTank->fireBullet();
-							break;
-						}
-						case Tank::MISSILE: {
-							_playerTank->fireMissile();
-							break;
-						}
-						}
+			case Tank::BULLET: {
+				_playerTank->fireBullet();
+				break;
+			}
+			case Tank::MISSILE: {
+				_playerTank->fireMissile();
+				break;
+			}
+			}
 
 			break;
 		}
@@ -592,21 +593,7 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 }
 
 void Scene::onMouseMove(int x, int y) {
-	int width = glutGet(GLUT_WINDOW_WIDTH);
-	int height = glutGet(GLUT_WINDOW_HEIGHT);
-
-	int xMove = x - _mouseX;
-	int yMove = y - _mouseY;
-	_mouseX = width / 2;
-	_mouseY = height / 2;
-
-	if (abs(xMove) > 15 || abs(yMove) > 15) {
-		glutWarpPointer(width / 2, height / 2);
-	}
-
-	_playerTank->setElevation(_playerTank->getElevation() - yMove / 3);
-	_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove / 3);
-	glutPostRedisplay();
+	onMousePassiveMove(x, y);
 }
 
 void Scene::onMousePassiveMove(int x, int y) {
@@ -617,12 +604,12 @@ void Scene::onMousePassiveMove(int x, int y) {
 	int yMove = y - _mouseY;
 	_mouseX = width / 2;
 	_mouseY = height / 2;
-	if (abs(xMove) > 15 || abs(yMove) > 15) {
+	if (abs(xMove) > 3 || abs(yMove) > 3) {
 		glutWarpPointer(width / 2, height / 2);
 	}
 
-	_playerTank->setElevation(_playerTank->getElevation() - yMove / 7);
-	_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove / 7);
+	_playerTank->setElevation(_playerTank->getElevation() - yMove / 2);
+	_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove / 2);
 	glutPostRedisplay();
 }
 
@@ -670,5 +657,12 @@ void Scene::setPlayerTank(Tank* tank) {
 
 Tank* Scene::getPlayerTank() {
 	return _playerTank;
+}
+Camera3D* Scene::getTankCam() {
+	return _tankCam;
+}
+
+Camera3D* Scene::getCurrentlyActiveCamera() {
+	return _currentlyActiveCamera;
 }
 }

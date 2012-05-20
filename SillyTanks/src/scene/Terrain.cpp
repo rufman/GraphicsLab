@@ -26,10 +26,8 @@
 
 namespace game_space {
 
-Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix,
-		float width, float length, uint widthResolution, uint lengthResolution) :
-		Drawable(scene), _numDisplayLists(2), _width(width), _length(length), _widthResolution(
-				widthResolution), _lengthResolution(lengthResolution) {
+Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix, float width, float length, uint widthResolution, uint lengthResolution) :
+		Drawable(scene), _numDisplayLists(2), _width(width), _length(length), _widthResolution(widthResolution), _lengthResolution(lengthResolution) {
 	_displayLists = glGenLists(_numDisplayLists);
 
 	_material.setAmbient(Color(0.2, 0.2, 0.2));
@@ -76,50 +74,36 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix,
 
 	for (uint widthPoint = 0; widthPoint < _widthResolution; widthPoint++) {
 
-		for (uint lengthPoint = 0; lengthPoint < _lengthResolution;
-				lengthPoint++) {
-			Point &vertex = _vertices[_widthResolution * lengthPoint
-					+ widthPoint];
-			vertex.x = -_width / 2.0
-					+ widthPoint * (_width / (_widthResolution - 1));
-			vertex.z = _length / 2.0
-					- lengthPoint * (_length / (_lengthResolution - 1));
-			vertex.y = ((_heightData->getData()[_heightData->getWidth()
-					* (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4])
-					/ 10.0f) - 20;
-			_nodes.push_back(new Node(Point(vertex.x, 2, vertex.z), _scene));
+		for (uint lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++) {
+			Point &vertex = _vertices[_widthResolution * lengthPoint + widthPoint];
+			vertex.x = -_width / 2.0 + widthPoint * (_width / (_widthResolution - 1));
+			vertex.z = _length / 2.0 - lengthPoint * (_length / (_lengthResolution - 1));
 
-			int heightDataIndex = _heightData->getWidth()
-					* (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
-			int objectDataIndex = _objectData->getWidth()
-					* (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
-			vertex.y = ((_heightData->getData()[heightDataIndex]) / 10.0f) - 20;
+			int heightDataIndex = _heightData->getWidth() * (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
+			int objectDataIndex = _objectData->getWidth() * (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
+			float heightScaling = 7.0f;
+			vertex.y = ((_heightData->getData()[heightDataIndex]) / heightScaling) - 200/heightScaling;
 
 			//ObjectData mapping
 			if (_objectData->getData()[objectDataIndex] == PINETREE_MAPNR) {
 				Tree *treeModel = new PineTree(_scene);
 				treeModel->setPosition(vertex);
 				_models.push_back(treeModel);
-			} else if (_objectData->getData()[objectDataIndex]
-					== ROUNDTREE_MAPNR) {
+			} else if (_objectData->getData()[objectDataIndex] == ROUNDTREE_MAPNR) {
 				Tree *treeModel = new RoundTree(_scene);
 				treeModel->setPosition(vertex);
 				_models.push_back(treeModel);
-			} else if (_objectData->getData()[objectDataIndex]
-					== PALMTREE_MAPNR) {
+			} else if (_objectData->getData()[objectDataIndex] == PALMTREE_MAPNR) {
 				Tree *treeModel = new PalmTree(_scene);
 				treeModel->setPosition(vertex);
 				_models.push_back(treeModel);
 			}
-			_nodes.push_back(new Node(Point(vertex.x, 2, vertex.z), _scene));
 		}
 	}
 
 	// Build triangles
-	for (int widthPoint = 0; widthPoint < (_widthResolution - 1);
-			widthPoint++) {
-		for (int lengthPoint = 0; lengthPoint < (_lengthResolution - 1);
-				lengthPoint++) {
+	for (int widthPoint = 0; widthPoint < (_widthResolution - 1); widthPoint++) {
+		for (int lengthPoint = 0; lengthPoint < (_lengthResolution - 1); lengthPoint++) {
 			int t1 = 2 * lengthPoint * (_widthResolution - 1) + widthPoint * 2;
 			int t2 = t1 + 1;
 			Triangle &triangle1 = _triangles[t1];
@@ -139,52 +123,28 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix,
 	}
 
 	// Calculate triangle normals
-	for (int widthPoint = 0; widthPoint < (_widthResolution - 1);
-			widthPoint++) {
-		for (int lengthPoint = 0; lengthPoint < (_lengthResolution - 1);
-				lengthPoint++) {
+	for (int widthPoint = 0; widthPoint < (_widthResolution - 1); widthPoint++) {
+		for (int lengthPoint = 0; lengthPoint < (_lengthResolution - 1); lengthPoint++) {
 			int t1 = 2 * lengthPoint * (_widthResolution - 1) + widthPoint * 2;
 			int t2 = t1 + 1;
 			Triangle &triangle1 = _triangles[t1];
 			Triangle &triangle2 = _triangles[t2];
 
-			_triangleNormals[t1] = Utils::normal(_vertices[triangle1.vertex1],
-					_vertices[triangle1.vertex2], _vertices[triangle1.vertex3]);
-			_triangleNormals[t2] = Utils::normal(_vertices[triangle2.vertex1],
-					_vertices[triangle2.vertex2], _vertices[triangle2.vertex3]);
+			_triangleNormals[t1] = Utils::normal(_vertices[triangle1.vertex1], _vertices[triangle1.vertex2], _vertices[triangle1.vertex3]);
+			_triangleNormals[t2] = Utils::normal(_vertices[triangle2.vertex1], _vertices[triangle2.vertex2], _vertices[triangle2.vertex3]);
 		}
 	}
 
 	// Calculate vertex normals
 	for (uint widthPoint = 0; widthPoint < _widthResolution; widthPoint++) {
-		for (uint lengthPoint = 0; lengthPoint < _lengthResolution;
-				lengthPoint++) {
+		for (uint lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++) {
 			int v = _widthResolution * lengthPoint + widthPoint;
 			Vector3D &normal = _vertexNormals[v];
 			normal = Vector3D(0.0, 0.0, 0.0);
 
-			int t1 =
-					(widthPoint > 0 && lengthPoint > 0) ?
-							(2 * (lengthPoint - 1) * (_widthResolution - 1)
-									+ 2 * (widthPoint - 1)) :
-							-1, t2 =
-					(widthPoint > 0 && lengthPoint > 0) ? (t1 + 1) : -1, t3 =
-					(widthPoint < (_widthResolution - 1) && lengthPoint > 0) ?
-							(2 * (lengthPoint - 1) * (_widthResolution - 1)
-									+ 2 * (widthPoint) + 1) :
-							-1, t4 =
-					(widthPoint > 0 && lengthPoint < (_lengthResolution - 1)) ?
-							(2 * (lengthPoint) * (_widthResolution - 1)
-									+ 2 * (widthPoint - 1)) :
-							-1, t5 =
-					(widthPoint < (_widthResolution - 1)
-							&& lengthPoint < (_lengthResolution - 1)) ?
-							(2 * (lengthPoint) * (_widthResolution - 1)
-									+ 2 * (widthPoint)) :
-							-1, t6 =
-					(widthPoint < (_widthResolution - 1)
-							&& lengthPoint < (_lengthResolution - 1)) ?
-							(t5 + 1) : -1;
+			int t1 = (widthPoint > 0 && lengthPoint > 0) ? (2 * (lengthPoint - 1) * (_widthResolution - 1) + 2 * (widthPoint - 1)) : -1, t2 = (widthPoint > 0 && lengthPoint > 0) ? (t1 + 1) : -1, t3 = (widthPoint < (_widthResolution - 1) && lengthPoint > 0) ? (2 * (lengthPoint - 1) * (_widthResolution - 1) + 2 * (widthPoint) + 1) : -1, t4 =
+					(widthPoint > 0 && lengthPoint < (_lengthResolution - 1)) ? (2 * (lengthPoint) * (_widthResolution - 1) + 2 * (widthPoint - 1)) : -1, t5 = (widthPoint < (_widthResolution - 1) && lengthPoint < (_lengthResolution - 1)) ? (2 * (lengthPoint) * (_widthResolution - 1) + 2 * (widthPoint)) : -1, t6 =
+					(widthPoint < (_widthResolution - 1) && lengthPoint < (_lengthResolution - 1)) ? (t5 + 1) : -1;
 			if (t1 >= 0)
 				normal += _triangleNormals[t1];
 			if (t2 >= 0)
@@ -203,6 +163,14 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix,
 	}
 
 	buildDisplayLists();
+
+	for (std::vector<Point>::iterator vertexIter = _vertices.begin(); vertexIter != _vertices.end(); vertexIter++) {
+		Point vertex = *vertexIter;
+		Node* node = new Node(Point(vertex.x, vertex.y, vertex.z), _scene);
+		//node->setNodeState(checkBorder(node->_position) ? Node::BLOCKED : Node::FREE);
+
+		_nodes.push_back(node);
+	}
 }
 
 Terrain::~Terrain() {
@@ -236,25 +204,13 @@ void Terrain::buildDisplayLists() {
 		const Point &vertex2 = _vertices[_triangles[t].vertex2];
 		const Point &vertex3 = _vertices[_triangles[t].vertex3];
 
-		glTexCoord2f(
-				((vertex1.x + _width / 2.0) / (_width / (_widthResolution - 1)))
-						* xSlice,
-				((-vertex1.z + _length / 2.0)
-						/ (_length / (_lengthResolution - 1))) * zSlice);
+		glTexCoord2f(((vertex1.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice, ((-vertex1.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
 		glVertex3f(vertex1.x, vertex1.y, vertex1.z);
 
-		glTexCoord2f(
-				((vertex2.x + _width / 2.0) / (_width / (_widthResolution - 1)))
-						* xSlice,
-				((-vertex2.z + _length / 2.0)
-						/ (_length / (_lengthResolution - 1))) * zSlice);
+		glTexCoord2f(((vertex2.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice, ((-vertex2.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
 		glVertex3f(vertex2.x, vertex2.y, vertex2.z);
 
-		glTexCoord2f(
-				((vertex3.x + _width / 2.0) / (_width / (_widthResolution - 1)))
-						* xSlice,
-				((-vertex3.z + _length / 2.0)
-						/ (_length / (_lengthResolution - 1))) * zSlice);
+		glTexCoord2f(((vertex3.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice, ((-vertex3.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
 		glVertex3f(vertex3.x, vertex3.y, vertex3.z);
 	}
 
@@ -284,33 +240,21 @@ void Terrain::buildDisplayLists() {
 			const Vector3D &normal = _vertexNormals[_triangles[t].vertex1];
 			glNormal3f(normal.x, normal.y, normal.z);
 		}
-		glTexCoord2f(
-				((vertex1.x + _width / 2.0) / (_width / (_widthResolution - 1)))
-						* xSlice,
-				((-vertex1.z + _length / 2.0)
-						/ (_length / (_lengthResolution - 1))) * zSlice);
+		glTexCoord2f(((vertex1.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice, ((-vertex1.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
 		glVertex3f(vertex1.x, vertex1.y, vertex1.z);
 
 		if (_renderingParameters.shadeMode == RenderingParameters::SMOOTH) {
 			const Vector3D &normal = _vertexNormals[_triangles[t].vertex2];
 			glNormal3f(normal.x, normal.y, normal.z);
 		}
-		glTexCoord2f(
-				((vertex2.x + _width / 2.0) / (_width / (_widthResolution - 1)))
-						* xSlice,
-				((-vertex2.z + _length / 2.0)
-						/ (_length / (_lengthResolution - 1))) * zSlice);
+		glTexCoord2f(((vertex2.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice, ((-vertex2.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
 		glVertex3f(vertex2.x, vertex2.y, vertex2.z);
 
 		if (_renderingParameters.shadeMode == RenderingParameters::SMOOTH) {
 			const Vector3D &normal = _vertexNormals[_triangles[t].vertex3];
 			glNormal3f(normal.x, normal.y, normal.z);
 		}
-		glTexCoord2f(
-				((vertex3.x + _width / 2.0) / (_width / (_widthResolution - 1)))
-						* xSlice,
-				((-vertex3.z + _length / 2.0)
-						/ (_length / (_lengthResolution - 1))) * zSlice);
+		glTexCoord2f(((vertex3.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice, ((-vertex3.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
 		glVertex3f(vertex3.x, vertex3.y, vertex3.z);
 	}
 
@@ -327,9 +271,7 @@ void Terrain::draw() const {
 		_nodes[i]->draw();
 	}
 
-	glPolygonMode(GL_FRONT_AND_BACK,
-			(_renderingParameters.drawMode == RenderingParameters::WIREFRAME) ?
-					GL_LINE : GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, (_renderingParameters.drawMode == RenderingParameters::WIREFRAME) ? GL_LINE : GL_FILL);
 
 	for (uint i = 0; i < _models.size(); i++) {
 		_models[i]->draw();
@@ -341,9 +283,7 @@ void Terrain::draw() const {
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
-	glCallList(
-			(_renderingParameters.shadeMode == RenderingParameters::FLAT) ?
-					(_displayLists) : (_displayLists + 1));
+	glCallList((_renderingParameters.shadeMode == RenderingParameters::FLAT) ? (_displayLists) : (_displayLists + 1));
 
 	glPopMatrix();
 
@@ -351,19 +291,16 @@ void Terrain::draw() const {
 		glColor3f(Color::WHITE.r, Color::WHITE.g, Color::WHITE.b);
 		glBegin(GL_LINES);
 		for (uint widthPoint = 0; widthPoint < _widthResolution; widthPoint++) {
-			for (uint lengthPoint = 0; lengthPoint < _lengthResolution;
-					lengthPoint++) {
+			for (uint lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++) {
 				int v = _widthResolution * lengthPoint + widthPoint;
 				const Point &vertex = _vertices[v];
 				const Vector3D &normal = _vertexNormals[v];
 				glVertex3f(vertex.x, vertex.y, vertex.z);
-				glVertex3f(vertex.x + normal.x, vertex.y + normal.y,
-						vertex.z + normal.z);
+				glVertex3f(vertex.x + normal.x, vertex.y + normal.y, vertex.z + normal.z);
 			}
 		}
 		glEnd();
-	} else if (_renderingParameters.normalMode
-			== RenderingParameters::TRIANGLE) {
+	} else if (_renderingParameters.normalMode == RenderingParameters::TRIANGLE) {
 		int numTriangles = 2 * (_widthResolution - 1) * (_lengthResolution - 1);
 		glColor3f(Color::TAN.r, Color::TAN.g, Color::TAN.b);
 		glBegin(GL_LINES);
@@ -371,14 +308,11 @@ void Terrain::draw() const {
 			const Point &vertex1 = _vertices[_triangles[t].vertex1];
 			const Point &vertex2 = _vertices[_triangles[t].vertex2];
 			const Point &vertex3 = _vertices[_triangles[t].vertex3];
-			Point baryCenter((vertex1.x + vertex2.x + vertex3.x) / 3.0f,
-					(vertex1.y + vertex2.y + vertex3.y) / 3.0f,
-					(vertex1.z + vertex2.z + vertex3.z) / 3.0f);
+			Point baryCenter((vertex1.x + vertex2.x + vertex3.x) / 3.0f, (vertex1.y + vertex2.y + vertex3.y) / 3.0f, (vertex1.z + vertex2.z + vertex3.z) / 3.0f);
 			const Vector3D &normal = _triangleNormals[t];
 
 			glVertex3f(baryCenter.x, baryCenter.y, baryCenter.z);
-			glVertex3f(baryCenter.x + normal.x, baryCenter.y + normal.y,
-					baryCenter.z + normal.z);
+			glVertex3f(baryCenter.x + normal.x, baryCenter.y + normal.y, baryCenter.z + normal.z);
 		}
 		glEnd();
 	}
@@ -392,14 +326,7 @@ float Terrain::getHeight(const Point &point) const {
 		Point secondPoint = _vertices[_triangles[triangleNumber].vertex2];
 		Point thirdPoint = _vertices[_triangles[triangleNumber].vertex3];
 
-		float y =
-				(_triangleNormals[triangleNumber].x
-						* (point.x
-								- _vertices[_triangles[triangleNumber].vertex1].x)
-						+ _triangleNormals[triangleNumber].z
-								* (point.z
-										- _vertices[_triangles[triangleNumber].vertex1].z))
-						/ (-_triangleNormals[triangleNumber].y);
+		float y = (_triangleNormals[triangleNumber].x * (point.x - _vertices[_triangles[triangleNumber].vertex1].x) + _triangleNormals[triangleNumber].z * (point.z - _vertices[_triangles[triangleNumber].vertex1].z)) / (-_triangleNormals[triangleNumber].y);
 		y += _vertices[_triangles[triangleNumber].vertex1].y;
 		return y;
 	} else {
@@ -431,9 +358,7 @@ Vector3D Terrain::getNormal(const Point &point) const {
 
 		//std::cout << "ratio1:" << ratio1<< std::endl;
 
-		return Vector3D(norm1.x * ratio1 + norm2.x * ratio2 + norm3.x * ratio3,
-				norm1.y * ratio1 + norm2.y * ratio2 + norm3.y * ratio3,
-				norm1.z * ratio1 + norm2.z * ratio2 + norm3.z * ratio3);
+		return Vector3D(norm1.x * ratio1 + norm2.x * ratio2 + norm3.x * ratio3, norm1.y * ratio1 + norm2.y * ratio2 + norm3.y * ratio3, norm1.z * ratio1 + norm2.z * ratio2 + norm3.z * ratio3);
 	} else {
 		return Vector3D(0, 1, 0);
 	}
@@ -458,13 +383,11 @@ int Terrain::getNearestTriangleIndexAt(const Point &point) const {
 	int triangleNumber = -1;
 	if (restRow - slope * restColumn > 0) {
 		//upper triangle
-		triangleNumber = (int) rowNumber * ((_widthResolution - 1) * 2)
-				+ ((int) columnNumber) * 2 + 1;
+		triangleNumber = (int) rowNumber * ((_widthResolution - 1) * 2) + ((int) columnNumber) * 2 + 1;
 
 	} else {
 		//lower triangle
-		triangleNumber = (int) rowNumber * ((_widthResolution - 1) * 2)
-				+ ((int) columnNumber) * 2;
+		triangleNumber = (int) rowNumber * ((_widthResolution - 1) * 2) + ((int) columnNumber) * 2;
 	}
 
 	//    std::cout << "triangle number:" << triangleNumber<< std::endl;
@@ -497,7 +420,9 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 	for (uint i = 0; i < _nodes.size(); i++) {
 		_nodes.at(i)->_f_score = 0;
 		_nodes.at(i)->_g_score = 0;
-		_nodes.at(i)->_nodeState = Node::FREE;
+		if (_nodes.at(i)->_nodeState != Node::BLOCKED) {
+			_nodes.at(i)->_nodeState = Node::FREE;
+		}
 		_nodes.at(i)->_pathState = Node::NOTHING;
 		_nodes.at(i)->_nextNode = 0;
 	}
@@ -512,10 +437,8 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 	start->_pathState = Node::STARTPOINT;
 	goal->_pathState = Node::ENDPOINT;
 
-	std::cout << "Start: " << start->_position.x << "," << start->_position.z
-			<< "\n";
-	std::cout << "Goal: " << goal->_position.x << "," << goal->_position.z
-			<< "\n";
+	std::cout << "Start: " << start->_position.x << "," << start->_position.z << "\n";
+	std::cout << "Goal: " << goal->_position.x << "," << goal->_position.z << "\n";
 
 	// closed set := the empty set    // The set of nodes already evaluated.
 	std::vector<Node*> closedSet;
@@ -549,8 +472,7 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 		closedSet.push_back(current);
 		push_heap(closedSet.begin(), closedSet.end(), HeapCompare_f());
 
-		std::cout << "Current node: " << current->_position.x << ","
-				<< current->_position.z << " f: " << current->_f_score << "\n";
+		std::cout << "Current node: " << current->_position.x << "," << current->_position.z << " f: " << current->_f_score << "\n";
 
 		// check if the current node that we examine is the goal node
 		if (current->_pathState == Node::ENDPOINT) {
@@ -567,9 +489,7 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 
 		// for each neighbor in neighbor_nodes(current)
 		std::vector<Node*> neighborhoodSet = getNeighbors(*current);
-		for (std::vector<Node*>::iterator neighborIter =
-				neighborhoodSet.begin(); neighborIter != neighborhoodSet.end();
-				neighborIter++) {
+		for (std::vector<Node*>::iterator neighborIter = neighborhoodSet.begin(); neighborIter != neighborhoodSet.end(); neighborIter++) {
 			Node* neighbor = *neighborIter;
 
 			// if neighbor in closed set
@@ -578,12 +498,10 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 				continue;
 			}
 
-			float tentative_g_score = current->_g_score
-					+ distBetween(*current, *neighbor);
+			float tentative_g_score = current->_g_score + distBetween(*current, *neighbor);
 
 			// if neighbor not in open set
-			if (neighbor->_nodeState != Node::OPEN
-					|| tentative_g_score < neighbor->_g_score) {
+			if (neighbor->_nodeState != Node::OPEN || tentative_g_score < neighbor->_g_score) {
 				neighbor->_nodeState = Node::OPEN;
 
 				// sort back element into heap
@@ -592,8 +510,7 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 
 				neighbor->_nextNode = current;
 				neighbor->_g_score = tentative_g_score;
-				neighbor->_f_score = neighbor->_g_score
-						+ heuristicCostEstimate(*neighbor, *goal);
+				neighbor->_f_score = neighbor->_g_score + heuristicCostEstimate(*neighbor, *goal);
 			}
 		}
 	}
@@ -605,10 +522,7 @@ float Terrain::heuristicCostEstimate(Node from, Node to) {
 }
 
 float Terrain::distBetween(Node from, Node to) {
-	return sqrt(
-			pow(from._position.x - to._position.x, 2)
-					+ pow(from._position.y - to._position.y, 2)
-					+ pow(from._position.z - to._position.z, 2));
+	return sqrt(pow(from._position.x - to._position.x, 2) + pow(from._position.y - to._position.y, 2) + pow(from._position.z - to._position.z, 2));
 }
 
 Node* Terrain::getNodeFromPoint(Point point) {
@@ -623,10 +537,7 @@ Node* Terrain::getNeighborOf(Point point, int px, int pz) {
 	int indexX = (point.x + _width / 2) / sliceW;
 	int indexZ = (-point.z + _length / 2) / sliceL;
 
-	return ((indexX + px) * _lengthResolution + (indexZ + pz) <= _nodes.size()
-			&& (indexX + px) < _widthResolution
-			&& (indexZ + pz) < _lengthResolution) ?
-			_nodes.at((indexX + px) * _lengthResolution + (indexZ + pz)) : NULL;
+	return ((indexX + px) * _lengthResolution + (indexZ + pz) <= _nodes.size() && (indexX + px) < _widthResolution && (indexZ + pz) < _lengthResolution) ? _nodes.at((indexX + px) * _lengthResolution + (indexZ + pz)) : NULL;
 }
 
 std::vector<Node*> Terrain::getNeighbors(Node node) {
@@ -685,12 +596,12 @@ Point Terrain::getRandomPointOnMap() {
 }
 
 bool Terrain::checkBorder(const Point &point) const {
-	float threshold = 5.0;
+	float threshold = 3.0;
 
-	float angleGravityNormal = acos(
-			Utils::dot(Vector3D(0, 1, 0), getNormal(point)));
+	float angleGravityNormal = acos(Utils::dot(Vector3D(0, 1, 0), getNormal(point)));
 
-	if (angleGravityNormal > 0.45) {
+	//PI/2 equals 45 degree, a tank should be able to do that.
+	if (angleGravityNormal > Utils::PI/2) {
 		return true;
 	}
 

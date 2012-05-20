@@ -25,7 +25,7 @@ namespace game_space {
 template <class T>
 class ParticleEngine {
 public:
-	ParticleEngine(Camera3D* camera) {
+	ParticleEngine(Camera3D* camera,int maxNumberOfParticles):_numberOfRenderedParticles(maxNumberOfParticles) {
 		_startPosition = Point(0,0,0);
 		_startAcceleration = Vector3D(0,1,0);
 		_engineActive = false;
@@ -34,7 +34,7 @@ public:
 		Point from(_camera->getLookAt().from);
 		_directionOfCamera = from - _startPosition;
 
-		_maxNumberOfParticles = 300;
+		_maxNumberOfParticles = maxNumberOfParticles;
 
 		for (int i = 0; i < _maxNumberOfParticles; i++) // Initialize all the particles
 		{
@@ -123,7 +123,6 @@ public:
 
 	void update(float seconds)
 	{
-
 		// Loop through all the particles
 		for (std::vector<Particle*>::iterator particleIterator = _particles.begin();particleIterator != _particles.end(); ++particleIterator) {
 			Particle* particle = *particleIterator;
@@ -157,6 +156,7 @@ public:
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);// Really nice perspective calculations
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);// Really nice point smoothing
 
+		_numberOfRenderedParticles = 0;
 		// loop through all the particles
 		for (std::vector<Particle*>::iterator particleIterator = _particles.begin();particleIterator != _particles.end(); ++particleIterator) {
 			Particle* particle = *particleIterator;
@@ -187,10 +187,15 @@ public:
 
 				Utils::applyGLRotation(getDirectionOfCamera(),Vector3D(0,0,1));
 				glTranslatef(-particle->x,-particle->y,-particle->z);
-
+				_numberOfRenderedParticles++;
 			}
 		}
 		glDepthMask(GL_TRUE);
+	}
+
+	int getNumberOfRenderedParticles()
+	{
+		return _numberOfRenderedParticles;
 	}
 
 private:
@@ -209,6 +214,8 @@ private:
 	TGATexture* _particleTexture;
 	Particle* _particleType;
 	bool _engineActive;
+
+	int _numberOfRenderedParticles;
 };
 
 }
