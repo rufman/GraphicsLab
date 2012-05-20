@@ -11,6 +11,7 @@
 #include "../../../common/Utils.hpp"
 #include "../../Scene.hpp"
 #include "../../Terrain.hpp"
+#include <iostream>
 
 #include <cmath>
 
@@ -29,7 +30,7 @@ Turret::~Turret() {
 }
 
 void Turret::reset() {
-	_elevation = 120;
+	_elevation = -15;
 	_azimuth = -85;
 	_power = 0.5;
 	_position = Point(0, 0, 0, 1);
@@ -41,7 +42,7 @@ float Turret::getElevation() const {
 
 void Turret::setElevation(float elevation) {
 	//stop the turret from pointing to strange angles.
-	if(elevation < 210 && elevation > 120)
+	if(elevation < 80 && elevation >= -15)
 	{
 		_elevation = elevation;
 	}
