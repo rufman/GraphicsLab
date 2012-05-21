@@ -5,6 +5,7 @@
 
 //header include
 #include "Smoke.hpp"
+#include <math.h>
 
 namespace game_space {
 
@@ -18,6 +19,7 @@ Smoke::~Smoke() {
 void Smoke::resetParticle(Point startPosition,Vector3D startAcceleration)
 {
 	timeToLive = 1.0f; // Give it new life
+	size = 1;
 	fade = float(rand() % 100) / 200.0f + 0.4f;// Random fade value
 	x = startPosition.x+rand()%3-1.5;
 	y = startPosition.y+rand()%3-1.5;
@@ -41,6 +43,7 @@ void Smoke::update(float seconds) {
 			x += vx*seconds;
 			y += vy*seconds;// + 0.5*GRAVITATIONAL_ACCELERATION*seconds*seconds;
 			z += vz*seconds;
+			size = 1 + sin(seconds);
 
 			//vy += GRAVITATIONAL_ACCELERATION*seconds;
 

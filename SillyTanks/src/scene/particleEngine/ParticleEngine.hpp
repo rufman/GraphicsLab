@@ -45,9 +45,6 @@ public:
 		}
 
 		loadParticleTexture(_particles[0]->_particleTexturePath);
-
-		_maxSize =10;
-		_minSize = 1;
 	}
 
 	virtual ~ParticleEngine()
@@ -84,26 +81,6 @@ public:
 	Vector3D getStartAcceleration()
 	{
 		return _startAcceleration;
-	}
-
-	void setMaxSize(float maxSize)
-	{
-		_maxSize = maxSize;
-	}
-
-	float getMaxSize() const
-	{
-		return _maxSize;
-	}
-
-	void setMinSize(float minSize)
-	{
-		_minSize = minSize;
-	}
-
-	float getMinSize() const
-	{
-		return _minSize;
 	}
 
 	Vector3D getDirectionOfCamera()
@@ -156,6 +133,19 @@ public:
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);// Really nice perspective calculations
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);// Really nice point smoothing
 
+		 float materialAmbient[3] = { 1, 1, 1 };
+		 float materialDiffuse[3] = { 1, 1, 1 };
+		 float materialSpecular[3] = { 0.0, 0.0, 0.0 };
+		 float materialEmission[3] = { 0.0, 0.0, 0.0 };
+		 int shininess = 0;
+
+		 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
+		 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
+		 glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
+		 glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
+		 glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+
+
 		_numberOfRenderedParticles = 0;
 		// loop through all the particles
 		for (std::vector<Particle*>::iterator particleIterator = _particles.begin();particleIterator != _particles.end(); ++particleIterator) {
@@ -165,7 +155,6 @@ public:
 				// Draw the particle using the RGB values, fade the particle based on its time to live
 				glColor4f(particle->r, particle->g,particle->b,particle->timeToLive);
 
-				float size = _minSize + rand()%1 * (_maxSize - _minSize);
 
 				glTranslatef(particle->x,particle->y,particle->z);
 				//rotating the sprite towards the camera
@@ -175,13 +164,13 @@ public:
 				// Build quad from a triangle strip
 				glBegin(GL_TRIANGLE_STRIP);
 				glTexCoord2d(_particleTexture->getWidth(), _particleTexture->getHeight());
-				glVertex3f(size, size, 0);// Top right
+				glVertex3f(particle->size, particle->size, 0);// Top right
 				glTexCoord2d(0, _particleTexture->getHeight());
-				glVertex3f( - size, size, 0);// Top left
+				glVertex3f( - particle->size, particle->size, 0);// Top left
 				glTexCoord2d(_particleTexture->getWidth(), 0);
-				glVertex3f(size, - size, 0);// Bottom right
+				glVertex3f(particle->size, - particle->size, 0);// Bottom right
 				glTexCoord2d(0, 0);
-				glVertex3f( - size, - size, 0);// Bottom left
+				glVertex3f( - particle->size, - particle->size, 0);// Bottom left
 				glEnd();
 				_particleTexture->setActive(false);
 
@@ -201,9 +190,6 @@ public:
 private:
 	int _maxNumberOfParticles;
 	std::vector<Particle*> _particles;
-
-	float _minSize;
-	float _maxSize;
 
 	Point _directionOfCamera;
 	Camera3D* _camera;

@@ -16,6 +16,7 @@
 
 #include "../../particleEngine/ParticleEngine.hpp"
 #include "../../particleEngine/Smoke.hpp"
+#include "../../particleEngine/Explosion.hpp"
 
 namespace game_space {
 
@@ -69,6 +70,7 @@ private:
 
 	int _waitBeforeAimingCounter;
 	ParticleEngine<Smoke> *_missileSmokeParticleEngine;
+	ParticleEngine<Explosion>* _missileExplosionParticleEngine;
 	bool _detonated;
 
 }; // class Bullet

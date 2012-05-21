@@ -81,7 +81,7 @@ namespace game_space {
 //###########
 // Particle engine
 //###########
-#define SPARKLE_TEXTURE "resources/GFX/textures/sparkle.tga"
+#define EXPLOSION_TEXTURE "resources/GFX/textures/explosion.tga"
 #define SMOKE_TEXTURE "resources/GFX/textures/smoke.tga"
 
 #define TOON_VERTEX_SHADER "ressources/shaders/toonvshader.vert"
