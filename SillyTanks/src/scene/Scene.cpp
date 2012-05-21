@@ -23,6 +23,7 @@
 //scene includes
 #include "SkyDome.hpp"
 #include "Terrain.hpp"
+#include "Water.hpp"
 
 //illumination includes
 #include "illumination/DirectionalLight.hpp"

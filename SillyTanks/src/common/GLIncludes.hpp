@@ -23,7 +23,7 @@
 // MacOS X
 #ifdef __APPLE__
 
-#include <GLUT/glew.h>
+#include <GL/glew.h>
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
 
