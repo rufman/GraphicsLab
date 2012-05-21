@@ -579,19 +579,19 @@ void Scene::handleKeyboardInput() {
 	}
 	if (_window.specialKeyPressed(GLUT_KEY_LEFT)) {
 		_endNode->_position.x--;
-		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+		_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
 	}
 	if (_window.specialKeyPressed(GLUT_KEY_RIGHT)) {
 		_endNode->_position.x++;
-		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+		_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
 	}
 	if (_window.specialKeyPressed(GLUT_KEY_UP)) {
 		_endNode->_position.z--;
-		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+		_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
 	}
 	if (_window.specialKeyPressed(GLUT_KEY_DOWN)) {
 		_endNode->_position.z++;
-		//_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+		_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
 	}
 }
 

@@ -1,31 +1,19 @@
 /*
- * tank.hpp
- * See tank.cpp
+ * Tower.h
  */
 
-#ifndef TANK_HPP_
-#define TANK_HPP_
+#ifndef TOWER_H_
+#define TOWER_H_
 
-// common includes
-#include "../../../common/Drawable.hpp"
-#include "../../../common/Types.hpp"
-#include "../../../common/PLYModel.hpp"
-#include "../../../common/Camera3D.hpp"
-
-#include "../../AI/TankAI.hpp"
-
-#include <math.h>
-
-//entities include
-#include "Turret.hpp"
 #include "../collisiondetection/Target.hpp"
-
-//forward declaration
-class TankAI;
+#include "../../AI/TowerAI.hpp"
+#include "../../../common/PLYModel.hpp"
+#include "Turret.hpp"
+#include "../../../common/Camera3D.hpp"
 
 namespace game_space {
 
-class Tank: public Target {
+class Tower: public game_space::Target {
 public:
 	enum SELECTEDWEAPON {
 		BULLET, MISSILE
@@ -33,29 +21,21 @@ public:
 protected:
 	Turret* _turret;
 
-	PLYModel* _chassis;
+	PLYModel* _towerBase;
 
-	/** Ship position */
+	/** Tower position */
 	Point _position;
-
-	/** Ship velocity */
-	Vector3D _velocity;
-
-	float _speed;
-
-	float _direction;
 
 	float _baseWidth;
 
 	int _targetId;
-	TankAI* _controllingAI;
+	TowerAI* _controllingAI;
 	bool _isAIControlled;
 
 	SELECTEDWEAPON _selectedWeapon;
-
 public:
-	Tank(Scene &scene,bool isAIControlled);
-	virtual ~Tank();
+	Tower(Scene &scene,bool isAIControlled);
+	virtual ~Tower();
 	void reset();
 
 	/** Draw the object to the screen. */
@@ -70,7 +50,6 @@ public:
 
 	float getAzimuth() const;
 	void setAzimuth(float azimuth);
-	void move(float speed);
 	void update(float seconds);
 	float getDirection() const;
 	void setDirection(float angle);
@@ -79,7 +58,7 @@ public:
 	Point getPosition() const;
 	int getID() const;
 	bool isAIControlled() const;
-	TankAI* getAI() const;
+	TowerAI* getAI() const;
 	void fireBullet();
 	void fireMissile();
 
@@ -88,5 +67,6 @@ public:
 	void setSelectedWeapon(SELECTEDWEAPON weapon);
 
 };
-}
-#endif
+
+} /* namespace game_space */
+#endif /* TOWER_H_ */
