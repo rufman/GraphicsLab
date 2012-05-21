@@ -148,7 +148,7 @@ void SoundEngine::playGunSound() {
 
 void SoundEngine::playGunSoundAt(float x, float y, float z){
 
-	float* arr = {x, y, z};
+	float arr[] = {x, y, z};
 	alSourcefv(Sources[GUN], AL_POSITION, arr);
 	alSourcePlay(Sources[GUN]);
 }
@@ -162,7 +162,7 @@ void SoundEngine::playExplosionSound() {
 
 void SoundEngine::playExplosionSoundAt(float x, float y, float z){
 
-	float* arr = {x, y, z};
+	float arr[] = {x, y, z};
 	alSourcefv(Sources[EXPLOSION], AL_POSITION, arr);
 	alSourcePlay(Sources[EXPLOSION]);
 
@@ -177,7 +177,7 @@ void SoundEngine::playMuzzleSound() {
 
 void SoundEngine::playMuzzleSoundAt(float x, float y, float z){
 
-	float* arr = {x, y, z};
+	float arr[] = {x, y, z};
 	alSourcefv(Sources[MUZZLE], AL_POSITION, arr);
 	alSourcePlay(Sources[MUZZLE]);
 
