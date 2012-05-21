@@ -44,6 +44,7 @@ class Light;
 class SkyDome;
 class Bullet;
 class Terrain;
+class Water;
 
 /** Class that contains contents of the screen to display */
 class Scene
@@ -161,6 +162,7 @@ private:
 
 	SkyDome *_skyDome;
 	Terrain *_terrain;
+	Water *_water;
 	DirectionalLight* _sunLight;
 
 	ParticleEngine<Smoke> *_tankSmokeParticleEngine;

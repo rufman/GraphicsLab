@@ -42,7 +42,9 @@
 namespace game_space {
 
 Scene::Scene(Window &window) :
-		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _sunLight(NULL) {
+		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(
+				TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(
+				NULL), _water(NULL), _sunLight(NULL) {
 	_soundEngine = SoundEngine();
 	//_shadingEngine  = new ShadingEngine();
 
@@ -53,8 +55,10 @@ Scene::Scene(Window &window) :
 Scene::~Scene() {
 	delete _skyDome;
 	delete _terrain;
+	delete _water;
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		delete light;
 	}
@@ -112,7 +116,9 @@ void Scene::initialize() {
 	_overviewCam = new Camera3D(*this);
 
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
-	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
+	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4,
+			100 * 4, 50, 50);
+	_water = new Water(*this, 100 * 4, 100 * 4);
 	_playerTank = new SmallTank(*this, 0, NULL);
 	_tanks.push_back(_playerTank);
 
@@ -125,7 +131,8 @@ void Scene::initialize() {
 
 	//hiding the default cursor and putting the cursor position to the middle of the window
 	glutSetCursor(GLUT_CURSOR_NONE);
-	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
+	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2,
+			glutGet(GLUT_WINDOW_HEIGHT) / 2);
 }
 
 void Scene::reset() {
@@ -142,12 +149,14 @@ void Scene::reset() {
 	_freeCameraParameters.applyToCamera(*_tankCam);
 
 	_skyDome->reset();
-	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter++) {
+	for (std::vector<Tank*>::iterator tankIter = _tanks.begin();
+			tankIter != _tanks.end(); tankIter++) {
 		Tank* tank = *tankIter;
 		tank->reset();
 	}
 
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end(); ++bulletIter) {
+	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
+			bulletIter != _bullets.end(); ++bulletIter) {
 		Bullet *bullet = *bulletIter;
 		delete bullet;
 	}
@@ -160,12 +169,14 @@ void Scene::update(float seconds) {
 
 	_skyDome->update(seconds);
 
-	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter++) {
+	for (std::vector<Tank*>::iterator tankIter = _tanks.begin();
+			tankIter != _tanks.end(); tankIter++) {
 		Tank* tank = *tankIter;
 		tank->update(seconds);
 	}
 
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end();) {
+	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
+			bulletIter != _bullets.end();) {
 		Bullet *bullet = *bulletIter;
 		bullet->move(seconds);
 
@@ -187,7 +198,8 @@ void Scene::update(float seconds) {
 		// Remove bullet if out of window
 		const Point &bulletPosition = bullet->getPosition();
 
-		if (hitTarget || (bulletPosition.y < _terrain->getHeight(bulletPosition))) {
+		if (hitTarget
+				|| (bulletPosition.y < _terrain->getHeight(bulletPosition))) {
 			bulletIter = _bullets.erase(bulletIter);
 			_terrain->doDamageAt(bulletPosition);
 			delete bullet;
@@ -196,7 +208,8 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end();) {
+	for (std::vector<Missile*>::iterator missileIter = _missiles.begin();
+			missileIter != _missiles.end();) {
 		(*missileIter)->move(seconds);
 		if ((*missileIter)->isDetonated()) {
 			Missile* missile = *missileIter;
@@ -245,7 +258,9 @@ void Scene::drawScene() {
 		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_currentlyActiveCamera = _overviewCam;
-		_currentlyActiveCamera->setLookAt(LookAt(Point(100, 100, 100), _playerTank->getPosition(), Vector3D(0, 1, 0)));
+		_currentlyActiveCamera->setLookAt(
+				LookAt(Point(100, 100, 100), _playerTank->getPosition(),
+						Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL Lighting
@@ -263,7 +278,8 @@ void Scene::drawScene() {
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}
@@ -288,8 +304,13 @@ void Scene::drawScene() {
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
 
+	//draw water
+	_water->setRenderingParameters(_renderingParameters);
+	_water->draw();
+
 	//Draw the tank
-	for (std::vector<Tank*>::iterator tankIter = _tanks.begin(); tankIter != _tanks.end(); tankIter++) {
+	for (std::vector<Tank*>::iterator tankIter = _tanks.begin();
+			tankIter != _tanks.end(); tankIter++) {
 		Tank* tank = *tankIter;
 		tank->setRenderingParameters(_renderingParameters);
 		tank->draw();
@@ -301,7 +322,8 @@ void Scene::drawScene() {
 	//_shadingEngine->clearShaders();
 	glPushMatrix();
 	// Draw bullets
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end(); ++bulletIter) {
+	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
+			bulletIter != _bullets.end(); ++bulletIter) {
 		Bullet *bullet = *bulletIter;
 		bullet->setRenderingParameters(_renderingParameters);
 		bullet->draw();
@@ -311,7 +333,8 @@ void Scene::drawScene() {
 
 	glPushMatrix();
 
-	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end(); missileIter++) {
+	for (std::vector<Missile*>::iterator missileIter = _missiles.begin();
+			missileIter != _missiles.end(); missileIter++) {
 		(*missileIter)->draw();
 	}
 	glPopMatrix();
@@ -425,7 +448,8 @@ void Scene::drawOverlay() {
 	int height = glutGet(GLUT_WINDOW_HEIGHT) / 4;
 
 	// Set camera parameters
-	_overlayCam->setViewport(Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
+	_overlayCam->setViewport(
+			Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
 
 	_overlayCam->applyViewport();
 	_overlayCam->applyProjection();
@@ -516,7 +540,8 @@ void Scene::handleKeyboardInput() {
 	if (_window.keyHit('4')) {
 		if (_renderingParameters.normalMode == RenderingParameters::OFF) {
 			_renderingParameters.normalMode = RenderingParameters::VERTEX;
-		} else if (_renderingParameters.normalMode == RenderingParameters::VERTEX) {
+		} else if (_renderingParameters.normalMode
+				== RenderingParameters::VERTEX) {
 			_renderingParameters.normalMode = RenderingParameters::TRIANGLE;
 		} else {
 			_renderingParameters.normalMode = RenderingParameters::OFF;
@@ -632,7 +657,12 @@ void Scene::onIdle() {
 }
 
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
-	Point from(radius * std::cos(Utils::toRadian(elevation)) * std::sin(Utils::toRadian(azimuth)) * -1, radius * std::sin(Utils::toRadian(elevation)), radius * std::cos(Utils::toRadian(elevation)) * std::cos(Utils::toRadian(azimuth)) * -1);
+	Point from(
+			radius * std::cos(Utils::toRadian(elevation))
+					* std::sin(Utils::toRadian(azimuth)) * -1,
+			radius * std::sin(Utils::toRadian(elevation)),
+			radius * std::cos(Utils::toRadian(elevation))
+					* std::cos(Utils::toRadian(azimuth)) * -1);
 
 	Vector3D up(0.0, 1.0, 0.0);
 	Vector3D dir(-from.x, -from.y, -from.z);
@@ -643,7 +673,8 @@ void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Vector3D upMove = up;
 	upMove *= moveY;
 
-	Point newFrom(from.x + normalMove.x + upMove.x, from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
+	Point newFrom(from.x + normalMove.x + upMove.x,
+			from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
 	Point to(newFrom.x - from.x, newFrom.y - from.y, newFrom.z - from.z);
 
 	camera.setLookAt(LookAt(newFrom, to, up));
@@ -672,8 +703,7 @@ Camera3D* Scene::getCurrentlyActiveCamera() {
 	return _currentlyActiveCamera;
 }
 
-ShadingEngine* Scene::getShadingEngine()
-{
+ShadingEngine* Scene::getShadingEngine() {
 	return _shadingEngine;
 }
 }
