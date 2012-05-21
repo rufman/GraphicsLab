@@ -21,7 +21,7 @@ int MessageBus::addNewClient()
 	return messageBus.size()-1;
 }
 
-std::vector<Message*>* MessageBus::getMessagesForClient(int clientID)
+std::vector<Message*>* MessageBus::getSubbusOfClient(int clientID)
 {
 	return messageBus.at(clientID);
 }

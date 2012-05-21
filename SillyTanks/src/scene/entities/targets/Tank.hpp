@@ -73,6 +73,7 @@ public:
 	float getDirection() const;
 	void setDirection(float angle);
 	LookAt getLookAt() const;
+	void setPosition(Point position);
 	Point getPosition() const;
 	int getID() const;
 	bool isAIControlled() const;

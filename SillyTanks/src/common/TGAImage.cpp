@@ -47,7 +47,7 @@ void TGAImage::load( const std::string &file )
 	std::ifstream f( file.c_str(), std::ios::in | std::ios::binary );
 	if ( !f.is_open() )
 	{
-		std::stringstream error; error << "Failed to open file " << file;
+		std::stringstream error; error << "Failed to open file " << file.c_str();
 		throw Exception( error.str() );
 	}
 

@@ -151,6 +151,10 @@ bool Tank::isAIControlled() const
 	return (_controllingAI != NULL);
 }
 
+void Tank::setPosition(Point position)
+{
+	_position = position;
+}
 Point Tank::getPosition() const
 {
 	return _position;

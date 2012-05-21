@@ -30,6 +30,8 @@
 //pathfinding includes
 #include "pathfinding/Node.hpp"
 
+#include "AI/MessageBus.hpp"
+
 
 #include <vector>
 
@@ -171,6 +173,8 @@ private:
 	Tank* _playerTank;
 
 	ShadingEngine* _shadingEngine;
+
+	MessageBus* _messageBus;
 
 }; // class Scene
 

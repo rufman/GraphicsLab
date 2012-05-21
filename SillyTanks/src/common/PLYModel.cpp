@@ -79,7 +79,7 @@ void PLYModel::processFile(const std::string &file) {
 				f >> numFaces;
 			}
 		} else if (element == "property") {
-			char type[6];
+			char type[5];
 			char name;
 			f >> type;
 			f >> name;

@@ -28,7 +28,7 @@ SmallTank::SmallTank(Scene & scene,int id,TankAI* ai):Tank(scene,id,ai) {
 	_turret = new Turret(_scene);
 
 	int tankTextureNumber = rand()%3;
-	std::string tankTexture;
+	std::string tankTexture = "NO-TEXTURE-PATH";
 	switch(tankTextureNumber)
 	{
 	case 0:
@@ -42,6 +42,11 @@ SmallTank::SmallTank(Scene & scene,int id,TankAI* ai):Tank(scene,id,ai) {
 		break;
 	}
 	case 2:
+	{
+		tankTexture = SMALLTANK_TEXTURE3;
+		break;
+	}
+	default:
 	{
 		tankTexture = SMALLTANK_TEXTURE3;
 		break;

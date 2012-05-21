@@ -32,6 +32,8 @@
 //entities includes
 #include "entities/targets/SmallTank.hpp"
 
+#include "AI/TankAI.hpp"
+
 //pathfinding includes
 #include "pathfinding/Node.hpp"
 
@@ -47,6 +49,7 @@ Scene::Scene(Window &window) :
 				TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(
 				NULL), _water(NULL), _sunLight(NULL) {
 	_soundEngine = SoundEngine();
+	_messageBus = new MessageBus();
 
 	_endNode = new Node(Point(1, 2, 1), *this);
 	_endNode->_pathState = Node::ENDPOINT;
@@ -121,6 +124,14 @@ void Scene::initialize() {
 	_water = new Water(*this, 100 * 4, 100 * 4);
 	_playerTank = new SmallTank(*this, 0, NULL);
 	_tanks.push_back(_playerTank);
+
+	for(int i = 0; i < 4;i++)
+	{
+		int tankId = _messageBus->addNewClient();
+		Tank* tank = new SmallTank(*this,tankId, new TankAI(*this,_messageBus->getSubbusOfClient(tankId)));
+		tank->setPosition(_terrain->getRandomPointOnMap());
+		_tanks.push_back(tank);
+	}
 
 	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam, 20);
 	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
