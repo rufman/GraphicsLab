@@ -120,18 +120,6 @@ public:
 	 */
 	static void applyGLRotation( const Vector3D &v1, const Vector3D &v2 );
 	
-	/**
-	 * Draw a box object centered at origin
-	 *
-	 * @param[in]	xLen		Length in x - width
-	 * @param[in]	yLen		Length in y - height
-	 * @param[in]	zLen		Length in z - length
-	 * @param[in]	xRes	Number of points in x direction
-	 * @param[in]	yRes	Number of points in y direction
-	 * @param[in]	zRes	Number of points in z direction
-	 */
-	static void drawBox( float xLen, float yLen, float zLen, uint xRes, uint yRes, uint zRes );
-	
 }; // class Utils
 
 

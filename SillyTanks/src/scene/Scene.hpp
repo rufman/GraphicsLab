@@ -14,6 +14,9 @@
 #include "../common/TGATexture.hpp"
 #include "../common/SoundEngine.hpp"
 
+//shading engine include
+#include "illumination/shading/ShadingEngine.hpp"
+
 //illumination include
 #include "illumination/DirectionalLight.hpp"
 
@@ -78,6 +81,7 @@ public:
 	Tank* getPlayerTank();
 	Camera3D* getTankCam();
 	Camera3D* getCurrentlyActiveCamera();
+	ShadingEngine* getShadingEngine();
 
 private:
 	/**
@@ -164,6 +168,8 @@ private:
 	Node* _endNode;
 
 	Tank* _playerTank;
+
+	ShadingEngine* _shadingEngine;
 
 }; // class Scene
 

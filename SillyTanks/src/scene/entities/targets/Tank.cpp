@@ -23,7 +23,7 @@
 
 namespace game_space {
 
-Tank::Tank(Scene &scene,int id,TankAI* ai ) :Drawable( scene ),_tankId(id),_controllingAI(ai),_direction(0),_velocity(Vector3D( 0.0, 0.0, 1.0 )) {}
+Tank::Tank(Scene &scene,int id,TankAI* ai ) :Drawable( scene ),_velocity(Vector3D( 0.0, 0.0, 1.0 )),_direction(0),_tankId(id),_controllingAI(ai) {}
 
 Tank::~Tank() {}
 

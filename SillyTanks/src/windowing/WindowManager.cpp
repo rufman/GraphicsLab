@@ -118,17 +118,6 @@ static void __timerFunc( int value )
 	glutTimerFunc( MILLIS_PER_FRAME, __timerFunc, MILLIS_PER_FRAME );
 }
 
-static void __idleFunc()
-{
-	WindowManager &windowManager = WindowManager::getInstance();
-	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
-	}
-
-	window->onIdle();
-}
 
 static void __keyPressed (unsigned char key, int x, int y) {
 	WindowManager &windowManager = WindowManager::getInstance();

@@ -44,6 +44,7 @@ namespace game_space {
 Scene::Scene(Window &window) :
 		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _sunLight(NULL) {
 	_soundEngine = SoundEngine();
+	//_shadingEngine  = new ShadingEngine();
 
 	_endNode = new Node(Point(1, 2, 1), *this);
 	_endNode->_pathState = Node::ENDPOINT;
@@ -273,12 +274,16 @@ void Scene::drawScene() {
 
 	// Draw scene
 	glMatrixMode(GL_MODELVIEW);
+	//The Sky dome should not use toon shading
+	//_shadingEngine->clearShaders();
 	glPushMatrix();
 
 	// Draw the sky
 	_skyDome->setRenderingParameters(_renderingParameters);
 	_skyDome->draw();
 
+	//the terrain should use toon shading
+	//_shadingEngine->applyToonShader();
 	// Draw the terrain
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
@@ -292,8 +297,9 @@ void Scene::drawScene() {
 
 	glPopMatrix();
 
+	//the bullets should not use toon shading
+	//_shadingEngine->clearShaders();
 	glPushMatrix();
-
 	// Draw bullets
 	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end(); ++bulletIter) {
 		Bullet *bullet = *bulletIter;
@@ -664,5 +670,10 @@ Camera3D* Scene::getTankCam() {
 
 Camera3D* Scene::getCurrentlyActiveCamera() {
 	return _currentlyActiveCamera;
+}
+
+ShadingEngine* Scene::getShadingEngine()
+{
+	return _shadingEngine;
 }
 }
