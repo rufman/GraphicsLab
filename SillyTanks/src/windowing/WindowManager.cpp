@@ -9,6 +9,7 @@
 // common includes
 #include "../common/GLIncludes.hpp"
 #include "../common/Exception.hpp"
+#include <stdio.h>
 
 namespace game_space {
 
@@ -16,223 +17,203 @@ namespace game_space {
 // Global variable and functions for binding GLUT callbacks
 //////////////////////////////////////////////////////////////////////////////
 
-static void __displayFunc()
-{
+static void __displayFunc() {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
 
 	window->onPaint();
 }
 
-static void __reshapeFunc( int width, int height )
-{
+static void __reshapeFunc(int width, int height) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
 
-	window->onResize( width, height );
+	window->onResize(width, height);
 }
 
-static void __entryFunc( int state )
-{
+static void __entryFunc(int state) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
 
-	window->onMouseEntry( state );
+	window->onMouseEntry(state);
 }
 
-static void __mouseFunc( int button, int state, int x, int y )
-{
+static void __mouseFunc(int button, int state, int x, int y) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
 
-	window->onMouseClick( button, state, x, y );
+	window->onMouseClick(button, state, x, y);
 }
 
-static void __motionFunc( int x, int y )
-{
+static void __motionFunc(int x, int y) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
 
-	window->onMouseMove( x, y );
+	window->onMouseMove(x, y);
 }
 
-static void __passiveMotionFunc( int x, int y )
-{
+static void __passiveMotionFunc(int x, int y) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
 
-	window->onMousePassiveMove( x, y );
+	window->onMousePassiveMove(x, y);
 }
 
-static void __visibilityFunc( int state )
-{
+static void __visibilityFunc(int state) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
 
-	window->onVisible( state );
+	window->onVisible(state);
 }
 
-static void __timerFunc( int value )
-{
+static void __timerFunc(int value) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
 
-	window->onTimer( value );
+	window->onTimer(value);
 
 	// To have max 30 frames per second,
 	// we schedule to run this function every 1000/33'th millisecond.
 	static const int MAX_FPS = 30;
-	static const int MILLIS_PER_FRAME = 1000/MAX_FPS;
-	glutTimerFunc( MILLIS_PER_FRAME, __timerFunc, MILLIS_PER_FRAME );
+	static const int MILLIS_PER_FRAME = 1000 / MAX_FPS;
+	glutTimerFunc(MILLIS_PER_FRAME, __timerFunc, MILLIS_PER_FRAME);
 }
 
-
-static void __keyPressed (unsigned char key, int x, int y) {
+static void __keyPressed(unsigned char key, int x, int y) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
-	window->setKey(key,true);
+	window->setKey(key, true);
 }
 
-static void __keyUp (unsigned char key, int x, int y) {
+static void __keyUp(unsigned char key, int x, int y) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
-	window->setKey(key,false);
+	window->setKey(key, false);
 }
 
-static void __specialKeyPressed (int key, int x, int y) {
+static void __specialKeyPressed(int key, int x, int y) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
-	window->setSpecialKey(key,true);
+	window->setSpecialKey(key, true);
 }
 
-static void __specialKeyUp (int key, int x, int y) {
+static void __specialKeyUp(int key, int x, int y) {
 	WindowManager &windowManager = WindowManager::getInstance();
 	Window *window = windowManager.getActiveWindow();
-	if ( window == NULL )
-	{
-		throw Exception( "Active window hasn't been set on WindowManager" );
+	if (window == NULL) {
+		throw Exception("Active window hasn't been set on WindowManager");
 	}
-	window->setSpecialKey(key,false);
+	window->setSpecialKey(key, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
 WindowManager *WindowManager::_instance = NULL;
 
-WindowManager &WindowManager::getInstance()
-{
-	if ( _instance == NULL )
-	{
+WindowManager &WindowManager::getInstance() {
+	if (_instance == NULL) {
 		_instance = new WindowManager();
 	}
 
-	return ( *_instance );
+	return (*_instance);
 }
 
 WindowManager::WindowManager() :
-_activeWindow( NULL )
-{
+		_activeWindow(NULL) {
 }
 
-WindowManager::~WindowManager()
-{
+WindowManager::~WindowManager() {
 }
 
-Window *WindowManager::createWindow( Window::Parameters &parameters )
-{
-	Window *window = new Window( parameters );
-
-	glutInitWindowSize( parameters.width, parameters.height );
-	glutInitWindowPosition( parameters.posX, parameters.posY );
-
+Window *WindowManager::createWindow(Window::Parameters &parameters) {
+	glutInitWindowPosition(parameters.posX, parameters.posY);
+	glutInitWindowSize(parameters.width, parameters.height);
 	// Create GLUT Window
-	int windowID = glutCreateWindow( parameters.title.c_str() );
-	window->setID( windowID );
-
-	_activeWindow = window;
-
-#ifdef WIN32
-	// Initialize GLEW
-	if ( GLEW_OK != glewInit() )
-	{
-		throw Exception( std::string( "Failed to initialize GLEW library" ) );
-	}
-
-	if ( !glewIsSupported( "GL_ARB_texture_rectangle" ) )
-	{
-		throw Exception( std::string( "GL_TEXTURE_RECTANGLE_ARB extension supported" ) );
-	}
-#endif
+	int windowID = glutCreateWindow(parameters.title.c_str());
 
 	// Bind handlers
-	glutDisplayFunc( __displayFunc );
-	glutReshapeFunc( __reshapeFunc );
-	glutMouseFunc( __mouseFunc );
-	glutMotionFunc( __motionFunc );
-	glutPassiveMotionFunc( __passiveMotionFunc );
-	glutEntryFunc( __entryFunc );
-	glutVisibilityFunc( __visibilityFunc );
-	glutTimerFunc( 1, __timerFunc, 1 );
+	glutDisplayFunc(__displayFunc);
+	glutIdleFunc(__displayFunc);
+	glutReshapeFunc(__reshapeFunc);
+	glutMouseFunc(__mouseFunc);
+	glutMotionFunc(__motionFunc);
+	glutPassiveMotionFunc(__passiveMotionFunc);
+	glutEntryFunc(__entryFunc);
+	glutVisibilityFunc(__visibilityFunc);
+	glutTimerFunc(1, __timerFunc, 1);
 
 	//get keyboard inputs to check if multiple keys are pressed simultaneously
-	glutKeyboardFunc(__keyPressed);// Tell GLUT to use the method "keyPressed" for key presses
-	glutKeyboardUpFunc(__keyUp);// Tell GLUT to use the method "keyUp" for key up events
+	glutKeyboardFunc(__keyPressed); // Tell GLUT to use the method "keyPressed" for key presses
+	glutKeyboardUpFunc(__keyUp); // Tell GLUT to use the method "keyUp" for key up events
 
-	glutSpecialFunc(__specialKeyPressed);// Tell GLUT to use the method "keySpecial" for special key presses
-	glutSpecialUpFunc(__specialKeyUp);// Tell GLUT to use the method "keySpecialUp" for special up key events
+	glutSpecialFunc(__specialKeyPressed); // Tell GLUT to use the method "keySpecial" for special key presses
+	glutSpecialUpFunc(__specialKeyUp); // Tell GLUT to use the method "keySpecialUp" for special up key events
+
+	glEnable(GL_DEPTH_TEST);
+
+	// Initialize GLEW
+	if (GLEW_OK != glewInit()) {
+		throw Exception(std::string("Failed to initialize GLEW library"));
+	}
+
+	if (!glewIsSupported("GL_ARB_texture_rectangle")) {
+		throw Exception(std::string("GL_TEXTURE_RECTANGLE_ARB extension supported"));
+	}
+
+	if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
+	{
+		printf("Ready for GLSL\n");
+	}
+	else {
+		printf("No GLSL support\n");
+		exit(1);
+	}
+
+	Window *window = new Window(parameters);
+	window->setID(windowID);
+
+	_activeWindow = window;
 
 	window->initialize();
 	return window;
 }
 
-void WindowManager::deleteWindow( Window &window )
-{
-	glutDestroyWindow( window.getID() );
-	delete ( &window );
+void WindowManager::deleteWindow(Window &window) {
+	glutDestroyWindow(window.getID());
+	delete (&window);
 }
 
 }

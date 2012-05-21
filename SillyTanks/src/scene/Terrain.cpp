@@ -586,11 +586,9 @@ std::vector<Node*> Terrain::getNeighbors(Node node) {
 }
 
 Point Terrain::getRandomPointOnMap() {
-	srand((unsigned) time(0));
-
-	float x = (-_width / 2.0) + ((float) rand() / (float) _width);
-	float z = (_length / 2.0) - ((float) rand() / (float) _length);
-	float y = getHeight(Point(x, 0, y));
+	float x = (-_width / 2.0) + (rand()%(int)_width);
+	float z = (_length / 2.0) - (rand()%(int)_length);
+	float y = getHeight(Point(x, 0, z));
 
 	return Point(x, y, z);
 }

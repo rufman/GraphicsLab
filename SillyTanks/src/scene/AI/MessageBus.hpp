@@ -18,7 +18,7 @@ public:
 	virtual ~MessageBus();
 
 	int addNewClient();
-	std::vector<Message*>* getMessagesForClient(int clientID);
+	std::vector<Message*>* getSubbusOfClient(int clientID);
 	void sendMessageTo(Message message,int reveiverID);
 };
 

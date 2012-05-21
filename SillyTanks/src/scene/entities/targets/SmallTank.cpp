@@ -27,6 +27,33 @@ SmallTank::SmallTank(Scene & scene,int id,TankAI* ai):Tank(scene,id,ai) {
 	//get a new turret
 	_turret = new Turret(_scene);
 
+	int tankTextureNumber = rand()%3;
+	std::string tankTexture = "NO-TEXTURE-PATH";
+	switch(tankTextureNumber)
+	{
+	case 0:
+	{
+		tankTexture = SMALLTANK_TEXTURE1;
+		break;
+	}
+	case 1:
+	{
+		tankTexture = SMALLTANK_TEXTURE2;
+		break;
+	}
+	case 2:
+	{
+		tankTexture = SMALLTANK_TEXTURE3;
+		break;
+	}
+	default:
+	{
+		tankTexture = SMALLTANK_TEXTURE3;
+		break;
+	}
+	}
+	_tankTexture = new TGATexture(tankTexture.c_str());
+
 	reset();
 
 }
@@ -35,6 +62,8 @@ SmallTank::~SmallTank() {}
 
 void SmallTank::draw() const
 {
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	_tankTexture->setActive(true);
 	glPushMatrix();
 	glTranslatef(_position.x,_position.y,_position.z);
 
@@ -60,6 +89,7 @@ void SmallTank::draw() const
 	_turret->setPosition(Point(tankPosition.x,tankPosition.y+0.5,tankPosition.z));
 	_turret->draw();
 	glPopMatrix();
+	_tankTexture->setActive(false);
 }
 
 }

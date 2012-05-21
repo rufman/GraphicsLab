@@ -32,6 +32,9 @@ int main( int argc, char *argv[] )
 {
     // set the signal handler to the one provided by this class
 	signal(SIGINT, signalHandler);
+
+	//for all the random calls inside of the project, we set the seed to time(0)
+	srand((unsigned) time(0));
     
     try
     {

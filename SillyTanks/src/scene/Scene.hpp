@@ -30,6 +30,8 @@
 //pathfinding includes
 #include "pathfinding/Node.hpp"
 
+#include "AI/MessageBus.hpp"
+
 
 #include <vector>
 
@@ -44,6 +46,7 @@ class Light;
 class SkyDome;
 class Bullet;
 class Terrain;
+class Water;
 
 /** Class that contains contents of the screen to display */
 class Scene
@@ -81,7 +84,6 @@ public:
 	Tank* getPlayerTank();
 	Camera3D* getTankCam();
 	Camera3D* getCurrentlyActiveCamera();
-	ShadingEngine* getShadingEngine();
 
 private:
 	/**
@@ -161,6 +163,7 @@ private:
 
 	SkyDome *_skyDome;
 	Terrain *_terrain;
+	Water *_water;
 	DirectionalLight* _sunLight;
 
 	ParticleEngine<Smoke> *_tankSmokeParticleEngine;
@@ -170,6 +173,8 @@ private:
 	Tank* _playerTank;
 
 	ShadingEngine* _shadingEngine;
+
+	MessageBus* _messageBus;
 
 }; // class Scene
 

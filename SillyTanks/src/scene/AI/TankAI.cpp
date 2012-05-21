@@ -14,8 +14,8 @@
 
 namespace game_space {
 
-TankAI::TankAI(Scene * scene, Tank* tank, std::vector<Message*>* aiMessages) :
-		_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _tank(tank), _currentTarget(-1), _scene(scene) {
+TankAI::TankAI(Scene &scene, std::vector<Message*>* aiMessages) :
+		_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(-1), _scene(scene) {
 
 }
 
@@ -80,8 +80,8 @@ void TankAI::sense() {
 void TankAI::explore() {
 	//choose some random position on the map and find a way from here to this position
 	if (_path == NULL) {
-		Point randomGoal = _scene->getTerrain().getRandomPointOnMap();
-		_path = _scene->getTerrain().findPath(_tank->getPosition(), randomGoal);
+		Point randomGoal = _scene.getTerrain().getRandomPointOnMap();
+		_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
 	}
 	//follow path
 	followPath();
