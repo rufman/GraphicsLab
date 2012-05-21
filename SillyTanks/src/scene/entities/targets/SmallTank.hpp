@@ -17,6 +17,9 @@ public:
 	SmallTank(Scene &scene,int id,TankAI* ai);
 	virtual ~SmallTank();
 	void draw() const;
+
+private:
+	TGATexture* _tankTexture;
 };
 
 }

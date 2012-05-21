@@ -25,8 +25,8 @@ void ShadingEngine::compileShaders() {
 	toonVertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
 	toonFragmentShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
 	char *vs = NULL, *fs = NULL;
-	vs = readInShader("toonf2.vert");
-	fs = readInShader("toonf2.frag");
+	vs = readInShader(TOON_VERTEX_SHADER);
+	fs = readInShader(TOON_FRAGMENT_SHADER);
 	const char* vv =vs;
 	const char* ff = fs;
 

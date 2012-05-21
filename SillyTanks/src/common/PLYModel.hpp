@@ -60,6 +60,8 @@ protected:
 	struct PLYData
 	{
 		std::vector<Point> vertices;
+		bool textured;
+		std::vector<Point> textureCoords;
 		struct Triangle 
 		{ 
 			uint vertex1, vertex2, vertex3;
