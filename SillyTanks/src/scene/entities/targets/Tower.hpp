@@ -6,6 +6,7 @@
 #define TOWER_H_
 
 #include "../collisiondetection/Target.hpp"
+#include "../../AI/TowerAI.hpp"
 #include "../../../common/PLYModel.hpp"
 #include "Turret.hpp"
 #include "../../../common/Camera3D.hpp"
