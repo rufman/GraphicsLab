@@ -123,14 +123,14 @@ void Scene::initialize() {
 			100 * 4, 50, 50);
 	_water = new Water(*this, 100 * 4, 100 * 4);
 	_playerTank = new SmallTank(*this, 0, NULL);
-	_tanks.push_back(_playerTank);
+	_targets.push_back(_playerTank);
 
 	for(int i = 0; i < 4;i++)
 	{
 		int tankId = _messageBus->addNewClient();
 		Tank* tank = new SmallTank(*this,tankId, new TankAI(*this,_messageBus->getSubbusOfClient(tankId)));
 		tank->setPosition(_terrain->getRandomPointOnMap());
-		_tanks.push_back(tank);
+		_targets.push_back(tank);
 	}
 
 	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam, 20);
@@ -164,10 +164,9 @@ void Scene::reset() {
 
 	_skyDome->reset();
 	_water->reset();
-	for (std::vector<Tank*>::iterator tankIter = _tanks.begin();
-			tankIter != _tanks.end(); tankIter++) {
-		Tank* tank = *tankIter;
-		tank->reset();
+	for(std::vector<Target*>::iterator targetIter = _targets.begin();targetIter != _targets.end();targetIter++)
+	{
+		(*targetIter)->reset();
 	}
 
 	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
@@ -184,10 +183,14 @@ void Scene::update(float seconds) {
 
 	_skyDome->update(seconds);
 	_water->update(seconds);
-	for (std::vector<Tank*>::iterator tankIter = _tanks.begin();
-			tankIter != _tanks.end(); tankIter++) {
-		Tank* tank = *tankIter;
-		tank->update(seconds);
+	for(std::vector<Target*>::iterator targetIter = _targets.begin();targetIter != _targets.end();targetIter++)
+	{
+		Target* target = *targetIter;
+		if(target->_targetType == Target::TANK)
+		{
+			Tank* tank = static_cast<Tank*>(target);
+			tank->update(seconds);
+		}
 	}
 
 	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
@@ -323,14 +326,16 @@ void Scene::drawScene() {
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
 
-	//Draw the tank
-	for (std::vector<Tank*>::iterator tankIter = _tanks.begin();
-			tankIter != _tanks.end(); tankIter++) {
-		Tank* tank = *tankIter;
-		tank->setRenderingParameters(_renderingParameters);
-		tank->draw();
+	//Draw the targets
+	for(std::vector<Target*>::iterator targetIter = _targets.begin();targetIter != _targets.end();targetIter++)
+	{
+		Target* target = *targetIter;
+		if(target->_targetType == Target::TANK)
+		{
+			Tank* tank = static_cast<Tank*>(target);
+			tank->draw();
+		}
 	}
-
 	glPopMatrix();
 
 	//the bullets should not use toon shading

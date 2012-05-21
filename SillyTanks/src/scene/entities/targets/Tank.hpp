@@ -18,13 +18,14 @@
 
 //entities include
 #include "Turret.hpp"
+#include "../collisiondetection/Target.hpp"
 
 //forward declaration
 class TankAI;
 
 namespace game_space {
 
-class Tank: public Drawable {
+class Tank: public Target {
 public:
 	enum SELECTEDWEAPON {
 		BULLET, MISSILE

@@ -24,6 +24,8 @@
 #include "particleEngine/ParticleEngine.hpp"
 #include "particleEngine/Smoke.hpp"
 
+#include "entities/collisiondetection/Projectile.hpp"
+#include "entities/collisiondetection/Target.hpp"
 #include "entities/projectiles/Bullet.hpp"
 #include "entities/projectiles/Missile.hpp"
 
@@ -104,6 +106,8 @@ private:
 
 
 public:
+	std::vector<Target*> _targets;
+	std::vector<Projectile*> _projectiles;
 	std::vector<Tank*> _tanks;
 	std::vector<Missile*> _missiles;
 	std::vector<Bullet*> _bullets;
