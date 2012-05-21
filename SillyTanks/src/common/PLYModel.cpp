@@ -240,4 +240,8 @@ Point& PLYModel::getPosition() {
 	return _position;
 }
 
+std::vector<Point>* PLYModel::getVertices(){
+	return &_plyData.vertices;
+}
+
 }
