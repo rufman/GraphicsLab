@@ -5,6 +5,9 @@
 #ifndef TOWERAI_H_
 #define TOWERAI_H_
 
+#include "Message.hpp"
+#include "../entities/targets/Tower.hpp"
+
 namespace game_space {
 
 class TowerAI {
@@ -12,8 +15,14 @@ public:
 	enum TOWERAI_STRATEGY {
 		EXPLORE, HUNT
 	} _strategy;
+
+	std::vector<Message*>* _aiMessages;
+	Tower* _tower;
+	int _currentTarget;
+	std::vector<Point>* _path;
+	Scene& _scene;
 public:
-	TowerAI();
+	TowerAI(Scene &scene, std::vector<Message*>* aiMessages);
 	virtual ~TowerAI();
 
 	//AI methods

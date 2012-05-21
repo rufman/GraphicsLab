@@ -86,13 +86,13 @@ void Window::resetKeys()
 
 bool Window::keyPressed(char key)
 {
-	return _keyPressed[key];
+	return _keyPressed[(int)key];
 }
 
 bool Window::keyHit(char key)
 {
-	bool keyHit = _keyHit[key];
-	_keyHit[key] = false;
+	bool keyHit = _keyHit[(int)key];
+	_keyHit[(int)key] = false;
 	return keyHit;
 }
 
@@ -113,7 +113,7 @@ void Window::setKey(unsigned char key,bool value) {
 	_keyPressed[key] = value;
 	_keyHit[key] = (_oldKeyPressed[key] && !_keyPressed[key]);
 
-	if(keyPressed('q') || keyPressed('Q') || keyPressed(27) )
+	if(keyPressed(27) )
 	{
 		exit( EXIT_SUCCESS );
 	}

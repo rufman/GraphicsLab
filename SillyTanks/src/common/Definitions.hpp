@@ -51,9 +51,13 @@ namespace game_space {
 // Tank definitions
 //#################
 #define SMALLTANK_CHASSIS_MODEL "resources/GFX/models/smalltank_chassis.ply"
-#define SMALLTANK_TURRET_MODEL "resources/GFX/models/smalltank_turret.ply"
+#define TURRET_MODEL "resources/GFX/models/turret.ply"
 #define SMALLTANK_SPEED 8
-#define SMALLTANK_BOOST 15
+
+//#################
+// Tower definitions
+//#################
+#define SMALLTOWER_TOWERBASE_MODEL "resource/GFX/models/"
 
 //#################
 //Tank textures definitions

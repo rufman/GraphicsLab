@@ -27,8 +27,8 @@ namespace game_space {
 
 Tank::Tank(Scene &scene,bool isAIControlled) :Target( scene,Target::TANK ),_velocity(Vector3D( 0.0, 0.0, 1.0 )),_direction(0),_isAIControlled(isAIControlled) {
 	//the ai must know the tank to be able to controll it
-	_tankId = _scene.getMessageBus()->addNewClient();
-	_controllingAI = new TankAI(scene,_scene.getMessageBus()->getSubbusOfClient(_tankId));
+	_targetId = _scene.getMessageBus()->addNewClient();
+	_controllingAI = new TankAI(scene,_scene.getMessageBus()->getSubbusOfClient(_targetId));
 	_controllingAI->_tank = this;
 }
 
@@ -170,7 +170,7 @@ Point Tank::getPosition() const
 
 int Tank::getID() const
 {
-	return _tankId;
+	return _targetId;
 }
 
 TankAI* Tank::getAI() const
