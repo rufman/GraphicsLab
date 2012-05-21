@@ -122,13 +122,13 @@ void Scene::initialize() {
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4,
 			100 * 4, 50, 50);
 	_water = new Water(*this, 100 * 4, 100 * 4);
-	_playerTank = new SmallTank(*this, 0, NULL);
+	_playerTank = new SmallTank(*this,false);
+	_playerTank->setPosition(_terrain->getRandomPointOnMap());
 	_targets.push_back(_playerTank);
 
 	for(int i = 0; i < 4;i++)
 	{
-		int tankId = _messageBus->addNewClient();
-		Tank* tank = new SmallTank(*this,tankId, new TankAI(*this,_messageBus->getSubbusOfClient(tankId)));
+		Tank* tank = new SmallTank(*this,true);
 		tank->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tank);
 	}
@@ -721,6 +721,10 @@ Camera3D* Scene::getTankCam() {
 
 Camera3D* Scene::getCurrentlyActiveCamera() {
 	return _currentlyActiveCamera;
+}
 
+MessageBus* Scene::getMessageBus()
+{
+	return _messageBus;
 }
 }

@@ -49,11 +49,12 @@ protected:
 
 	int _tankId;
 	TankAI* _controllingAI;
+	bool _isAIControlled;
 
 	SELECTEDWEAPON _selectedWeapon;
 
 public:
-	Tank(Scene &scene, int id, TankAI* ai);
+	Tank(Scene &scene,bool isAIControlled);
 	virtual ~Tank();
 	void reset();
 
