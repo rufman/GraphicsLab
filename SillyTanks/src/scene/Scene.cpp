@@ -44,7 +44,6 @@ namespace game_space {
 Scene::Scene(Window &window) :
 		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _sunLight(NULL) {
 	_soundEngine = SoundEngine();
-	//_shadingEngine  = new ShadingEngine();
 
 	_endNode = new Node(Point(1, 2, 1), *this);
 	_endNode->_pathState = Node::ENDPOINT;
@@ -126,6 +125,8 @@ void Scene::initialize() {
 	//hiding the default cursor and putting the cursor position to the middle of the window
 	glutSetCursor(GLUT_CURSOR_NONE);
 	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
+
+	//_shadingEngine  = new ShadingEngine();
 }
 
 void Scene::reset() {
@@ -670,10 +671,5 @@ Camera3D* Scene::getTankCam() {
 
 Camera3D* Scene::getCurrentlyActiveCamera() {
 	return _currentlyActiveCamera;
-}
-
-ShadingEngine* Scene::getShadingEngine()
-{
-	return _shadingEngine;
 }
 }

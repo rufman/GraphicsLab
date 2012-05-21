@@ -81,7 +81,6 @@ public:
 	Tank* getPlayerTank();
 	Camera3D* getTankCam();
 	Camera3D* getCurrentlyActiveCamera();
-	ShadingEngine* getShadingEngine();
 
 private:
 	/**

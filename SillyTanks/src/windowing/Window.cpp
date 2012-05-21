@@ -44,6 +44,24 @@ void Window::onPaint()
 
 void Window::onResize( int width, int height )
 {
+	// Prevent a divide by zero, when window is too short
+	// (you cant make a window of zero width).
+	if (height == 0)
+		height = 1;
+
+	float ratio = 1.0 * width / height;
+
+	// Reset the coordinate system before modifying
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	// Set the viewport to be the entire window
+	glViewport(0, 0, width, height);
+
+	// Set the correct perspective.
+	gluPerspective(45, ratio, 1, 100);
+	glMatrixMode(GL_MODELVIEW);
+
 	_scene->onResize( width, height );
 	glutPostRedisplay();
 }
