@@ -44,6 +44,9 @@ public:
     void draw() const;
     void setPosition(Point &position);
     Point &getPosition();
+    std::vector<Point>* getVertices();
+
+
 protected:
 	void buildDisplayLists();
 	
