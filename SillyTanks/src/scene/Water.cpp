@@ -96,7 +96,7 @@ void Water::calculateVertexHeights()
 		for ( int lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++ )
 		{
 			Point &vertex = _vertices[_widthResolution*lengthPoint + widthPoint];
-			vertex.y = std::sin( (float)widthPoint + _displacement ) - std::cos( (float)lengthPoint + _displacement );
+			vertex.y = std::sin( (float)widthPoint + _displacement ) - std::cos( (float)lengthPoint + _displacement )-10;
 		}
 	}
 }

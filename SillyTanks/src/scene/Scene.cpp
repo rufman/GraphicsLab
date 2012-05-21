@@ -150,6 +150,7 @@ void Scene::reset() {
 	_freeCameraParameters.applyToCamera(*_tankCam);
 
 	_skyDome->reset();
+	_water->reset();
 	for (std::vector<Tank*>::iterator tankIter = _tanks.begin();
 			tankIter != _tanks.end(); tankIter++) {
 		Tank* tank = *tankIter;
@@ -169,7 +170,7 @@ void Scene::update(float seconds) {
 	handleKeyboardInput();
 
 	_skyDome->update(seconds);
-
+	_water->update(seconds);
 	for (std::vector<Tank*>::iterator tankIter = _tanks.begin();
 			tankIter != _tanks.end(); tankIter++) {
 		Tank* tank = *tankIter;
