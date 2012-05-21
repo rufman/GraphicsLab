@@ -31,6 +31,7 @@ void Explosion::resetParticle(Point startPosition,Vector3D startAcceleration)
 	r = 0;
 	g = 1.0;
 	b = 0;
+	size = 40;
 }
 
 void Explosion::update(float seconds) {

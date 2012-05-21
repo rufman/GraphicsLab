@@ -41,11 +41,10 @@ void Smoke::update(float seconds) {
 		if (active) {
 
 			x += vx*seconds;
-			y += vy*seconds;// + 0.5*GRAVITATIONAL_ACCELERATION*seconds*seconds;
+			y += vy*seconds;
 			z += vz*seconds;
-			size = 1 + sin(seconds);
+			size = 0.5 + sin(size);
 
-			//vy += GRAVITATIONAL_ACCELERATION*seconds;
 
 			timeToLive -= fade * seconds; // Reduce particles life by 'fade'
 		}

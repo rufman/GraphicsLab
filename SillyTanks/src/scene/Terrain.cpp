@@ -531,13 +531,14 @@ Node* Terrain::getNodeFromPoint(Point point) {
 }
 
 Node* Terrain::getNeighborOf(Point point, int px, int pz) {
-	float sliceW = _width / _widthResolution;
-	float sliceL = _length / _lengthResolution;
+
+	float sliceW = _width / (_widthResolution-1);
+	float sliceL = _length / (_lengthResolution-1);
 
 	int indexX = (point.x + _width / 2) / sliceW;
-	int indexZ = (-point.z + _length / 2) / sliceL;
+	int indexZ = -(point.z - _length / 2) / sliceL;
 
-	return ((indexX + px) * _lengthResolution + (indexZ + pz) <= _nodes.size() && (indexX + px) < _widthResolution && (indexZ + pz) < _lengthResolution) ? _nodes.at((indexX + px) * _lengthResolution + (indexZ + pz)) : NULL;
+	return ((indexX + px)+  _widthResolution * (indexZ + pz) <= _nodes.size() && (indexX + px) < _widthResolution && (indexZ + pz) < _lengthResolution) ? _nodes.at((indexX + px)+  _widthResolution * (indexZ + pz)) : NULL;
 }
 
 std::vector<Node*> Terrain::getNeighbors(Node node) {

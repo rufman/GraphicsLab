@@ -21,7 +21,7 @@ Missile::Missile(Scene &scene, float size) :
 	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getTankCam(),100);
 	_missileSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_missileSmokeParticleEngine->setActive(true);
-	_missileExplosionParticleEngine = new ParticleEngine<Explosion>(_scene.getTankCam(),1);
+	_missileExplosionParticleEngine = new ParticleEngine<Explosion>(_scene.getTankCam(),100);
 	_missileExplosionParticleEngine->setStartAcceleration(Vector3D(0,0,0));
 }
 
@@ -45,7 +45,7 @@ void Missile::draw() const {
 	}
 	glRotatef(90, 0, 1, 0);
 
-	 float materialAmbient[3] = { 0.1, 0.1, 0.1 };
+	 float materialAmbient[3] = { 1, 1, 1 };
 	 float materialDiffuse[3] = { 0.2, 0.2, 0.2 };
 	 float materialSpecular[3] = { 0.2, 0.4, 0.4 };
 	 float materialEmission[3] = { 0.1, 0.1, 0.1 };
@@ -118,6 +118,8 @@ void Missile::move(float seconds) {
 
 	_missileSmokeParticleEngine->setStartPosition(_position);
 	_missileSmokeParticleEngine->update(seconds);
+	_missileExplosionParticleEngine->setStartPosition(_position);
+	_missileExplosionParticleEngine->update(seconds);
 	if (_position.y < _scene.getTerrain().getHeight(_position)) {
 		_scene.getTerrain().doDamageAt(_position);
 		_scene.getTerrain().doDamageAt(_position);
