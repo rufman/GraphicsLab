@@ -33,9 +33,17 @@ public:
 
 	void playGunSound();
 
+	void playGunSoundAt(float x, float y, float z);
+
 	void playExplosionSound();
 
+	void playExplosionSoundAt(float x, float y, float z);
+
 	void playMuzzleSound();
+
+	void playMuzzleSoundAt(float x, float y, float z);
+
+
 
 
 private:

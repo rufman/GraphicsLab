@@ -141,18 +141,47 @@ ALboolean SoundEngine::LoadALData() {
 
 void SoundEngine::playGunSound() {
 
+	alSourcefv(Sources[GUN], AL_POSITION, SourcesPos[EXPLOSION]); // reset position of sound
 	alSourcePlay(Sources[GUN]);
 
 }
 
+void SoundEngine::playGunSoundAt(float x, float y, float z){
+
+	ALfloat arr[3] = {x, y, z};
+	alSourcefv(Sources[GUN], AL_POSITION, arr);
+	alSourcePlay(Sources[GUN]);
+}
+
 void SoundEngine::playExplosionSound() {
 
+	alSourcefv(Sources[EXPLOSION], AL_POSITION, SourcesPos[EXPLOSION]); // reset position of sound
+	alSourcePlay(Sources[EXPLOSION]);
+
+}
+
+void SoundEngine::playExplosionSoundAt(float x, float y, float z){
+
+	ALfloat arr[3] = {x, y, z};
+	alSourcefv(Sources[EXPLOSION], AL_POSITION, arr);
 	alSourcePlay(Sources[EXPLOSION]);
 
 }
 
 void SoundEngine::playMuzzleSound() {
 
+	alSourcefv(Sources[MUZZLE], AL_POSITION, SourcesPos[EXPLOSION]); //reset position of sound
 	alSourcePlay(Sources[MUZZLE]);
 
 }
+
+void SoundEngine::playMuzzleSoundAt(float x, float y, float z){
+
+	ALfloat arr[3] = {x, y, z};
+	alSourcefv(Sources[MUZZLE], AL_POSITION, arr);
+	alSourcePlay(Sources[MUZZLE]);
+
+}
+
+
+
