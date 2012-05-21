@@ -21,7 +21,7 @@ Missile::Missile(Scene &scene, float size) :
 	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getTankCam(),100);
 	_missileSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_missileSmokeParticleEngine->setActive(true);
-	_missileExplosionParticleEngine = new ParticleEngine<Explosion>(_scene.getTankCam(),100);
+	_missileExplosionParticleEngine = new ParticleEngine<Explosion>(_scene.getTankCam(),1);
 	_missileExplosionParticleEngine->setStartAcceleration(Vector3D(0,0,0));
 }
 
