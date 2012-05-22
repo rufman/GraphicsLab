@@ -14,7 +14,6 @@
 #include "../common/GLIncludes.hpp"
 #include "../common/Utils.hpp"
 #include "../common/Material.hpp"
-#include "../common/screenTexture.hpp"
 
 #include <cmath>
 

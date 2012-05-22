@@ -8,7 +8,7 @@
  */
 
 // Class declaration include
-#include "screenTexture.hpp"
+#include "ScreenTexture.hpp"
 
 
 namespace game_space {
