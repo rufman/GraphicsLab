@@ -120,7 +120,7 @@ void Scene::initialize() {
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
 	_water = new Water(*this, 100 * 4, 100 * 4);
 	_playerTank = new SmallTank(*this, false);
-	_playerTank->setPosition(_terrain->getRandomPointOnMap());
+	_playerTank->setPosition(Point(10,0,10));
 	_targets.push_back(_playerTank);
 
 	//add some tanks to the scene

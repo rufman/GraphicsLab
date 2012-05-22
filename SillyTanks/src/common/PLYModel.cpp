@@ -28,13 +28,18 @@ PLYModel::~PLYModel() {
 	glDeleteLists(_displayLists, _numDisplayLists);
 }
 
-void PLYModel::load(const std::string &file) {
+void PLYModel::load(const std::string &modelFile) {
 	_plyData.reset();
 
-	processFile(file);
+	processFile(modelFile);
 
 	buildDisplayLists();
 	_angle = 0;
+}
+
+void PLYModel::load(const std::string &modelFile, const std::string &textureFile) {
+	load(modelFile);
+	_texture(textureFile);
 }
 
 void PLYModel::processFile(const std::string &file) {
@@ -166,7 +171,9 @@ void PLYModel::buildDisplayLists() {
 
 	glShadeModel(GL_FLAT);
 	_material.setActive();
-
+	if(_plyData.textured){
+		_texture.setActive(true);
+	}
 	glBegin(GL_TRIANGLES);
 
 	for (uint triangleID = 0; triangleID < _plyData.triangles.size(); triangleID++) {
@@ -194,7 +201,9 @@ void PLYModel::buildDisplayLists() {
 	}
 
 	glEnd();
-
+	if(_plyData.textured){
+		_texture.setActive(false);
+	}
 	glEndList();
 
 	// Smooth shading
@@ -202,7 +211,9 @@ void PLYModel::buildDisplayLists() {
 
 	glShadeModel(GL_SMOOTH);
 	_material.setActive();
-
+	if(_plyData.textured){
+		_texture.setActive(true);
+	}
 	glBegin(GL_TRIANGLES);
 
 	for (uint triangleID = 0; triangleID < _plyData.triangles.size(); triangleID++) {
@@ -237,7 +248,9 @@ void PLYModel::buildDisplayLists() {
 	}
 
 	glEnd();
-
+	if(_plyData.textured){
+		_texture.setActive(false);
+	}
 	glEndList();
 }
 
