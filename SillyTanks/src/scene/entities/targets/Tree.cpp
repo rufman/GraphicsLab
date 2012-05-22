@@ -37,9 +37,9 @@ void Tree::draw() const {
 //	glBlendFunc(GL_ONE,GL_ONE);
 //	glEnable(GL_TEXTURE_2D);
 //	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	TGATexture *environment = new TGATexture(
-			"resources/GFX/levels/terrain_tex.tga");
-	environment->setActive(true);
+//	TGATexture *environment = new TGATexture(
+//			"resources/GFX/levels/terrain_tex.tga");
+//	environment->setActive(true);
 //	glColor3f(1,1,1);
 	//GL_REFLECTION_MAP for s,t,r texture coordinates
 //
@@ -61,13 +61,13 @@ void Tree::draw() const {
 //	glEnable(GL_TEXTURE_GEN_R);
 	//Texture use for automatic coordinate generation
 	//glBindTexture(GL_TEXTURE_2D, environment);
-	glEnable(GL_TEXTURE_2D);
+//	glEnable(GL_TEXTURE_2D);
 
 	//Sphere mapping and enable s & t texture generation
-	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-	glEnable(GL_TEXTURE_GEN_S);
-	glEnable(GL_TEXTURE_GEN_T);
+//	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+//	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+//	glEnable(GL_TEXTURE_GEN_S);
+//	glEnable(GL_TEXTURE_GEN_T);
 	glPushMatrix();
 	glTranslatef(_position.x, _position.y, _position.z);
 	Utils::applyGLRotation(Vector3D(0.0f, 1.0f, 0.0f),
