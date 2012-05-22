@@ -62,7 +62,7 @@ namespace game_space {
 //#################
 //Tank textures definitions
 //#################
-#define SMALLTANK_TEXTURE1 "resources/GFX/textures/black.tga"
+#define SMALLTANK_TEXTURE1 "resources/GFX/textures/pink.tga"
 #define SMALLTANK_TEXTURE2 "resources/GFX/textures/blue.tga"
 #define SMALLTANK_TEXTURE3 "resources/GFX/textures/cow.tga"
 

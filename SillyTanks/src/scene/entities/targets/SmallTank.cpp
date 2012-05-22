@@ -27,7 +27,7 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 	//get a new turret
 	_turret = new Turret(_scene);
 
-	int tankTextureNumber = rand()%3;
+	int tankTextureNumber = 1;//rand()%3;
 	std::string tankTexture = "NO-TEXTURE-PATH";
 	switch(tankTextureNumber)
 	{

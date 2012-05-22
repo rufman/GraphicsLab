@@ -167,7 +167,7 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix, float width
 	for (std::vector<Point>::iterator vertexIter = _vertices.begin(); vertexIter != _vertices.end(); vertexIter++) {
 		Point vertex = *vertexIter;
 		Node* node = new Node(Point(vertex.x, vertex.y, vertex.z), _scene);
-		//node->setNodeState(checkBorder(node->_position) ? Node::BLOCKED : Node::FREE);
+		//
 
 		_nodes.push_back(node);
 	}
@@ -268,6 +268,7 @@ void Terrain::buildDisplayLists() {
 void Terrain::draw() const {
 	_texture->setActive( true );
 	for (uint i = 0; i < _vertices.size(); i++) {
+		_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
 		_nodes[i]->draw();
 	}
 
