@@ -234,7 +234,7 @@ void Scene::update(float seconds) {
 		if (hitTarget
 				|| (bulletPosition.y < _terrain->getHeight(bulletPosition))) {
 			bulletIter = _bullets.erase(bulletIter);
-			_terrain->doDamageAt(bulletPosition);
+			_terrain->doDamageAt(bulletPosition,0.05);
 			delete bullet;
 		} else {
 			++bulletIter;
