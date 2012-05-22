@@ -268,7 +268,7 @@ void Terrain::buildDisplayLists() {
 void Terrain::draw() const {
 	_texture->setActive( true );
 	for (uint i = 0; i < _vertices.size(); i++) {
-		_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
+		//_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
 		_nodes[i]->draw();
 	}
 
