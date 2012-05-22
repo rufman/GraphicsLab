@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2/trunk/ext/glew-1.5.8/include/GL
+END
+wglew.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/2/trunk/ext/glew-1.5.8/include/GL/wglew.h
+END
+glxew.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/2/trunk/ext/glew-1.5.8/include/GL/glxew.h
+END
+glew.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/2/trunk/ext/glew-1.5.8/include/GL/glew.h
+END

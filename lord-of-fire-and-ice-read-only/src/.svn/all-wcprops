@@ -1,0 +1,527 @@
+K 25
+svn:wc:ra_dav:version-url
+V 26
+/svn/!svn/ver/58/trunk/src
+END
+window.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/48/trunk/src/window.hpp
+END
+loadingScreen.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/40/trunk/src/loadingScreen.cpp
+END
+map.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/55/trunk/src/map.cpp
+END
+camera2D.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/38/trunk/src/camera2D.hpp
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/17/trunk/src/main.cpp
+END
+directionalLight.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/src/directionalLight.cpp
+END
+graphicsSettings.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/48/trunk/src/graphicsSettings.hpp
+END
+defs.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/2/trunk/src/defs.hpp
+END
+inputManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/28/trunk/src/inputManager.cpp
+END
+pathFinding.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/55/trunk/src/pathFinding.cpp
+END
+camera.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/2/trunk/src/camera.hpp
+END
+scene.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/57/trunk/src/scene.cpp
+END
+sector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/55/trunk/src/sector.cpp
+END
+sceneryObject.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/src/sceneryObject.cpp
+END
+texture.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/2/trunk/src/texture.cpp
+END
+tgaTexture.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/src/tgaTexture.hpp
+END
+textBox.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/52/trunk/src/textBox.hpp
+END
+sun.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/46/trunk/src/sun.cpp
+END
+fileUtils.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/src/fileUtils.hpp
+END
+utils.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/50/trunk/src/utils.hpp
+END
+light.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/src/light.cpp
+END
+windowManager.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/src/windowManager.hpp
+END
+drawable2D.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/52/trunk/src/drawable2D.cpp
+END
+positionalLight.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/30/trunk/src/positionalLight.cpp
+END
+sky.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/26/trunk/src/sky.hpp
+END
+shadowTexture.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/46/trunk/src/shadowTexture.hpp
+END
+npcManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/57/trunk/src/npcManager.cpp
+END
+npc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/57/trunk/src/npc.cpp
+END
+button.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/40/trunk/src/button.hpp
+END
+gameSaveFunctions.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/57/trunk/src/gameSaveFunctions.cpp
+END
+camera3D.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/38/trunk/src/camera3D.hpp
+END
+dock.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/55/trunk/src/dock.hpp
+END
+drawable.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2/trunk/src/drawable.hpp
+END
+sceneryObjectManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/57/trunk/src/sceneryObjectManager.cpp
+END
+gl_includes.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/src/gl_includes.hpp
+END
+material.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2/trunk/src/material.cpp
+END
+time.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/2/trunk/src/time.cpp
+END
+menuManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/54/trunk/src/menuManager.cpp
+END
+introScreen.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/38/trunk/src/introScreen.hpp
+END
+player.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/50/trunk/src/player.hpp
+END
+menuFunctions.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/48/trunk/src/menuFunctions.hpp
+END
+menu.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/48/trunk/src/menu.cpp
+END
+window.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/48/trunk/src/window.cpp
+END
+vector.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/2/trunk/src/vector.hpp
+END
+application.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/src/application.hpp
+END
+camera2D.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/38/trunk/src/camera2D.cpp
+END
+fog.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/30/trunk/src/fog.hpp
+END
+reflectionTexture.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/46/trunk/src/reflectionTexture.hpp
+END
+graphicsSettings.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/48/trunk/src/graphicsSettings.cpp
+END
+map.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/55/trunk/src/map.hpp
+END
+loadingScreen.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/40/trunk/src/loadingScreen.hpp
+END
+directionalLight.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/src/directionalLight.hpp
+END
+tgaTexture.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/src/tgaTexture.cpp
+END
+textBox.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/2/trunk/src/textBox.cpp
+END
+inputManager.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/src/inputManager.hpp
+END
+utils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/50/trunk/src/utils.cpp
+END
+fileUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/src/fileUtils.cpp
+END
+pathFinding.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/55/trunk/src/pathFinding.hpp
+END
+windowManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/src/windowManager.cpp
+END
+scene.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/55/trunk/src/scene.hpp
+END
+sector.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/46/trunk/src/sector.hpp
+END
+sceneryObject.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/src/sceneryObject.hpp
+END
+texture.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/46/trunk/src/texture.hpp
+END
+sky.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/51/trunk/src/sky.cpp
+END
+shadowTexture.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/57/trunk/src/shadowTexture.cpp
+END
+types.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/55/trunk/src/types.hpp
+END
+sun.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/46/trunk/src/sun.hpp
+END
+button.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/40/trunk/src/button.cpp
+END
+drawable2D.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/54/trunk/src/drawable2D.hpp
+END
+light.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/src/light.hpp
+END
+positionalLight.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/30/trunk/src/positionalLight.hpp
+END
+camera3D.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/58/trunk/src/camera3D.cpp
+END
+npcManager.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/55/trunk/src/npcManager.hpp
+END
+dock.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/55/trunk/src/dock.cpp
+END
+npc.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/57/trunk/src/npc.hpp
+END
+gameSaveFunctions.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/55/trunk/src/gameSaveFunctions.hpp
+END
+introScreen.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/48/trunk/src/introScreen.cpp
+END
+player.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/55/trunk/src/player.cpp
+END
+sceneryObjectManager.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/35/trunk/src/sceneryObjectManager.hpp
+END
+material.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2/trunk/src/material.hpp
+END
+time.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/2/trunk/src/time.hpp
+END
+exception.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/src/exception.hpp
+END
+application.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/src/application.cpp
+END
+menuManager.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/54/trunk/src/menuManager.hpp
+END
+menu.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/40/trunk/src/menu.hpp
+END
+fog.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/30/trunk/src/fog.cpp
+END
+reflectionTexture.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/30/trunk/src/reflectionTexture.cpp
+END
