@@ -50,6 +50,7 @@ public:
 
     /** Draw the sky dome to the screen. */
     void draw() const;
+    void drawShadows(const Point &lightPosition) const;
 
     int getNearestTriangleIndexAt( const Point &point) const;
     void doDamageAt( const Point &point,float damageStrength ) ;

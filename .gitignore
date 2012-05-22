@@ -1,6 +1,10 @@
 SillyTanks/Debug
 SillyTanks/elements
 SillyTanks/.project
+ShadowTutorial/
+lord-of-fire-and-ice-read-only/Debug/*.d
+project
+*.d
 .metadata
 *.project
 *.cproject

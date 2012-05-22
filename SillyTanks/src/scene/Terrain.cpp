@@ -88,14 +88,17 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix, float width
 			if (_objectData->getData()[objectDataIndex] == PINETREE_MAPNR) {
 				Tree *treeModel = new PineTree(_scene);
 				treeModel->setPosition(vertex);
+				//treeModel->setNeighbors();
 				_models.push_back(treeModel);
 			} else if (_objectData->getData()[objectDataIndex] == ROUNDTREE_MAPNR) {
 				Tree *treeModel = new RoundTree(_scene);
 				treeModel->setPosition(vertex);
+				//treeModel->setNeighbors();
 				_models.push_back(treeModel);
 			} else if (_objectData->getData()[objectDataIndex] == PALMTREE_MAPNR) {
 				Tree *treeModel = new PalmTree(_scene);
 				treeModel->setPosition(vertex);
+				//treeModel->setNeighbors();
 				_models.push_back(treeModel);
 			}
 		}
@@ -318,6 +321,12 @@ void Terrain::draw() const {
 		glEnd();
 	}
 	_texture->setActive( false );
+}
+
+void Terrain::drawShadows(const Point &lightPostion) const {
+	for (uint i = 0; i < _models.size(); i++) {
+			_models[i]->castShadow(&lightPostion);
+	}
 }
 
 float Terrain::getHeight(const Point &point) const {
