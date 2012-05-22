@@ -191,7 +191,7 @@ void Scene::reset() {
 void Scene::update(float seconds) {
 	handleKeyboardInput();
 
-	_skyDome->update(seconds);
+    _skyDome->update(seconds);
 	_water->update(seconds);
 	for(std::vector<Target*>::iterator targetIter = _targets.begin();targetIter != _targets.end();targetIter++)
 	{
@@ -267,7 +267,10 @@ void Scene::onPaint() {
 		update(secondsSinceLastUpdate);
 		_updateTime.start();
 	}
-
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	// Draw mirror image
+	drawWaterImage();
+	_water->capture();
 	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
@@ -746,5 +749,41 @@ Camera3D* Scene::getCurrentlyActiveCamera() {
 MessageBus* Scene::getMessageBus()
 {
 	return _messageBus;
+}
+
+/**
+ * Water mirroring part
+ */
+
+void Scene::drawWaterImage()
+{
+    int width = glutGet( GLUT_WINDOW_WIDTH );
+    int height = glutGet( GLUT_WINDOW_HEIGHT );
+
+    // Set camera parameters
+	_water->applyCamera();
+
+	// Set scene parameters
+	glEnable( GL_DEPTH_TEST );
+    glEnable( GL_LIGHTING );
+    glDisable( GL_BLEND );
+
+	// Grid
+	if ( _gridOn )
+		drawGrid();
+
+	for ( LightVector::iterator lightIter = _lights.begin();
+		 lightIter != _lights.end();
+		 ++lightIter )
+	{
+		Light *light = *lightIter;
+		light->apply();
+	}
+
+	// Draw scene
+    glMatrixMode( GL_MODELVIEW );
+    glPushMatrix();
+	_skyDome->draw();
+    glPopMatrix();
 }
 }
