@@ -53,6 +53,8 @@ public:
 			Particle* particle = *particleIterator;
 			delete particle;
 		}
+		delete _particleTexture;
+		delete _particleType;
 	}
 
 	void loadParticleTexture(const std::string &textureFilePath) {

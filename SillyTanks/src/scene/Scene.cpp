@@ -298,9 +298,6 @@ void Scene::onPaint() {
 	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	// Clear the screen
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
 	// Draw screen
 	drawScene();
 	if (_dashBoardOn)
@@ -364,7 +361,7 @@ void Scene::drawScene() {
 	//the terrain should use toon shading
 	//_shadingEngine->applyToonShader();
 
-	GLmatrix16f Minv;
+	/*GLmatrix16f Minv;
 	Point lightpos = _skyDome->getSunPosition();
 	glClearDepth(1.0f); // Depth Buffer Setup
 	glClearStencil(0); // Stencil Buffer Setup
@@ -377,7 +374,7 @@ void Scene::drawScene() {
 	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
 	VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
 	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
-
+*/
 	// Draw the terrain
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
@@ -439,7 +436,7 @@ void Scene::drawScene() {
 
 	glTranslatef(0, 10, 0);
 	treeModel->draw();
-	treeModel->castShadow(&lightpos);
+	//treeModel->castShadow(&lightpos);
 	glPopMatrix();
 
 	glEnable(GL_LIGHTING); // Enable Lighting
