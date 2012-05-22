@@ -23,11 +23,30 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 	float tankLength = 1.0f;
 	float tankWidth = 1.0f;
 	float tankHeight = 0.6f;
-	float chassisHeight = tankHeight;
 
 
+	Point frontRightUnder = Point(0,0,0);
+	Point frontLeftUnder = Point(-tankWidth,0,0);
+	Point frontRightUpper = Point(0,0,tankHeight);
+	Point frontLeftUpper = Point(-tankWidth,0,tankHeight);
 
+	Point rearRightUnder = Point(0,tankLength,0);
+	Point rearLeftUnder = Point(-tankWidth, tankLength,0);
+	Point rearRightUpper = Point(0, tankLength, tankHeight);
+	Point rearLeftUpper = Point(-tankWidth, tankLength, tankHeight);
 
+	Point* pointArray = new Point[8];
+
+	pointArray[0] = frontRightUnder;
+	pointArray[1] = frontLeftUnder;
+	pointArray[2] = frontRightUpper;
+	pointArray[3] = frontLeftUpper;
+	pointArray[4] = rearRightUnder;
+	pointArray[5] = rearLeftUnder;
+	pointArray[6] = rearRightUpper;
+	pointArray[7] = rearLeftUpper;
+
+	_boundingBox = new BoundingBox(pointArray);
 
 	//create a new chassis / with texture size 400
 	_chassis = new PLYModel(_scene,400);
