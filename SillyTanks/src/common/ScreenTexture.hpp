@@ -4,7 +4,7 @@
  * Author   :   Fatih Erol
  * Date     :   12.04.2012
  *
- * All rights reserved.
+ * All rights reserved....
  */
 
 #ifndef GRAPHICSLAB_SCREENTEXTURE_HPP

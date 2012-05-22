@@ -22,6 +22,7 @@ ScreenTexture::ScreenTexture() :
 
 ScreenTexture::~ScreenTexture()
 {
+
 }
 
 void ScreenTexture::capture( uint x, uint y, uint width, uint height )
