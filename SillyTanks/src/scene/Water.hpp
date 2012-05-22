@@ -9,10 +9,13 @@
 // commons includes
 #include "../common/Drawable.hpp"
 #include "../common/Types.hpp"
+#include "../common/screenTexture.hpp"
+#include "../common/Material.hpp"
 
 namespace game_space {
 
 class TGATexture;
+class Material;
 
 /** Water */
 class Water: public Drawable {
@@ -56,6 +59,28 @@ public:
 	 */
 	Vector3D getNormal(const Point &point) const;
 
+	/**
+	 * Set up OpenGL camera to imitate mirror, as if
+	 * there is a camera behind the mirror glass.
+	 */
+	void applyCamera() const;
+
+	/**
+	 * Place the mirror rectangle. Left top point can be
+	 * calculated from the parameters as the rectangle is planar.
+	 *
+	 * @param[in]	leftBottom		Left bottom point of rectangle
+	 * @param[in]	rightBottom		Right bottom point of rectangle
+	 * @param[in]	rightTop		Right top point of the rectangle
+	 */
+	void place( const Point &leftBottom, const Point &rightBottom, const Point &rightTop );
+
+	/**
+	 * Capture the drawn image after applyCamera() is called as
+	 * the mirror texture, which can be applied to the mirror surface rectangle.
+	 */
+	void capture();
+
 private:
 	/** Calculate vertex heights */
 	void calculateVertexHeights();
@@ -87,6 +112,12 @@ private:
 
 	/** Normals of the triangles */
 	Vector3D *_triangleNormals;
+
+	Material _material;
+
+	ScreenTexture _texture;
+
+	Point _leftBottom, _rightBottom, _rightTop;
 
 };
 

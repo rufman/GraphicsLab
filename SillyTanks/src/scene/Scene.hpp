@@ -97,6 +97,7 @@ private:
 	void update( float seconds );
 
 	// Draw parts of the scene
+	void drawWaterImage();
 	void drawScene();
 	void drawGrid();
 	void drawOverlay();
