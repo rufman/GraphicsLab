@@ -179,9 +179,9 @@ void Scene::initialize() {
 
 	//_shadingEngine  = new ShadingEngine();
 
-	cross->setRenderingParameters(_renderingParameters);
-	cross->load("resources/GFX/models/square.ply");
-	cross->setNeighbors();
+	//cross->setRenderingParameters(_renderingParameters);
+	//cross->load("resources/GFX/models/square.ply");
+	//cross->setNeighbors();
 }
 
 void Scene::reset() {
