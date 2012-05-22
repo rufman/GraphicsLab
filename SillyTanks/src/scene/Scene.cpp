@@ -24,6 +24,7 @@
 #include "SkyDome.hpp"
 #include "Terrain.hpp"
 #include "Water.hpp"
+#include "Mirror.hpp"
 
 //illumination includes
 #include "illumination/DirectionalLight.hpp"
@@ -46,7 +47,7 @@
 namespace game_space {
 
 Scene::Scene(Window &window) :
-		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _sunLight(NULL) {
+		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL),  _sunLight(NULL) {
 	_soundEngine = SoundEngine();
 	_messageBus = new MessageBus();
 
@@ -116,7 +117,7 @@ void Scene::initialize() {
 	_tankCam = new Camera3D(*this);
 	_overviewCam = new Camera3D(*this);
 
-	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
+	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 250, 50, 50);
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
 	_water = new Water(*this, 100 * 4, 100 * 4);
 	_playerTank = new SmallTank(*this, false);
@@ -168,6 +169,7 @@ void Scene::reset() {
 
 	_skyDome->reset();
 	_water->reset();
+
 	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
 		(*targetIter)->reset();
 	}
@@ -260,6 +262,10 @@ void Scene::onPaint() {
 	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
+
+	// Clear the screen
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
 	// Draw screen
 	drawScene();
 	if (_dashBoardOn)
@@ -326,6 +332,7 @@ void Scene::drawScene() {
 	//draw water
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
+
 
 	//Draw the targets
 	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
@@ -730,6 +737,7 @@ void Scene::drawWaterImage() {
 
 	// Set camera parameters
 	_water->applyCamera();
+
 
 	// Set scene parameters
 	glEnable(GL_DEPTH_TEST);
