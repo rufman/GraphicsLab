@@ -57,7 +57,7 @@ namespace game_space {
 //#################
 // Tower definitions
 //#################
-#define SMALLTOWER_TOWERBASE_MODEL "resource/GFX/models/"
+#define SMALLTOWER_TOWERBASE_MODEL "resources/GFX/models/smalltower_towerbase.ply"
 
 //#################
 //Tank textures definitions
