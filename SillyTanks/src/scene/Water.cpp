@@ -376,66 +376,11 @@ void Water::draw() const {
 	glPopMatrix();
 }
 
-/**
- * The Mirroring functions start here
- */
-void Water::place(const Point &leftBottom, const Point &rightBottom,
-		const Point &rightTop) {
-	_leftBottom = leftBottom;
-	_rightBottom = rightBottom;
-	_rightTop = rightTop;
-}
 
 void Water::applyCamera() const {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-	/////////////////////////////////////////////////////////////
-	////////////////////// GRAPHICS LAB 08 //////////////////////
-	/////////////////////////////////////////////////////////////
-	// Insert code here to set up and apply the camera viewport,
-	// projection and modelview matrices according to the mirror
-	// placement. The lab presentation slides provide further
-	// detail into how we want to place the camera to simulate
-	// the mirror. The three points of the mirror rectangle are
-	// already known. We can calculate rectangle center and normal
-	// and the left top point using these values easily. Then we
-	// calculate and apply the following:
-	// - The viewport: We will be drawing to the same window, so
-	//   the width and height values above are important. However,
-	//   our image place should match the mirror, so, we need to
-	//   scale our mirror rectangle to fit the window area, and then
-	//   we call glViewport with appropriate values.
-	// - The projection: Like Camera3D::applyProjection, we need
-	//   to set the projection parameters, considering the mirror
-	//   rectangle as the image plane, thus altering the aspect ratio,
-	//   and calling gluPerspective with proper values.
-	// - The modelview: Like Camera3D::applyModelview, we want to
-	//   set the proper from/to/up values to call gluLookAt. We can
-	//   put the from point behind the mirror center according to
-	//   the field of view (fovy) of our perspective projection setup
-	//   and the rectangle height. The camera will be looking to the
-	//   center of the mirror rectangle, and the up vector can be
-	//   simply ( 0, 1, 0 ) or the rectangle's normalized up vector
-	//   pointing from rightBottom to rightTop. gluLookAt should be
-	//   called appropriately on the correct matrix mode afterwards.
-	/////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////
-
-	Point *leftTop = new Point(_leftBottom.x, _rightTop.y, _leftBottom.z);
-	Point *center = new Point(_leftBottom.x + (_rightTop.x - _leftBottom.x) / 2,
-			_leftBottom.y + (_rightTop.y - _leftBottom.y) / 2,
-			_leftBottom.z + (_rightTop.z - _leftBottom.z) / 2);
-	//std::cout<<_leftBottom.x-_rightTop.x<<_leftBottom.y-_rightTop.y<<_leftBottom.z-_rightTop.z<<std::endl;
-
-	Vector3D *bottomToTop = new Vector3D(_rightTop.x - _rightBottom.x,
-			_rightTop.y - _rightBottom.y, _rightTop.z - _rightBottom.z);
-	Vector3D *leftToRight = new Vector3D(_rightBottom.x - _leftBottom.x,
-			_rightBottom.y - _leftBottom.y, _rightBottom.z - _leftBottom.z);
-	Vector3D mirrorNormal = Utils::cross(*leftToRight, *bottomToTop);
-	Utils::normalize(mirrorNormal);
-
-	// This is probably not right :S... Don't get the whole concept of viewport right...
 	glViewport(0, 0, width, height);
 
 	glMatrixMode(GL_PROJECTION);
@@ -446,24 +391,14 @@ void Water::applyCamera() const {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0,0,0,
-			0,1,0,
+	gluLookAt(0,5,0,
+			0,10,0,
 			0,0,1);
-//	std::cout << "NORMAL X: " << mirrorNormal.x << "NORMAL Y" << mirrorNormal.y
-//			<< "NORMAL Z" << mirrorNormal.z << std::endl;
 }
 
 void Water::capture() {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
-	/////////////////////////////////////////////////////////////
-	////////////////////// GRAPHICS LAB 08 //////////////////////
-	/////////////////////////////////////////////////////////////
-	// Insert code here to capture the image drawn after applyCamera()
-	// call into the _texture variable through ScreenTexture::capture(...)
-	// call. The viewport defines where the image was drawn.
-	/////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////
 
 	_texture.capture(0, 0, width, height);
 }

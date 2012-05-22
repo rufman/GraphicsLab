@@ -191,7 +191,7 @@ void Terrain::buildDisplayLists() {
 	glShadeModel(GL_FLAT);
 
 	_material.setActive();
-	_texture->setActive(true);
+	//_texture->setActive(true);
 
 	glBegin(GL_TRIANGLES);
 
@@ -226,7 +226,7 @@ void Terrain::buildDisplayLists() {
 	glShadeModel(GL_SMOOTH);
 
 	_material.setActive();
-	_texture->setActive(true);
+	//_texture->setActive(true);
 
 	glBegin(GL_TRIANGLES);
 
@@ -266,7 +266,7 @@ void Terrain::buildDisplayLists() {
 }
 
 void Terrain::draw() const {
-
+	_texture->setActive( true );
 	for (uint i = 0; i < _vertices.size(); i++) {
 		_nodes[i]->draw();
 	}
@@ -316,6 +316,7 @@ void Terrain::draw() const {
 		}
 		glEnd();
 	}
+	_texture->setActive( false );
 }
 
 float Terrain::getHeight(const Point &point) const {

@@ -175,18 +175,12 @@ void Scene::reset() {
 		delete bullet;
 	}
 	_bullets.clear();
-	_water->place( Point( 0, 0, 0 ), Point( 0, 0, 0 ), Point( 0, 0, 0 ) );
 
 }
 
 void Scene::update(float seconds) {
 	handleKeyboardInput();
-	// Draw mirror image
-	drawWaterImage();
-	_water->capture();
 
-	// Clear the screen
-    glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT );
     _skyDome->update(seconds);
 	_water->update(seconds);
 	for(std::vector<Target*>::iterator targetIter = _targets.begin();targetIter != _targets.end();targetIter++)
@@ -258,7 +252,10 @@ void Scene::onPaint() {
 		update(secondsSinceLastUpdate);
 		_updateTime.start();
 	}
-
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	// Draw mirror image
+	drawWaterImage();
+	_water->capture();
 	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
