@@ -9,12 +9,11 @@
 // commons includes
 #include "../common/Drawable.hpp"
 #include "../common/Types.hpp"
-#include "../common/screenTexture.hpp"
+#include "../common/ScreenTexture.hpp"
 #include "../common/Material.hpp"
 
 namespace game_space {
 
-class TGATexture;
 class Material;
 
 /** Water */

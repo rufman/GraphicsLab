@@ -31,6 +31,7 @@
 
 //entities includes
 #include "entities/targets/SmallTank.hpp"
+#include "entities/targets/SmallTower.hpp"
 
 #include "AI/TankAI.hpp"
 
@@ -126,6 +127,7 @@ void Scene::initialize() {
 	_playerTank->setPosition(_terrain->getRandomPointOnMap());
 	_targets.push_back(_playerTank);
 
+	//add some tanks to the scene
 	for(int i = 0; i < 4;i++)
 	{
 		Tank* tank = new SmallTank(*this,true);
@@ -133,17 +135,25 @@ void Scene::initialize() {
 		_targets.push_back(tank);
 	}
 
+	//add some towers to the scene
+	for(int i = 0; i < 4;i++)
+	{
+		Tower* tower = new SmallTower(*this,true);
+		tower->setPosition(_terrain->getRandomPointOnMap());
+		_targets.push_back(tower);
+	}
+
 	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam, 20);
 	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_tankSmokeParticleEngine->setActive(true);
 
-	// Reset data
+	// reset data
 	reset();
 
 	//hiding the default cursor and putting the cursor position to the middle of the window
 	glutSetCursor(GLUT_CURSOR_NONE);
 
-
+	//move the pointer to the middle of the panel
 	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
 
 	//_shadingEngine  = new ShadingEngine();
@@ -191,6 +201,11 @@ void Scene::update(float seconds) {
 			Tank* tank = static_cast<Tank*>(target);
 			tank->update(seconds);
 		}
+		if(target->_targetType == Target::TOWER)
+		{
+			Tower * tower = static_cast<Tower*>(target);
+			tower->update(seconds);
+		}
 	}
 
 	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
@@ -200,7 +215,7 @@ void Scene::update(float seconds) {
 
 		bool hitTarget = false;
 
-		//implement here how to checkhits between targets and bullets
+		//TODO:implement here how to checkhits between targets and bullets
 		/*for ( TargetVector::iterator targetIter = _targets.begin();targetIter != _targets.end();++targetIter )
 		 {
 		 Target *target = *targetIter;
@@ -337,6 +352,11 @@ void Scene::drawScene() {
 		{
 			Tank* tank = static_cast<Tank*>(target);
 			tank->draw();
+		}
+		if(target->_targetType == Target::TOWER)
+		{
+			Tower* tower = static_cast<Tower*>(target);
+			tower->draw();
 		}
 	}
 	glPopMatrix();

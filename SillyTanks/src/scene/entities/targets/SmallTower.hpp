@@ -17,7 +17,7 @@ public:
 		void draw() const;
 
 	private:
-		TGATexture* _tankTexture;
+		TGATexture* _towerTexture;
 };
 
 } /* namespace game_space */

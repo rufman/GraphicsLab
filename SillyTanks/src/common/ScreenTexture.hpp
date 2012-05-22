@@ -12,7 +12,7 @@
 
 
 // Base class include
-#include "texture.hpp"
+#include "Texture.hpp"
 
 namespace game_space {
 

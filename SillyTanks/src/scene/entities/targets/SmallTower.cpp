@@ -41,7 +41,7 @@ SmallTower::SmallTower(Scene & scene, bool isAIControlled) :
 		break;
 	}
 	}
-	_tankTexture = new TGATexture(tankTexture.c_str());
+	_towerTexture = new TGATexture(tankTexture.c_str());
 
 	reset();
 
@@ -52,7 +52,7 @@ SmallTower::~SmallTower() {
 
 void SmallTower::draw() const {
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	_tankTexture->setActive(true);
+	_towerTexture->setActive(true);
 	glPushMatrix();
 	glTranslatef(_position.x, _position.y, _position.z);
 
@@ -61,7 +61,7 @@ void SmallTower::draw() const {
 
 	Utils::applyGLRotation(Vector3D(0.0f, 1.0f, 0.0f), _scene.getTerrain().getNormal(_position));
 
-	glScalef(_baseWidth * 5, _baseWidth * 5, _baseWidth * 5);
+	glScalef(_baseWidth * 15, _baseWidth * 15, _baseWidth * 15);
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(0, -0.5, 0);
 
@@ -72,10 +72,10 @@ void SmallTower::draw() const {
 	glPushMatrix();
 	_turret->setRenderingParameters(_renderingParameters);
 	Point towerPosition = getPosition();
-	_turret->setPosition(Point(towerPosition.x, towerPosition.y + 5, towerPosition.z));
+	_turret->setPosition(Point(towerPosition.x-2, towerPosition.y + 5, towerPosition.z-2));
 	_turret->draw();
 	glPopMatrix();
-	_tankTexture->setActive(false);
+	_towerTexture->setActive(false);
 }
 
 } /* namespace game_space */
