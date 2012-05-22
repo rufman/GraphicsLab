@@ -1,4 +1,2 @@
--sky "resources/GFX/textures/dusk.tga" -terrain "resources/GFX/levels/terrain"
-
-arguments so that debugger works:
--sky resources/GFX/textures/dusk.tga -terrain resources/GFX/levels/terrain
+Arguments are known be working with eclipse debugger gdb
+-sky resources/GFX/textures/dusk.tga -terrain resources/GFX/levels/image

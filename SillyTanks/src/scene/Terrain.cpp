@@ -82,7 +82,7 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix, float width
 			int heightDataIndex = _heightData->getWidth() * (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
 			int objectDataIndex = _objectData->getWidth() * (lengthPoint * zSlice) * 4 + widthPoint * xSlice * 4;
 			float heightScaling = 7.0f;
-			vertex.y = ((_heightData->getData()[heightDataIndex]) / heightScaling) - 200/heightScaling;
+			vertex.y = ((_heightData->getData()[heightDataIndex]) / heightScaling) - 200 / heightScaling;
 
 			//ObjectData mapping
 			if (_objectData->getData()[objectDataIndex] == PINETREE_MAPNR) {
@@ -167,7 +167,7 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix, float width
 	for (std::vector<Point>::iterator vertexIter = _vertices.begin(); vertexIter != _vertices.end(); vertexIter++) {
 		Point vertex = *vertexIter;
 		Node* node = new Node(Point(vertex.x, vertex.y, vertex.z), _scene);
-		//node->setNodeState(checkBorder(node->_position) ? Node::BLOCKED : Node::FREE);
+		//
 
 		_nodes.push_back(node);
 	}
@@ -191,7 +191,7 @@ void Terrain::buildDisplayLists() {
 	glShadeModel(GL_FLAT);
 
 	_material.setActive();
-	_texture->setActive(true);
+	//_texture->setActive(true);
 
 	glBegin(GL_TRIANGLES);
 
@@ -226,7 +226,7 @@ void Terrain::buildDisplayLists() {
 	glShadeModel(GL_SMOOTH);
 
 	_material.setActive();
-	_texture->setActive(true);
+	//_texture->setActive(true);
 
 	glBegin(GL_TRIANGLES);
 
@@ -266,8 +266,9 @@ void Terrain::buildDisplayLists() {
 }
 
 void Terrain::draw() const {
-
+	_texture->setActive( true );
 	for (uint i = 0; i < _vertices.size(); i++) {
+		_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
 		_nodes[i]->draw();
 	}
 
@@ -316,6 +317,7 @@ void Terrain::draw() const {
 		}
 		glEnd();
 	}
+	_texture->setActive( false );
 }
 
 float Terrain::getHeight(const Point &point) const {
@@ -532,13 +534,13 @@ Node* Terrain::getNodeFromPoint(Point point) {
 
 Node* Terrain::getNeighborOf(Point point, int px, int pz) {
 
-	float sliceW = _width / (_widthResolution-1);
-	float sliceL = _length / (_lengthResolution-1);
+	float sliceW = _width / (_widthResolution - 1);
+	float sliceL = _length / (_lengthResolution - 1);
 
 	int indexX = (point.x + _width / 2) / sliceW;
 	int indexZ = -(point.z - _length / 2) / sliceL;
 
-	return ((indexX + px)+  _widthResolution * (indexZ + pz) <= _nodes.size() && (indexX + px) < _widthResolution && (indexZ + pz) < _lengthResolution) ? _nodes.at((indexX + px)+  _widthResolution * (indexZ + pz)) : NULL;
+	return ((indexX + px) + _widthResolution * (indexZ + pz) <= _nodes.size() && (indexX + px) < _widthResolution && (indexZ + pz) < _lengthResolution) ? _nodes.at((indexX + px) + _widthResolution * (indexZ + pz)) : NULL;
 }
 
 std::vector<Node*> Terrain::getNeighbors(Node node) {
@@ -587,9 +589,12 @@ std::vector<Node*> Terrain::getNeighbors(Node node) {
 }
 
 Point Terrain::getRandomPointOnMap() {
-	float x = (-_width / 2.0) + (rand()%(int)_width);
-	float z = (_length / 2.0) - (rand()%(int)_length);
-	float y = getHeight(Point(x, 0, z));
+	float x,y,z;
+	do {
+		x = (-_width / 2.0) + (rand() % (int) _width);
+		z = (_length / 2.0) - (rand() % (int) _length);
+		y = getHeight(Point(x, 0, z));
+	} while (y < -2);
 
 	return Point(x, y, z);
 }
@@ -600,7 +605,7 @@ bool Terrain::checkBorder(const Point &point) const {
 	float angleGravityNormal = acos(Utils::dot(Vector3D(0, 1, 0), getNormal(point)));
 
 	//PI/2 equals 45 degree, a tank should be able to do that.
-	if (angleGravityNormal > Utils::PI/2) {
+	if (angleGravityNormal > Utils::PI / 2) {
 		return true;
 	}
 

@@ -163,7 +163,6 @@ void SoundEngine::playExplosionSound() {
 
 void SoundEngine::playExplosionSoundAt(float x, float y, float z){
 
-
 	ALfloat arr[3] = {x, y, z};
 	alSourcefv(Sources[EXPLOSION], AL_POSITION, arr);
 	alSourcePlay(Sources[EXPLOSION]);
@@ -178,7 +177,6 @@ void SoundEngine::playMuzzleSound() {
 }
 
 void SoundEngine::playMuzzleSoundAt(float x, float y, float z){
-
 
 	ALfloat arr[3] = {x, y, z};
 	alSourcefv(Sources[MUZZLE], AL_POSITION, arr);
