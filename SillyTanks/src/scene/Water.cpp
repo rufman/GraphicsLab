@@ -19,7 +19,7 @@
 
 namespace game_space {
 
-Water::Water(Scene &scene, float width, float length) :
+Water::Water(Scene &scene, float waterHeight, float width, float length) :
 		Drawable(scene), _displacement(0.0f), _width(width), _length(length), _widthResolution(
 				30), _lengthResolution(30) {
 	_material.setAmbient(Color(0.4, 0.4, 0.4));
@@ -27,6 +27,8 @@ Water::Water(Scene &scene, float width, float length) :
 	_material.setSpecular(Color(0.2, 0.2, 0.2));
 	_material.setEmission(Color(0.2, 0.2, 0.2));
 	_material.setShininess(64);
+
+	waterHeightOffset = waterHeight;
 
 	int numVertices = _widthResolution * _lengthResolution;
 	_vertices = new Point[numVertices];
@@ -98,7 +100,7 @@ void Water::calculateVertexHeights() {
 			Point &vertex = _vertices[_widthResolution * lengthPoint
 					+ widthPoint];
 			vertex.y = std::sin((float) widthPoint + _displacement)
-					- std::cos((float) lengthPoint + _displacement) - 10;
+					- std::cos((float) lengthPoint + _displacement) - waterHeightOffset;
 		}
 	}
 }

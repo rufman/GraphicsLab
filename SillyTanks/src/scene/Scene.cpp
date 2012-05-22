@@ -122,7 +122,7 @@ void Scene::initialize() {
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4,
 			100 * 4, 50, 50);
-	_water = new Water(*this, 100 * 4, 100 * 4);
+	_water = new Water(*this, parameters.waterHeight, 100 * 4, 100 * 4);
 	_playerTank = new SmallTank(*this,false);
 	_playerTank->setPosition(_terrain->getRandomPointOnMap());
 	_targets.push_back(_playerTank);
