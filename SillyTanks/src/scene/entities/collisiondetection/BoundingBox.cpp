@@ -3,16 +3,20 @@
  * This class is a bounding box to detect collisions between a to objects
  */
 #include "BoundingBox.hpp"
+//#include "../../../common/Types.hpp"
+
+
 
 namespace game_space {
-BoundingBox::BoundingBox(float x,float y,float z):_x(x),_y(y),_z(z){
+
+
+BoundingBox::BoundingBox(Point* arr){
+
+
 
 }
 
-BoundingBox::~BoundingBox()
-{
 
-}
 
 }
 

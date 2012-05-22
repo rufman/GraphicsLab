@@ -52,7 +52,7 @@ public:
     void draw() const;
 
     int getNearestTriangleIndexAt( const Point &point) const;
-    void doDamageAt( const Point &point ) ;
+    void doDamageAt( const Point &point,float damageStrength ) ;
     std::vector<Point>* findPath(Point start,Point goal);
     Node* getNodeFromPoint(Point point);
     Node * getNeighborOf(Point point,int px,int pz);

@@ -25,7 +25,7 @@
 namespace game_space {
 
 Tower::Tower(Scene &scene,bool isAIControlled) :Target( scene,Target::TOWER ),_isAIControlled(isAIControlled) {
-	//the ai must know the tank to be able to controll it
+	//the ai must know the tank to be able to control it
 	_targetId = _scene.getMessageBus()->addNewClient();
 	_controllingAI = new TowerAI(scene,_scene.getMessageBus()->getSubbusOfClient(_targetId));
 	_controllingAI->_tower = this;

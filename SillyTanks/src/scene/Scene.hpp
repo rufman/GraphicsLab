@@ -50,6 +50,7 @@ class Bullet;
 class Terrain;
 class Water;
 
+
 /** Class that contains contents of the screen to display */
 class Scene
 {
