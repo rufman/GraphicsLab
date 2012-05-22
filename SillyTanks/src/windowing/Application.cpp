@@ -9,10 +9,10 @@
 #include "../common/Exception.hpp"
 #include "../common/GLIncludes.hpp"
 #include "../windowing/WindowManager.hpp"
-#include <stdio.h>
 
 #include <cstdlib>
 #include <iostream>
+#include <stdio.h>
 
 namespace game_space {
 
@@ -71,16 +71,6 @@ void Application::initialize(int argc, char **argv) {
 	Window::Parameters windowParameters;
 	windowParameters.title = _parameters.windowTitle;
 	_mainWindow = windowManager.createWindow(windowParameters);
-
-	glewInit();
-	if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
-	{
-		printf("Ready for GLSL\n");
-	}
-	else {
-		printf("No GLSL support\n");
-		exit(1);
-	}
 }
 
 int Application::run() {

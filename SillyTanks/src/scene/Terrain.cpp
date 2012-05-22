@@ -531,13 +531,14 @@ Node* Terrain::getNodeFromPoint(Point point) {
 }
 
 Node* Terrain::getNeighborOf(Point point, int px, int pz) {
-	float sliceW = _width / _widthResolution;
-	float sliceL = _length / _lengthResolution;
+
+	float sliceW = _width / (_widthResolution-1);
+	float sliceL = _length / (_lengthResolution-1);
 
 	int indexX = (point.x + _width / 2) / sliceW;
-	int indexZ = (-point.z + _length / 2) / sliceL;
+	int indexZ = -(point.z - _length / 2) / sliceL;
 
-	return ((indexX + px) * _lengthResolution + (indexZ + pz) <= _nodes.size() && (indexX + px) < _widthResolution && (indexZ + pz) < _lengthResolution) ? _nodes.at((indexX + px) * _lengthResolution + (indexZ + pz)) : NULL;
+	return ((indexX + px)+  _widthResolution * (indexZ + pz) <= _nodes.size() && (indexX + px) < _widthResolution && (indexZ + pz) < _lengthResolution) ? _nodes.at((indexX + px)+  _widthResolution * (indexZ + pz)) : NULL;
 }
 
 std::vector<Node*> Terrain::getNeighbors(Node node) {
@@ -586,11 +587,9 @@ std::vector<Node*> Terrain::getNeighbors(Node node) {
 }
 
 Point Terrain::getRandomPointOnMap() {
-	srand((unsigned) time(0));
-
-	float x = (-_width / 2.0) + ((float) rand() / (float) _width);
-	float z = (_length / 2.0) - ((float) rand() / (float) _length);
-	float y = getHeight(Point(x, 0, y));
+	float x = (-_width / 2.0) + (rand()%(int)_width);
+	float z = (_length / 2.0) - (rand()%(int)_length);
+	float y = getHeight(Point(x, 0, z));
 
 	return Point(x, y, z);
 }

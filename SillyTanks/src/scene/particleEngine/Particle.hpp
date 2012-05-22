@@ -34,6 +34,7 @@ public:
 	float ax; // X Acceleration
 	float ay; // Y Acceleration
 	float az; // Z Acceleration
+	float size;
 
 	std::string _particleTexturePath;
 };

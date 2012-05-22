@@ -22,7 +22,7 @@ const float Turret::_baseWidth = 1.0f;
 Turret::Turret(Scene &scene) :
 		Drawable(scene) {
 	_turret = new PLYModel(_scene);
-	_turret->load(SMALLTANK_TURRET_MODEL);
+	_turret->load(TURRET_MODEL);
 	reset();
 }
 

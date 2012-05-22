@@ -21,6 +21,8 @@ Missile::Missile(Scene &scene, float size) :
 	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getTankCam(),100);
 	_missileSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_missileSmokeParticleEngine->setActive(true);
+	_missileExplosionParticleEngine = new ParticleEngine<Explosion>(_scene.getTankCam(),1);
+	_missileExplosionParticleEngine->setStartAcceleration(Vector3D(0,0,0));
 }
 
 Missile::~Missile() {
@@ -42,9 +44,8 @@ void Missile::draw() const {
 		Utils::applyGLRotation(Vector3D(1, 0, 0), _toTarget);
 	}
 	glRotatef(90, 0, 1, 0);
-	/*
-	 * TODO:: Enable that later on as it colors somehow the particles. As soon as that is fixed, reenable it.
-	 float materialAmbient[3] = { 0.1, 0.1, 0.1 };
+
+	 float materialAmbient[3] = { 1, 1, 1 };
 	 float materialDiffuse[3] = { 0.2, 0.2, 0.2 };
 	 float materialSpecular[3] = { 0.2, 0.4, 0.4 };
 	 float materialEmission[3] = { 0.1, 0.1, 0.1 };
@@ -55,7 +56,7 @@ void Missile::draw() const {
 	 glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
 	 glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
 	 glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-	 */
+
 
 	GLUquadricObj *quadObj = gluNewQuadric();
 	gluCylinder(quadObj, _size / 2.0, _size / 2.0, _size * 4.0, 10, 10);
@@ -117,11 +118,16 @@ void Missile::move(float seconds) {
 
 	_missileSmokeParticleEngine->setStartPosition(_position);
 	_missileSmokeParticleEngine->update(seconds);
+	_missileExplosionParticleEngine->setStartPosition(_position);
+	_missileExplosionParticleEngine->update(seconds);
 	if (_position.y < _scene.getTerrain().getHeight(_position)) {
 		_scene.getTerrain().doDamageAt(_position);
 		_scene.getTerrain().doDamageAt(_position);
 		_scene.getTerrain().doDamageAt(_position);
 		_missileSmokeParticleEngine->setActive(false);
+		_missileExplosionParticleEngine->setActive(true);
+		_missileExplosionParticleEngine->setStartPosition(_position);
+		_missileExplosionParticleEngine->update(seconds);
 	}
 	if(_missileSmokeParticleEngine->getNumberOfRenderedParticles() == 0)
 	{

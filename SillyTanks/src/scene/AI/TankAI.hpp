@@ -29,9 +29,9 @@ public:
 	Tank* _tank;
 	int _currentTarget;
 	std::vector<Point>* _path;
-	Scene* _scene;
+	Scene& _scene;
 public:
-	TankAI(Scene* scene,Tank* tank,std::vector<Message*>* aiMessages);
+	TankAI(Scene &scene,std::vector<Message*>* aiMessages);
 	virtual ~TankAI();
 	//ai methods
 	//main method of the ai, activates all the other ai methods, represents one single reflection

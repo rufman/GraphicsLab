@@ -20,14 +20,22 @@
 #include "../projectiles/Bullet.hpp"
 #include "../projectiles/Missile.hpp"
 
+#include "../../AI/TankAI.hpp"
+
 
 namespace game_space {
 
-Tank::Tank(Scene &scene,int id,TankAI* ai ) :Drawable( scene ),_velocity(Vector3D( 0.0, 0.0, 1.0 )),_direction(0),_tankId(id),_controllingAI(ai) {}
+Tank::Tank(Scene &scene,bool isAIControlled) :Target( scene,Target::TANK ),_velocity(Vector3D( 0.0, 0.0, 1.0 )),_direction(0),_isAIControlled(isAIControlled) {
+	//the ai must know the tank to be able to controll it
+	_targetId = _scene.getMessageBus()->addNewClient();
+	_controllingAI = new TankAI(scene,_scene.getMessageBus()->getSubbusOfClient(_targetId));
+	_controllingAI->_tank = this;
+}
 
 Tank::~Tank() {}
 
 void Tank::reset() {
+	_position = _scene.getTerrain().getRandomPointOnMap();
 	_velocity = Vector3D( 0.0, 0.0, 1.0 );
 	_direction = 0;
 }
@@ -148,9 +156,13 @@ LookAt Tank::getLookAt() const
 
 bool Tank::isAIControlled() const
 {
-	return (_controllingAI != NULL);
+	return _isAIControlled;
 }
 
+void Tank::setPosition(Point position)
+{
+	_position = position;
+}
 Point Tank::getPosition() const
 {
 	return _position;
@@ -158,7 +170,7 @@ Point Tank::getPosition() const
 
 int Tank::getID() const
 {
-	return _tankId;
+	return _targetId;
 }
 
 TankAI* Tank::getAI() const

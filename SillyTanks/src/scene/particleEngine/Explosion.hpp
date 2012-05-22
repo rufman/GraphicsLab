@@ -1,6 +1,5 @@
 /*
  * Explosion.hpp
-* See Explosion.cpp
  */
 
 #ifndef GAME_EXPLOSION_HPP
@@ -14,10 +13,12 @@
 
 namespace game_space {
 
-class Explosion  {
+class Explosion:virtual public Particle {
 public:
 	Explosion();
 	virtual ~Explosion();
+	virtual void resetParticle(Point startPosition,Vector3D startAcceleration);
+	virtual void update(float seconds);
 };
 
 }

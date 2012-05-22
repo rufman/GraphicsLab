@@ -44,6 +44,9 @@ public:
     void draw() const;
     void setPosition(Point &position);
     Point &getPosition();
+    std::vector<Point>* getVertices();
+
+
 protected:
 	void buildDisplayLists();
 	
@@ -60,6 +63,8 @@ protected:
 	struct PLYData
 	{
 		std::vector<Point> vertices;
+		bool textured;
+		std::vector<Point> textureCoords;
 		struct Triangle 
 		{ 
 			uint vertex1, vertex2, vertex3;

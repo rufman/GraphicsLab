@@ -44,6 +44,24 @@ void Window::onPaint()
 
 void Window::onResize( int width, int height )
 {
+	// Prevent a divide by zero, when window is too short
+	// (you cant make a window of zero width).
+	if (height == 0)
+		height = 1;
+
+	float ratio = 1.0 * width / height;
+
+	// Reset the coordinate system before modifying
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	// Set the viewport to be the entire window
+	glViewport(0, 0, width, height);
+
+	// Set the correct perspective.
+	gluPerspective(45, ratio, 1, 100);
+	glMatrixMode(GL_MODELVIEW);
+
 	_scene->onResize( width, height );
 	glutPostRedisplay();
 }
@@ -68,13 +86,13 @@ void Window::resetKeys()
 
 bool Window::keyPressed(char key)
 {
-	return _keyPressed[key];
+	return _keyPressed[(int)key];
 }
 
 bool Window::keyHit(char key)
 {
-	bool keyHit = _keyHit[key];
-	_keyHit[key] = false;
+	bool keyHit = _keyHit[(int)key];
+	_keyHit[(int)key] = false;
 	return keyHit;
 }
 
@@ -95,7 +113,7 @@ void Window::setKey(unsigned char key,bool value) {
 	_keyPressed[key] = value;
 	_keyHit[key] = (_oldKeyPressed[key] && !_keyPressed[key]);
 
-	if(keyPressed('q') || keyPressed('Q') || keyPressed(27) )
+	if(keyPressed(27) )
 	{
 		exit( EXIT_SUCCESS );
 	}
