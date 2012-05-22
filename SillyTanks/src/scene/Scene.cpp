@@ -616,36 +616,36 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 	const int mouseDown = 0;
 	const int mouseUp = 1;
 
-	//if (state == mouseDown) {
-	switch (button) {
-	case leftButton: {
-		switch (_playerTank->getSelectedWeapon()) {
-		case Tank::BULLET: {
-			_playerTank->fireBullet();
-			break;
-		}
-		case Tank::MISSILE: {
-			_playerTank->fireMissile();
-			break;
-		}
-		}
+	if (state == mouseDown) {
+		switch (button) {
+		case leftButton: {
+			switch (_playerTank->getSelectedWeapon()) {
+			case Tank::BULLET: {
+				_playerTank->fireBullet();
+				break;
+			}
+			case Tank::MISSILE: {
+				_playerTank->fireMissile();
+				break;
+			}
+			}
 
-		break;
-	}
-	case rightButton: {
-		switch (_playerTank->getSelectedWeapon()) {
-		case Tank::BULLET: {
-			_playerTank->setSelectedWeapon(Tank::MISSILE);
 			break;
 		}
-		case Tank::MISSILE: {
-			_playerTank->setSelectedWeapon(Tank::BULLET);
+		case rightButton: {
+			switch (_playerTank->getSelectedWeapon()) {
+			case Tank::BULLET: {
+				_playerTank->setSelectedWeapon(Tank::MISSILE);
+				break;
+			}
+			case Tank::MISSILE: {
+				_playerTank->setSelectedWeapon(Tank::BULLET);
+				break;
+			}
+			}
 			break;
 		}
 		}
-		break;
-	}
-		//}
 	}
 }
 
