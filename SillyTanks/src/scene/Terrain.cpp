@@ -400,15 +400,15 @@ int Terrain::getNearestTriangleIndexAt(const Point &point) const {
 	return triangleNumber;
 }
 
-void Terrain::doDamageAt(const Point &point) {
+void Terrain::doDamageAt(const Point &point,float damageStrength) {
 	int triangleIndex = getNearestTriangleIndexAt(point);
 	if (triangleIndex != -1) {
 		const Point firstPoint = _vertices[_triangles[triangleIndex].vertex1];
 		const Point secondPoint = _vertices[_triangles[triangleIndex].vertex2];
 		const Point thirdPoint = _vertices[_triangles[triangleIndex].vertex3];
-		firstPoint.y -= .05;
-		secondPoint.y -= .05;
-		thirdPoint.y -= .05;
+		firstPoint.y -= damageStrength;
+		secondPoint.y -= damageStrength;
+		thirdPoint.y -= damageStrength;
 		_vertices.at(_triangles[triangleIndex].vertex1) = firstPoint;
 		_vertices.at(_triangles[triangleIndex].vertex2) = secondPoint;
 		_vertices.at(_triangles[triangleIndex].vertex3) = thirdPoint;
