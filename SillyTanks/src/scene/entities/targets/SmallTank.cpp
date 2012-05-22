@@ -76,9 +76,6 @@ void SmallTank::draw() const
 	glPushMatrix();
 	glTranslatef(_position.x,_position.y,_position.z);
 
-	//a little bit higher over the ground because otherwise the model sinks into the ground
-	glTranslatef(0,2,0);
-
 	Utils::applyGLRotation(Vector3D(0.0f,1.0f,0.0f),_scene.getTerrain().getNormal(_position));
 
 	glScalef(_baseWidth*5,_baseWidth*5,_baseWidth*5);
@@ -97,7 +94,7 @@ void SmallTank::draw() const
 	glPushMatrix();
 	_turret->setRenderingParameters(_renderingParameters);
 	Point tankPosition = getPosition();
-	_turret->setPosition(Point(tankPosition.x,tankPosition.y+0.5,tankPosition.z));
+	_turret->setPosition(Point(tankPosition.x,tankPosition.y,tankPosition.z));
 	_tankTexture->setActive(true);
 	_turret->draw();
 	_tankTexture->setActive(false);
