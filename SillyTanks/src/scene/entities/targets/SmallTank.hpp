@@ -7,6 +7,7 @@
 #define GAME_SMALLTANK_HPP
 
 #include "../../../common/Definitions.hpp"
+#include "../collisiondetection/BoundingBox.hpp"
 #include "Tank.hpp"
 #include "../../AI/TankAI.hpp"
 
@@ -20,6 +21,7 @@ public:
 
 private:
 	TGATexture* _tankTexture;
+	BoundingBox* _boundingBox;
 };
 
 }

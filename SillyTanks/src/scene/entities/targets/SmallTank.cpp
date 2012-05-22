@@ -19,6 +19,15 @@ namespace game_space {
 
 SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlled) {
 	_baseWidth = 1.0f;
+	float turretHeight = 0.5f;
+	float tankLength = 1.0f;
+	float tankWidth = 1.0f;
+	float tankHeight = 0.6f;
+	float chassisHeight = tankHeight;
+
+
+
+
 
 	//create a new chassis
 	_chassis = new PLYModel(_scene);
