@@ -20,8 +20,8 @@ namespace game_space {
 SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlled) {
 	_baseWidth = 1.0f;
 
-	//create a new chassis
-	_chassis = new PLYModel(_scene);
+	//create a new chassis / with texture size 400
+	_chassis = new PLYModel(_scene,400);
 	_chassis->load(SMALLTANK_CHASSIS_MODEL);
 
 	//get a new turret

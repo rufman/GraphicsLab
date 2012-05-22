@@ -28,7 +28,7 @@ public:
 	 *
 	 * @param[in, out]	scene	Owning scene
 	 */
-    PLYModel( Scene &scene );
+    PLYModel( Scene &scene,int textureSize );
     
     /** Destructor */
     ~PLYModel();
@@ -58,6 +58,9 @@ protected:
 
 	Material _material;
 	
+public:
+	int _textureSize;
+
 protected:
 	Point _position;
 	struct PLYData
@@ -77,7 +80,7 @@ protected:
 		
 		std::vector<Vector3D> vertexNormals;
 		std::vector<Vector3D> triangleNormals;
-		
+
 		Point min, max;
 		
 		void reset()
