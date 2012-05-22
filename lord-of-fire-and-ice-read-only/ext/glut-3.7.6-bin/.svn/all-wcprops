@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/ext/glut-3.7.6-bin
+END
+glut32.lib
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2/trunk/ext/glut-3.7.6-bin/glut32.lib
+END
+glut.def
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/2/trunk/ext/glut-3.7.6-bin/glut.def
+END
+glut32.dll
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2/trunk/ext/glut-3.7.6-bin/glut32.dll
+END
+README-win32.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/2/trunk/ext/glut-3.7.6-bin/README-win32.txt
+END
+glut.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2/trunk/ext/glut-3.7.6-bin/glut.h
+END

@@ -1,0 +1,162 @@
+/**
+ * gameSaveFunctions.cpp
+ *
+ * Author   :   Balz Caflisch, Nico Colic, Jan Meier, Henry Raymond, Fatih Erol
+ * Date     :   07.05.2011
+ *
+ * All rights reserved.
+ */
+
+
+// Class declaration include
+#include "gameSaveFunctions.hpp"
+
+// Includes
+#include "scene.hpp"
+#include "map.hpp"
+#include "sun.hpp"
+#include "utils.hpp"
+#include "player.hpp"
+#include <cstdio>
+
+
+GRAPHICSLAB_NAMESPACE_BEGIN
+
+GameSaveFunctions::GameSaveFunctions(Scene &scene, LoadingScreen* loadingScreen, Map* map, Sun* sun, Player* player, NPCManager* npcManager) :
+	_scene(scene),
+	_loadingScreen(loadingScreen),
+	_map(map),
+	_sun(sun),
+	_player(player),
+	_npcManager(npcManager) {
+}
+
+
+
+GameSaveFunctions::~GameSaveFunctions() {
+}
+
+
+
+void GameSaveFunctions::loadIntroMap() {
+	_loadingScreen->startLoading();
+	_npcManager->removeAll();
+	_map->load("data/maps/intro_map/");
+
+	_sun->updatePosition();
+	_player->place(154.0, 124.0, -130.0);
+	_player->setCameraElevationZoom(25.0, 4.0);
+
+	MenuManager::setIntroMenuMode(true);
+	MenuManager::changeMenuState(MAIN);
+	_loadingScreen->loadingFinished();
+}
+
+
+
+void GameSaveFunctions::loadGame(int gameSave) {
+
+	float playerStartingX = 1006.0;
+	float playerStartingY = 15.0;
+	float playerStartingDirection = -130.0;
+
+	_loadingScreen->startLoading();
+	_npcManager->removeAll();
+	_map->load("data/maps/world/");
+
+	_sun->updatePosition();
+	if(gameSave == 0) {
+		_player->place(playerStartingX, playerStartingY, playerStartingDirection);
+		_player->setCameraElevationZoom(15.0, 2.5);
+
+	} else {
+		FILE* file;
+		if(gameSave == 1) {
+			file = fopen("data/game_saves/save1.sav", "rb");
+		} else if(gameSave == 2) {
+			file = fopen("data/game_saves/save2.sav", "rb");
+		} else if(gameSave == 3) {
+			file = fopen("data/game_saves/save3.sav", "rb");
+		} else if(gameSave == 4) {
+			file = fopen("data/game_saves/save4.sav", "rb");
+		} else if(gameSave == 5) {
+			file = fopen("data/game_saves/save5.sav", "rb");
+		}
+
+		if(file == NULL) {
+			_player->place(playerStartingX, playerStartingY, playerStartingDirection);
+
+		} else {
+			unsigned char* gameSaveData = new unsigned char[GAME_SAVE_FILE_LENGTH];
+			fread(gameSaveData, 1, GAME_SAVE_FILE_LENGTH, file);
+			float playerX         = Utils::getFloatFromBytes(gameSaveData[0],  gameSaveData[1],  gameSaveData[2]);
+			float playerY         = Utils::getFloatFromBytes(gameSaveData[3],  gameSaveData[4],  gameSaveData[5]);
+			float playerDirection = Utils::getFloatFromBytes(gameSaveData[6],  gameSaveData[7],  gameSaveData[8])  - 180.0;
+			float cameraElevation = Utils::getFloatFromBytes(gameSaveData[9],  gameSaveData[10], gameSaveData[11]) - 180.0;
+			float cameraZoom      = Utils::getFloatFromBytes(gameSaveData[12], gameSaveData[13], gameSaveData[14]);
+			fclose(file);
+			delete [] gameSaveData;
+			_player->place(playerX, playerY, playerDirection);
+			_player->setCameraElevationZoom(cameraElevation, cameraZoom);
+		}
+	}
+	_npcManager->spawnAll();
+	MenuManager::setIntroMenuMode(false);
+	MenuManager::changeMenuState(NONE);
+	_loadingScreen->loadingFinished();
+}
+
+
+
+void GameSaveFunctions::saveGame(int gameSave) {
+	FILE* file;
+	if(gameSave == 1) {
+		file = fopen("data/game_saves/save1.sav", "wb");
+	} else if(gameSave == 2) {
+		file = fopen("data/game_saves/save2.sav", "wb");
+	} else if(gameSave == 3) {
+		file = fopen("data/game_saves/save3.sav", "wb");
+	} else if(gameSave == 4) {
+		file = fopen("data/game_saves/save4.sav", "wb");
+	} else if(gameSave == 5) {
+		file = fopen("data/game_saves/save5.sav", "wb");
+	}
+	if(file != NULL) {
+		unsigned char* gameSaveData = new unsigned char[GAME_SAVE_FILE_LENGTH];
+
+		vec3f playerPosition = _player->getPosition();
+		float playerDirection = _player->getDirection() + 180.0;
+		float cameraElevation = _player->getCameraElevation() + 180.0;
+		float cameraZoom = _player->getCameraZoom();
+
+		gameSaveData[0]  = Utils::getByteOfFloat(0, playerPosition.x());
+		gameSaveData[1]  = Utils::getByteOfFloat(1, playerPosition.x());
+		gameSaveData[2]  = Utils::getByteOfFloat(2, playerPosition.x());
+
+		gameSaveData[3]  = Utils::getByteOfFloat(0, playerPosition.z());
+		gameSaveData[4]  = Utils::getByteOfFloat(1, playerPosition.z());
+		gameSaveData[5]  = Utils::getByteOfFloat(2, playerPosition.z());
+
+		gameSaveData[6]  = Utils::getByteOfFloat(0, playerDirection);
+		gameSaveData[7]  = Utils::getByteOfFloat(1, playerDirection);
+		gameSaveData[8]  = Utils::getByteOfFloat(2, playerDirection);
+
+		gameSaveData[9]  = Utils::getByteOfFloat(0, cameraElevation);
+		gameSaveData[10] = Utils::getByteOfFloat(1, cameraElevation);
+		gameSaveData[11] = Utils::getByteOfFloat(2, cameraElevation);
+
+		gameSaveData[12] = Utils::getByteOfFloat(0, cameraZoom);
+		gameSaveData[13] = Utils::getByteOfFloat(1, cameraZoom);
+		gameSaveData[14] = Utils::getByteOfFloat(2, cameraZoom);
+
+		fwrite(gameSaveData, 1, GAME_SAVE_FILE_LENGTH, file);
+		fclose(file);
+		delete [] gameSaveData;
+	}
+	MenuManager::setIntroMenuMode(false);
+	MenuManager::changeMenuState(NONE);
+}
+
+GRAPHICSLAB_NAMESPACE_END
+
+
