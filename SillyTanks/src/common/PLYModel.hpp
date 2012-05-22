@@ -39,13 +39,14 @@ public:
 	 * @param[in]	file	File to load PLY data from
 	 */
 	void load( const std::string &file );
-	
-    /** Draw the model to the screen. */
-    void draw() const;
-    void setPosition(Point &position);
-    Point &getPosition();
-    std::vector<Point>* getVertices();
 
+	/** Draw the model to the screen. */
+	void draw() const;
+	void setPosition(Point &position);
+	Point &getPosition();
+	std::vector<Point>* getVertices();
+	void setNeighbors();
+	void castShadow(const Point *lightPosition);
 
 protected:
 	void buildDisplayLists();
@@ -80,11 +81,16 @@ protected:
 		
 		std::vector<Vector3D> vertexNormals;
 		std::vector<Vector3D> triangleNormals;
+		std::vector<bool> triangleVisible;
+		struct Neighbors // a basic vector class
+		{
+			int neigh[3];
+		};
+		std::vector<Neighbors> triangleNeighbors;
 
 		Point min, max;
-		
-		void reset()
-		{
+
+		void reset() {
 			vertices.clear();
 			triangles.clear();
 			vertexNormals.clear();

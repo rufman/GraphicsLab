@@ -19,6 +19,7 @@
 #include "../common/Camera3D.hpp"
 #include "../common/TextBox.hpp"
 #include "../common/SoundEngine.hpp"
+#include "../common/PLYModel.hpp"
 
 //scene includes
 #include "SkyDome.hpp"
@@ -44,10 +45,29 @@
 #include <iostream>
 #include <vector>
 
+#include "entities/targets/PineTree.hpp"
+
 namespace game_space {
 
+typedef float GLmatrix16f[16]; // Typedef's For VMatMult Procedur
+
+void VMatMult(GLmatrix16f M, Point v) {
+	GLfloat res[4]; // Hold Calculated Results
+	res[0] = M[0] * v.x + M[4] * v.y + M[8] * v.z + M[12] * v.w;
+	res[1] = M[1] * v.x + M[5] * v.y + M[9] * v.z + M[13] * v.w;
+	res[2] = M[2] * v.x + M[6] * v.y + M[10] * v.z + M[14] * v.w;
+	res[3] = M[3] * v.x + M[7] * v.y + M[11] * v.z + M[15] * v.w;
+	v.x = res[0]; // Results Are Stored Back In v
+	v.y = res[1];
+	v.z = res[2];
+	v.w = res[3]; // Homogenous Coordinate
+}
+PLYModel* cross;
+Tree *treeModel ;
 Scene::Scene(Window &window) :
-		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL),  _sunLight(NULL) {
+		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(
+				TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(
+				NULL), _water(NULL), _sunLight(NULL) {
 	_soundEngine = SoundEngine();
 	_messageBus = new MessageBus();
 
@@ -60,7 +80,8 @@ Scene::~Scene() {
 	delete _terrain;
 	delete _water;
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		delete light;
 	}
@@ -75,6 +96,9 @@ Scene::~Scene() {
 
 void Scene::initialize() {
 
+	cross = new PLYModel(*this, 400);
+	treeModel = new PineTree(*this);
+	treeModel->setNeighbors();
 	// Initialize lights
 	Color lightAmbient(0.4, 0.4, 0.4);
 	Color lightSpecular(0.8, 0.8, 0.8);
@@ -121,7 +145,7 @@ void Scene::initialize() {
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4,
 			100 * 4, 50, 50);
 	_water = new Water(*this, parameters.waterHeight, 100 * 4, 100 * 4);
-	_playerTank = new SmallTank(*this,false);
+	_playerTank = new SmallTank(*this, false);
 	_playerTank->setPosition(_terrain->getRandomPointOnMap());
 	_targets.push_back(_playerTank);
 
@@ -150,9 +174,14 @@ void Scene::initialize() {
 	glutSetCursor(GLUT_CURSOR_NONE);
 
 	//move the pointer to the middle of the panel
-	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
+	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2,
+			glutGet(GLUT_WINDOW_HEIGHT) / 2);
 
 	//_shadingEngine  = new ShadingEngine();
+
+	cross->setRenderingParameters(_renderingParameters);
+	cross->load("resources/GFX/models/square.ply");
+	cross->setNeighbors();
 }
 
 void Scene::reset() {
@@ -171,11 +200,13 @@ void Scene::reset() {
 	_skyDome->reset();
 	_water->reset();
 
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
 		(*targetIter)->reset();
 	}
 
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end(); ++bulletIter) {
+	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
+			bulletIter != _bullets.end(); ++bulletIter) {
 		Bullet *bullet = *bulletIter;
 		delete bullet;
 	}
@@ -188,7 +219,8 @@ void Scene::update(float seconds) {
 
 	_skyDome->update(seconds);
 	_water->update(seconds);
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
@@ -200,7 +232,8 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end();) {
+	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
+			bulletIter != _bullets.end();) {
 		Bullet *bullet = *bulletIter;
 		bullet->move(seconds);
 
@@ -222,7 +255,8 @@ void Scene::update(float seconds) {
 		// Remove bullet if out of window
 		const Point &bulletPosition = bullet->getPosition();
 
-		if (hitTarget || (bulletPosition.y < _terrain->getHeight(bulletPosition))) {
+		if (hitTarget
+				|| (bulletPosition.y < _terrain->getHeight(bulletPosition))) {
 			bulletIter = _bullets.erase(bulletIter);
 			_terrain->doDamageAt(bulletPosition, 0.05);
 			delete bullet;
@@ -231,7 +265,8 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end();) {
+	for (std::vector<Missile*>::iterator missileIter = _missiles.begin();
+			missileIter != _missiles.end();) {
 		(*missileIter)->move(seconds);
 		if ((*missileIter)->isDetonated()) {
 			Missile* missile = *missileIter;
@@ -256,16 +291,15 @@ void Scene::onPaint() {
 		update(secondsSinceLastUpdate);
 		_updateTime.start();
 	}
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	// Draw mirror image
 	drawWaterImage();
 	_water->capture();
 	// Clear the screen
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// Clear the screen
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// Draw screen
 	drawScene();
@@ -287,7 +321,9 @@ void Scene::drawScene() {
 		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_currentlyActiveCamera = _overviewCam;
-		_currentlyActiveCamera->setLookAt(LookAt(Point(100, 100, 100), _playerTank->getPosition(), Vector3D(0, 1, 0)));
+		_currentlyActiveCamera->setLookAt(
+				LookAt(Point(100, 100, 100), _playerTank->getPosition(),
+						Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL Lighting
@@ -305,7 +341,8 @@ void Scene::drawScene() {
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}
@@ -326,17 +363,34 @@ void Scene::drawScene() {
 
 	//the terrain should use toon shading
 	//_shadingEngine->applyToonShader();
+
+	GLmatrix16f Minv;
+	Point lightpos = _skyDome->getSunPosition();
+	glClearDepth(1.0f); // Depth Buffer Setup
+	glClearStencil(0); // Stencil Buffer Setup
+	glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+	glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+	glCullFace(GL_BACK); // Set Culling Face To Back Face
+	glEnable(GL_CULL_FACE); // Enable Culling
+
+	//glLoadIdentity();
+	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
+	VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
+	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
+
 	// Draw the terrain
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
+
+	//_terrain->drawShadows(lightpos);
 
 	//draw water
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
 
-
 	//Draw the targets
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
@@ -347,13 +401,15 @@ void Scene::drawScene() {
 			tower->draw();
 		}
 	}
+
 	glPopMatrix();
 
 	//the bullets should not use toon shading
 	//_shadingEngine->clearShaders();
 	glPushMatrix();
 	// Draw bullets
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end(); ++bulletIter) {
+	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin();
+			bulletIter != _bullets.end(); ++bulletIter) {
 		Bullet *bullet = *bulletIter;
 		bullet->setRenderingParameters(_renderingParameters);
 		bullet->draw();
@@ -363,7 +419,8 @@ void Scene::drawScene() {
 
 	glPushMatrix();
 
-	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end(); missileIter++) {
+	for (std::vector<Missile*>::iterator missileIter = _missiles.begin();
+			missileIter != _missiles.end(); missileIter++) {
 		(*missileIter)->draw();
 	}
 	glPopMatrix();
@@ -372,6 +429,24 @@ void Scene::drawScene() {
 	_tankSmokeParticleEngine->draw();
 	glPopMatrix();
 	_endNode->draw();
+
+	glPushMatrix();
+	//glTranslatef(0, 10, 0);
+	//glutSolidSphere(10,100,100);
+	//cross->draw();
+//	Point lightpos = Point(lp[0], lp[1], lp[2]);
+	//cross->castShadow(&lightpos);
+
+	glTranslatef(0, 10, 0);
+	treeModel->draw();
+	treeModel->castShadow(&lightpos);
+	glPopMatrix();
+
+	glEnable(GL_LIGHTING); // Enable Lighting
+	glDepthMask(GL_TRUE); // Enable Depth Mask
+
+	glFlush();
+	glutSwapBuffers();
 }
 
 void Scene::drawGrid() {
@@ -477,7 +552,8 @@ void Scene::drawOverlay() {
 	int height = glutGet(GLUT_WINDOW_HEIGHT) / 4;
 
 	// Set camera parameters
-	_overlayCam->setViewport(Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
+	_overlayCam->setViewport(
+			Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
 
 	_overlayCam->applyViewport();
 	_overlayCam->applyProjection();
@@ -568,7 +644,8 @@ void Scene::handleKeyboardInput() {
 	if (_window.keyHit('4')) {
 		if (_renderingParameters.normalMode == RenderingParameters::OFF) {
 			_renderingParameters.normalMode = RenderingParameters::VERTEX;
-		} else if (_renderingParameters.normalMode == RenderingParameters::VERTEX) {
+		} else if (_renderingParameters.normalMode
+				== RenderingParameters::VERTEX) {
 			_renderingParameters.normalMode = RenderingParameters::TRIANGLE;
 		} else {
 			_renderingParameters.normalMode = RenderingParameters::OFF;
@@ -684,7 +761,12 @@ void Scene::onIdle() {
 }
 
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
-	Point from(radius * std::cos(Utils::toRadian(elevation)) * std::sin(Utils::toRadian(azimuth)) * -1, radius * std::sin(Utils::toRadian(elevation)), radius * std::cos(Utils::toRadian(elevation)) * std::cos(Utils::toRadian(azimuth)) * -1);
+	Point from(
+			radius * std::cos(Utils::toRadian(elevation))
+					* std::sin(Utils::toRadian(azimuth)) * -1,
+			radius * std::sin(Utils::toRadian(elevation)),
+			radius * std::cos(Utils::toRadian(elevation))
+					* std::cos(Utils::toRadian(azimuth)) * -1);
 
 	Vector3D up(0.0, 1.0, 0.0);
 	Vector3D dir(-from.x, -from.y, -from.z);
@@ -695,7 +777,8 @@ void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Vector3D upMove = up;
 	upMove *= moveY;
 
-	Point newFrom(from.x + normalMove.x + upMove.x, from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
+	Point newFrom(from.x + normalMove.x + upMove.x,
+			from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
 	Point to(newFrom.x - from.x, newFrom.y - from.y, newFrom.z - from.z);
 
 	camera.setLookAt(LookAt(newFrom, to, up));
@@ -739,7 +822,6 @@ void Scene::drawWaterImage() {
 	// Set camera parameters
 	_water->applyCamera();
 
-
 	// Set scene parameters
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
@@ -749,7 +831,8 @@ void Scene::drawWaterImage() {
 	if (_gridOn)
 		drawGrid();
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}
