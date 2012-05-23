@@ -14,7 +14,7 @@
 namespace game_space {
 
 Tree::Tree(Scene & scene, const std::string &file) :
-		PLYModel(scene, 400) {
+		PLYModel(scene) {
 	load(file);
 }
 

@@ -26,8 +26,8 @@ namespace game_space {
 
 Tower::Tower(Scene &scene,bool isAIControlled) :Target( scene,Target::TOWER ),_isAIControlled(isAIControlled) {
 	//the ai must know the tank to be able to control it
-	_targetId = _scene.getMessageBus()->addNewClient();
-	_controllingAI = new TowerAI(scene,_scene.getMessageBus()->getSubbusOfClient(_targetId));
+	std::vector<Message*>* messageSubbus = _scene.getMessageBus()->addNewClient();
+	_controllingAI = new TowerAI(scene,messageSubbus);
 	_controllingAI->_tower = this;
 }
 
@@ -99,20 +99,6 @@ LookAt Tower::getLookAt() const
 bool Tower::isAIControlled() const
 {
 	return _isAIControlled;
-}
-
-void Tower::setPosition(Point position)
-{
-	_position = position;
-}
-Point Tower::getPosition() const
-{
-	return _position;
-}
-
-int Tower::getID() const
-{
-	return _targetId;
 }
 
 TowerAI* Tower::getAI() const

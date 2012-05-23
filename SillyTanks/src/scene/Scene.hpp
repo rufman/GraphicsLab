@@ -49,6 +49,7 @@ class SkyDome;
 class Bullet;
 class Terrain;
 class Water;
+class Target;
 
 
 /** Class that contains contents of the screen to display */
@@ -89,6 +90,7 @@ public:
 	Camera3D* getCurrentlyActiveCamera();
 	MessageBus* getMessageBus();
 	Water* getWater();
+	std::vector<Target*> getTargets();
 
 private:
 	/**

@@ -12,6 +12,8 @@
 
 namespace game_space {
 
+class Point;
+
 class Target:public Drawable {
 public:
 	enum TargetType
@@ -21,10 +23,13 @@ public:
 	}_targetType;
 private:
 	std::vector<BoundingBox> _boundingBoxes;
+
+protected:
+	Point _position;
 public:
 	Target(Scene &scene,TargetType type);
-	virtual bool isHit(Projectile projectile);
-	virtual bool collidesWithOtherTarget(Target target);
+	virtual bool isHit(Projectile* projectile);
+	virtual bool collidesWithOtherTarget(Target* target);
 
 	//a projectile has a bounding radius to first check if the projectile is even near to the target
 	//(check if distance between projectile and target is higher than bounding radiuses added up)
@@ -38,6 +43,9 @@ public:
 	void update(float seconds);
 
 	void reset();
+
+	void setPosition(Point position);
+	Point getPosition() const;
 };
 
 }

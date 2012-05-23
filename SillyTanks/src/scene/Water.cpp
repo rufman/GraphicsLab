@@ -253,21 +253,21 @@ void Water::draw() const {
 			const Vector3D &normal = _vertexNormals[_triangles[t].vertex1];
 			glNormal3f(normal.x, normal.y, normal.z);
 		}
-		glTexCoord2f(((vertex1.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice, ((-vertex1.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
+		glTexCoord2f(_texture.getWidth()-((vertex1.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice,((-vertex1.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
 		glVertex3f(vertex1.x, vertex1.y, vertex1.z);
 
 		if (_renderingParameters.shadeMode == RenderingParameters::SMOOTH) {
 			const Vector3D &normal = _vertexNormals[_triangles[t].vertex2];
 			glNormal3f(normal.x, normal.y, normal.z);
 		}
-		glTexCoord2f(((vertex2.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice, ((-vertex2.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
+		glTexCoord2f(_texture.getWidth()-((vertex2.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice,((-vertex2.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
 		glVertex3f(vertex2.x, vertex2.y, vertex2.z);
 
 		if (_renderingParameters.shadeMode == RenderingParameters::SMOOTH) {
 			const Vector3D &normal = _vertexNormals[_triangles[t].vertex3];
 			glNormal3f(normal.x, normal.y, normal.z);
 		}
-		glTexCoord2f(((vertex3.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice, ((-vertex3.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
+		glTexCoord2f(_texture.getWidth()-((vertex3.x + _width / 2.0) / (_width / (_widthResolution - 1))) * xSlice,((-vertex3.z + _length / 2.0) / (_length / (_lengthResolution - 1))) * zSlice);
 		glVertex3f(vertex3.x, vertex3.y, vertex3.z);
 	}
 

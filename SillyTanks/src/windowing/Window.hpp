@@ -1,34 +1,26 @@
-/**
- * window.hpp
-* See window.cpp
- */
-
 #ifndef GRAPHICSLAB_WINDOW_HPP
 #define GRAPHICSLAB_WINDOW_HPP
-
 
 // Global definitions include
 #include "../common/Definitions.hpp"
 
-// Includes
+// std includes
 #include <string>
 
-
 namespace game_space {
-
 
 // Forward declarations
 class Scene;
 
-/** Class for a window */
 class Window
 {
 public:
     friend class WindowManager;
     
-    /** Parameters */
+    // Parameters
     struct Parameters
     {
+    	int argc; char **argv;
         int width, height;
         int posX, posY;
         bool fullScreen;
@@ -43,16 +35,20 @@ public:
         }
     };
     
-    // EVENT HANDLERS
+    // event handlers for window events
     void onPaint();
     void onResize( int width, int height );
+    void onVisible( int state );
+    void onTimer( int value );
+    void onIdle();
+
+    //mouse event handlers
     void onMouseEntry( int state );
     void onMouseClick( int button, int state, int x, int y );
     void onMouseMove( int x, int y );
     void onMousePassiveMove( int x, int y );
-    void onVisible( int state );
-    void onTimer( int value );
-    void onIdle();
+
+    //key event handlers
     void resetKeys();
     bool keyPressed(char key);
     bool keyHit(char key);
@@ -91,15 +87,16 @@ private:
     void setID( int windowID );
     
 private:
-    /** Parameters */
+    // Parameters
     Parameters _parameters;
     
-    /** Window ID */
+    // Window ID
     int _windowID;
     
-    /** Scene data */
+    // scene
     Scene *_scene;
     
+    //key and special key maps
 	bool _keyPressed[256];// boolean map of normal keys
 	bool _keyHit[256];
 	bool _oldKeyPressed[256];

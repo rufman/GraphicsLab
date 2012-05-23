@@ -63,13 +63,13 @@ void TankAI::sense() {
 		switch (message->_messageType) {
 		case Message::ATTACKED_BY: {
 			AttackedByMessage* abMessage = static_cast<AttackedByMessage*>(message);
-			std::cout << "Tank " << _tank->getID() << " is attacked by Tank " << abMessage->_attackingEnemyID;
+			std::cout << "Tank " <<  " is attacked by Tank " << abMessage->_attackingEnemyID;
 			break;
 		}
 		case Message::DETONATION_SOUND: {
 			DetonationSoundMessage* dsMessage = static_cast<DetonationSoundMessage*>(message);
 			if (Utils::distance(_tank->getPosition(), dsMessage->_detonationPoint) < dsMessage->_detonationStrength) {
-				std::cout << "Tank " << _tank->getID() << " heard some detonation at point " << dsMessage->_detonationPoint.x << "," << dsMessage->_detonationPoint.z;
+				std::cout << "Tank " << " heard some detonation at point " << dsMessage->_detonationPoint.x << "," << dsMessage->_detonationPoint.z;
 			}
 			break;
 		}
@@ -83,8 +83,8 @@ void TankAI::explore() {
 		Point randomGoal = _scene.getTerrain().getRandomPointOnMap();
 		_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
 	}
-	//follow path
-	followPath();
+
+	//followPath();
 
 }
 
@@ -122,7 +122,7 @@ void TankAI::followPath() {
 	if (rotationAngle != 0) {
 		_tank->setDirection(_tank->getDirection() + Utils::toDegree(rotationAngle));
 	}
-	_tank->move(2);
+	_tank->move(SMALLTANK_SPEED);
 }
 
 void TankAI::aimAndFire(int target) {

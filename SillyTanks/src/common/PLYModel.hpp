@@ -10,6 +10,7 @@
 // common includes
 #include "Drawable.hpp"
 #include "Material.hpp"
+#include "TGATexture.hpp"
 
 #include <string>
 #include <vector>
@@ -17,7 +18,6 @@
 
 
 namespace game_space {
-
 
 /** PLY Model */
 class PLYModel : public Drawable
@@ -28,7 +28,7 @@ public:
 	 *
 	 * @param[in, out]	scene	Owning scene
 	 */
-    PLYModel( Scene &scene,int textureSize );
+    PLYModel( Scene &scene );
     
     /** Destructor */
     ~PLYModel();
@@ -38,7 +38,8 @@ public:
 	 *
 	 * @param[in]	file	File to load PLY data from
 	 */
-	void load( const std::string &file );
+    void load( const std::string &modelFile);
+	void load( const std::string &modelFile, const std::string &textureFile);
 
 	/** Draw the model to the screen. */
 	void draw() const;
@@ -58,9 +59,6 @@ protected:
 	GLuint _displayLists;
 
 	Material _material;
-	
-public:
-	int _textureSize;
 
 	Point _position;
 	struct PLYData
@@ -105,6 +103,7 @@ public:
 	
 private:
 	float _angle;
+	TGATexture* _texture;
 
 }; // class PLYModel
 

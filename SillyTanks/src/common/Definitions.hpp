@@ -58,6 +58,7 @@ namespace game_space {
 // Tower definitions
 //#################
 #define SMALLTOWER_TOWERBASE_MODEL "resources/GFX/models/smalltower_towerbase.ply"
+#define SMALLTOWER_VISION_DISTANCE 20;
 
 //#################
 //Tank textures definitions
@@ -83,6 +84,7 @@ namespace game_space {
 // Object map definitions
 //#################
 #define PINETREE_MODEL "resources/GFX/models/pinetree.ply"
+#define PINETREE_TEXTURE "resources/GFX/textures/cube.png"
 #define PINETREE_MAPNR 0
 
 #define PALMTREE_MODEL "resources/GFX/models/palmtree.ply"

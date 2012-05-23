@@ -24,7 +24,6 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 	float tankWidth = 1.0f;
 	float tankHeight = 0.6f;
 
-
 	Point frontRightUnder = Point(0,0,0);
 	Point frontLeftUnder = Point(-tankWidth,0,0);
 	Point frontRightUpper = Point(0,0,tankHeight);
@@ -49,8 +48,7 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 	_boundingBox = new BoundingBox(pointArray);
 
 	//create a new chassis / with texture size 400
-	_chassis = new PLYModel(_scene,400);
-	_chassis->load(SMALLTANK_CHASSIS_MODEL);
+	_chassis = new PLYModel(_scene);
 
 	//get a new turret
 	_turret = new Turret(_scene);
@@ -145,8 +143,9 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 		break;
 	}
 	}
-	_tankTexture = new TGATexture(tankTexture.c_str());
-
+	//_tankTexture = new TGATexture(tankTexture.c_str());
+	_chassis->load(SMALLTANK_CHASSIS_MODEL,tankTexture.c_str());
+	_turret->load(SMALLTANK_CHASSIS_MODEL,tankTexture.c_str());
 	reset();
 
 }
@@ -156,7 +155,6 @@ SmallTank::~SmallTank() {}
 void SmallTank::draw() const
 {
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
 	glPushMatrix();
 	glTranslatef(_position.x,_position.y,_position.z);
 
@@ -170,18 +168,17 @@ void SmallTank::draw() const
 	glTranslatef(0,-0.5,0);
 
 	_chassis->setRenderingParameters(_renderingParameters);
-	_tankTexture->setActive(true);
+	//_tankTexture->setActive(true);
 	_chassis->draw();
-	_tankTexture->setActive(false);
+	//_tankTexture->setActive(false);
 	glPopMatrix();
 
 	glPushMatrix();
 	_turret->setRenderingParameters(_renderingParameters);
 	Point tankPosition = getPosition();
 	_turret->setPosition(Point(tankPosition.x,tankPosition.y,tankPosition.z));
-	_tankTexture->setActive(true);
+	//_tankTexture->setActive(true);
 	_turret->draw();
-	_tankTexture->setActive(false);
 	glPopMatrix();
 }
 
