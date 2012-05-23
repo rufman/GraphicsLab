@@ -23,12 +23,13 @@ public:
 	}_targetType;
 private:
 	std::vector<BoundingBox> _boundingBoxes;
+	BoundingBox* _boundingBox;
 
 protected:
 	Point _position;
 public:
 	Target(Scene &scene,TargetType type);
-	virtual bool isHit(Projectile* projectile);
+	bool checkHit(Projectile* projectile_);
 	virtual bool collidesWithOtherTarget(Target* target);
 
 	//a projectile has a bounding radius to first check if the projectile is even near to the target
@@ -38,6 +39,12 @@ public:
 	void addBoundingBox(BoundingBox box);
 		std::vector<BoundingBox> getBoundingBoxes() const;
 	/** Draw the object to the screen. */
+
+		//TODO: I don't think it is necessary to have multiple boundinboxes.
+		//we don't gain efficiency or something for it an we would spent time
+		//which we could spend for other things
+
+
 	void draw() const;
 
 	void update(float seconds);
