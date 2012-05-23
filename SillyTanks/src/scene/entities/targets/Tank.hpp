@@ -60,6 +60,8 @@ public:
 
 	/** Draw the object to the screen. */
 	void draw() const;
+	virtual void drawShadow(const Point &lightPostion) const;
+	virtual void setNeighbors() const;
 
 	Point getMuzzlePosition() const;
 	float getShootingPower() const;

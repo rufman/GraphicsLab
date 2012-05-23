@@ -45,6 +45,14 @@ void Tank::draw() const
 
 }
 
+void Tank::drawShadow(const Point &lightPostion) const
+{
+
+}
+void Tank::setNeighbors() const{
+
+}
+
 Point Tank::getMuzzlePosition() const
 {
 	return _turret->getMuzzlePosition();

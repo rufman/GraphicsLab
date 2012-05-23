@@ -14,7 +14,7 @@
 namespace game_space {
 
 Tree::Tree(Scene & scene, const std::string &file) :
-		PLYModel(scene,400) {
+		PLYModel(scene, 400) {
 	load(file);
 }
 
@@ -87,6 +87,17 @@ void Tree::draw() const {
 //	glEnable(GL_LIGHTING);
 //	glDisable(GL_TEXTURE_GEN_T);
 //	glDisable(GL_TEXTURE_GEN_S);
+}
+
+void Tree::drawShadow(const Point &lightPosition) {
+	glPushMatrix();
+	glTranslatef(_position.x, _position.y, _position.z);
+	Utils::applyGLRotation(Vector3D(0.0f, 1.0f, 0.0f),
+			_scene.getTerrain().getNormal(_position));
+	glScalef(5, 5, 5);
+	glRotatef(-90, 1, 0, 0);
+	castShadow(&lightPosition);
+	glPopMatrix();
 }
 
 }

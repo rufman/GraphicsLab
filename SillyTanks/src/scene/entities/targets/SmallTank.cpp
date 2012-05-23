@@ -185,4 +185,13 @@ void SmallTank::draw() const
 	glPopMatrix();
 }
 
+void SmallTank::castShadow(const Point &lightPostion) const
+{
+	_chassis->castShadow(&lightPostion);
+}
+
+void SmallTank::setNeighbors() const {
+	_chassis->setNeighbors();
+}
+
 }
