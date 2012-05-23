@@ -22,34 +22,35 @@
 
 #include "../../AI/TankAI.hpp"
 
-
 namespace game_space {
 
-Tank::Tank(Scene &scene,bool isAIControlled) :Target( scene,Target::TANK ),_velocity(Vector3D( 0.0, 0.0, 1.0 )),_direction(0),_isAIControlled(isAIControlled) {
-	//the ai must know the tank to be able to controll it
-	_targetId = _scene.getMessageBus()->addNewClient();
-	_controllingAI = new TankAI(scene,_scene.getMessageBus()->getSubbusOfClient(_targetId));
-	_controllingAI->_tank = this;
+Tank::Tank(Scene &scene, bool isAIControlled) :
+		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(0), _isAIControlled(isAIControlled) {
+
+	if (isAIControlled) {
+		//the ai must know the tank to be able to controll it
+		std::vector<Message*>* messageBus = _scene.getMessageBus()->addNewClient();
+		_controllingAI = new TankAI(scene, messageBus);
+		_controllingAI->_tank = this;
+	}
 }
 
-Tank::~Tank() {}
+Tank::~Tank() {
+}
 
 void Tank::reset() {
 	_position = _scene.getTerrain().getRandomPointOnMap();
-	_velocity = Vector3D( 0.0, 0.0, 1.0 );
+	_velocity = Vector3D(0.0, 0.0, 1.0);
 	_direction = 0;
 }
 
-void Tank::draw() const
-{
+void Tank::draw() const {
 
 }
 
-Point Tank::getMuzzlePosition() const
-{
+Point Tank::getMuzzlePosition() const {
 	return _turret->getMuzzlePosition();
 }
-
 
 float Tank::getShootingPower() const {
 	return _turret->getPower();
@@ -59,8 +60,7 @@ void Tank::setShootingPower(float power) {
 	_turret->setPower(power);
 }
 
-float Tank::getElevation() const
-{
+float Tank::getElevation() const {
 	return _turret->getElevation();
 }
 
@@ -68,8 +68,7 @@ void Tank::setElevation(float elevation) {
 	_turret->setElevation(elevation);
 }
 
-float Tank::getAzimuth() const
-{
+float Tank::getAzimuth() const {
 	return _turret->getAzimuth();
 }
 
@@ -81,50 +80,32 @@ void Tank::move(float speed) {
 	_speed = speed;
 }
 
-float Tank::getDirection() const
-{
+float Tank::getDirection() const {
 	return _direction;
 }
 
 void Tank::setDirection(float angle) {
-	_velocity = Utils::rotate(angle, Vector3D( 0.0, 0.0, 1.0 ), Vector3D( 0.0, 1.0, 0.0 ) );
+	_velocity = Utils::rotate(angle, Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
 	_direction = angle;
 }
 
 void Tank::update(float seconds) {
-	float averagedHeight = _scene.getTerrain().getHeight(
-			Point(_position.x - 1, _position.y, _position.z - 1));
-	averagedHeight += _scene.getTerrain().getHeight(
-			Point(_position.x + 1, _position.y, _position.z - 1));
-	averagedHeight += _scene.getTerrain().getHeight(
-			Point(_position.x, _position.y, _position.z + 1));
+	float averagedHeight = _scene.getTerrain().getHeight(Point(_position.x - 1, _position.y, _position.z - 1));
+	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x + 1, _position.y, _position.z - 1));
+	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x, _position.y, _position.z + 1));
 	averagedHeight = averagedHeight / 3.0;
 
 	Vector3D gravity = Vector3D(0, 1, 0);
 	Vector3D realGravity = Vector3D(0, -1, 0);
-	Vector3D firstNormal = _scene.getTerrain().getNormal(
-			Point(_position.x - 1, _position.y, _position.z - 1));
-	Vector3D secondNormal = _scene.getTerrain().getNormal(
-			Point(_position.x + 1, _position.y, _position.z - 1));
-	Vector3D thirdNormal = _scene.getTerrain().getNormal(
-			Point(_position.x, _position.y, _position.z - 1));
-	Vector3D normal = Vector3D(
-			(firstNormal.x + secondNormal.x + thirdNormal.x) / 3.0,
-			(firstNormal.y + secondNormal.y + thirdNormal.y) / 3.0,
-			(firstNormal.z + secondNormal.z + thirdNormal.z) / 3.0);
+	Vector3D firstNormal = _scene.getTerrain().getNormal(Point(_position.x - 1, _position.y, _position.z - 1));
+	Vector3D secondNormal = _scene.getTerrain().getNormal(Point(_position.x + 1, _position.y, _position.z - 1));
+	Vector3D thirdNormal = _scene.getTerrain().getNormal(Point(_position.x, _position.y, _position.z - 1));
+	Vector3D normal = Vector3D((firstNormal.x + secondNormal.x + thirdNormal.x) / 3.0, (firstNormal.y + secondNormal.y + thirdNormal.y) / 3.0, (firstNormal.z + secondNormal.z + thirdNormal.z) / 3.0);
 
 	float angleGravityNormal = acos(Utils::dot(gravity, normal));
-	Vector3D relativeGravity = Vector3D(
-			angleGravityNormal * 15.0 * (realGravity.x + normal.x),
-			angleGravityNormal * (realGravity.y + normal.y),
-			angleGravityNormal * 15.0 * (realGravity.z + normal.z));
+	Vector3D relativeGravity = Vector3D(angleGravityNormal * 15.0 * (realGravity.x + normal.x), angleGravityNormal * (realGravity.y + normal.y), angleGravityNormal * 15.0 * (realGravity.z + normal.z));
 
-	Point nextPosition(
-			_position.x
-					+ (_velocity.x * _speed * seconds
-							+ relativeGravity.x * seconds), averagedHeight,
-			_position.z + (_velocity.z * _speed * seconds
-					+ relativeGravity.z * seconds));
+	Point nextPosition(_position.x + (_velocity.x * _speed * seconds + relativeGravity.x * seconds), averagedHeight, _position.z + (_velocity.z * _speed * seconds + relativeGravity.z * seconds));
 
 	if (_scene.getTerrain().checkBorder(nextPosition)) {
 		_speed = 0;
@@ -139,42 +120,25 @@ void Tank::update(float seconds) {
 	_speed = 0;
 }
 
-LookAt Tank::getLookAt() const
-{
+LookAt Tank::getLookAt() const {
 	Point from, to;
 
-	const Vector3D &velocity = Utils::rotate(_turret->getAzimuth(),Vector3D(0,0,-1),Vector3D(0,1,0));
+	const Vector3D &velocity = Utils::rotate(_turret->getAzimuth(), Vector3D(0, 0, -1), Vector3D(0, 1, 0));
 	Vector3D direction = velocity;
-	Utils::normalize( direction );
+	Utils::normalize(direction);
 	to = _position;
-	from.x = to.x - direction.x*10;
-	from.z = to.z - direction.z*10;
+	from.x = to.x - direction.x * 10;
+	from.z = to.z - direction.z * 10;
 	from.y = 10;
 
-	return LookAt( from, to, Vector3D(0,1,0) );
+	return LookAt(from, to, Vector3D(0, 1, 0));
 }
 
-bool Tank::isAIControlled() const
-{
+bool Tank::isAIControlled() const {
 	return _isAIControlled;
 }
 
-void Tank::setPosition(Point position)
-{
-	_position = position;
-}
-Point Tank::getPosition() const
-{
-	return _position;
-}
-
-int Tank::getID() const
-{
-	return _targetId;
-}
-
-TankAI* Tank::getAI() const
-{
+TankAI* Tank::getAI() const {
 	return _controllingAI;
 }
 
@@ -185,47 +149,29 @@ void Tank::fireBullet() {
 	bullet->setPosition(getMuzzlePosition());
 
 	float velocityScale = 30;
-	Vector3D velocity(
-			-velocityScale * getShootingPower()
-					* std::cos(Utils::toRadian(getElevation()))
-					* std::sin(Utils::toRadian(-getAzimuth())),
-			velocityScale * getShootingPower()
-					* std::sin(Utils::toRadian(getElevation())),
-			-velocityScale * getShootingPower()
-					* std::cos(Utils::toRadian(getElevation()))
-					* std::cos(Utils::toRadian(-getAzimuth())));
+	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	bullet->setVelocity(velocity);
 
 	_scene._bullets.push_back(bullet);
 }
 
 void Tank::fireMissile() {
-		Missile* missile = new Missile(_scene);
+	Missile* missile = new Missile(_scene);
 
-		missile->setPosition(getMuzzlePosition());
+	missile->setPosition(getMuzzlePosition());
 
-		Vector3D velocity(
-				-getShootingPower()
-						* std::cos(Utils::toRadian(getElevation()))
-						* std::sin(Utils::toRadian(-getAzimuth())),
-				getShootingPower()
-						* std::sin(Utils::toRadian(getElevation())),
-				-getShootingPower()
-						* std::cos(Utils::toRadian(getElevation()))
-						* std::cos(Utils::toRadian(-getAzimuth())));
-		missile->setVelocity(velocity);
+	Vector3D velocity(-getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), getShootingPower() * std::sin(Utils::toRadian(getElevation())), -getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
+	missile->setVelocity(velocity);
 
-		_scene.getSoundEngine().playExplosionSound();
-		_scene._missiles.push_back(missile);
+	_scene.getSoundEngine().playExplosionSound();
+	_scene._missiles.push_back(missile);
 }
 
-Tank::SELECTEDWEAPON Tank::getSelectedWeapon()
-{
+Tank::SELECTEDWEAPON Tank::getSelectedWeapon() {
 	return _selectedWeapon;
 }
 
-void Tank::setSelectedWeapon(SELECTEDWEAPON weapon)
-{
+void Tank::setSelectedWeapon(SELECTEDWEAPON weapon) {
 	_selectedWeapon = weapon;
 }
 

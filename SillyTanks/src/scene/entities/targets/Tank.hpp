@@ -35,9 +35,6 @@ protected:
 
 	PLYModel* _chassis;
 
-	/** Ship position */
-	Point _position;
-
 	/** Ship velocity */
 	Vector3D _velocity;
 
@@ -75,9 +72,6 @@ public:
 	float getDirection() const;
 	void setDirection(float angle);
 	LookAt getLookAt() const;
-	void setPosition(Point position);
-	Point getPosition() const;
-	int getID() const;
 	bool isAIControlled() const;
 	TankAI* getAI() const;
 	void fireBullet();

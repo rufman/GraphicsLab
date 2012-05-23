@@ -10,7 +10,7 @@
 
 namespace game_space {
 
-class SmallTower: public game_space::Tower {
+class SmallTower: public Tower {
 public:
 	SmallTower(Scene &scene,bool isAIControlled);
 		virtual ~SmallTower();

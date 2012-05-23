@@ -58,6 +58,7 @@ namespace game_space {
 // Tower definitions
 //#################
 #define SMALLTOWER_TOWERBASE_MODEL "resources/GFX/models/smalltower_towerbase.ply"
+#define SMALLTOWER_VISION_DISTANCE 20;
 
 //#################
 //Tank textures definitions

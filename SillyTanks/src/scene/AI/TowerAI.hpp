@@ -5,10 +5,14 @@
 #ifndef TOWERAI_H_
 #define TOWERAI_H_
 
-#include "Message.hpp"
-#include "../entities/targets/Tower.hpp"
+#include <vector>
 
 namespace game_space {
+class Target;
+class Tower;
+class Message;
+class Scene;
+class Point;
 
 class TowerAI {
 public:
@@ -18,7 +22,7 @@ public:
 
 	std::vector<Message*>* _aiMessages;
 	Tower* _tower;
-	int _currentTarget;
+	Target* _currentTarget;
 	std::vector<Point>* _path;
 	Scene& _scene;
 public:
@@ -29,10 +33,10 @@ public:
 	void brainTick();
 
 	//if the conditions are met, the ai switches the strategy
-	void switchStrategy(TOWERAI_STRATEGY strategy, int target);
+	void switchStrategy(TOWERAI_STRATEGY strategy, Target* target);
 
 	//picks the target that sense has found from the messages or returns -1 if no target has been found.
-	int pickTarget();
+	Target* pickTarget();
 
 	//sense processes the messages sent to the ai, that means for instance when you hear something, the ai is allowed to react on this.
 	void sense();

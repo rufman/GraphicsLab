@@ -25,12 +25,8 @@ protected:
 
 	PLYModel* _towerBase;
 
-	/** Tower position */
-	Point _position;
-
 	float _baseWidth;
 
-	int _targetId;
 	TowerAI* _controllingAI;
 	bool _isAIControlled;
 
@@ -56,9 +52,6 @@ public:
 	float getDirection() const;
 	void setDirection(float angle);
 	LookAt getLookAt() const;
-	void setPosition(Point position);
-	Point getPosition() const;
-	int getID() const;
 	bool isAIControlled() const;
 	TowerAI* getAI() const;
 	void fireBullet();
