@@ -61,6 +61,8 @@ protected:
 	Material _material;
 
 	Point _position;
+
+public:
 	struct PLYData
 	{
 		std::vector<Point> vertices;
