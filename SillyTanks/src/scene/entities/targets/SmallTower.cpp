@@ -16,7 +16,7 @@ SmallTower::SmallTower(Scene & scene, bool isAIControlled) :
 
 	//create a new tower base
 	_towerBase = new PLYModel(_scene,400);
-	_towerBase->load(SMALLTOWER_TOWERBASE_MODEL);
+	_towerBase->load(SMALLTOWER_TOWERBASE_MODEL,SMALLTANK_TEXTURE2);
 
 	//get a new turret
 	_turret = new Turret(_scene);

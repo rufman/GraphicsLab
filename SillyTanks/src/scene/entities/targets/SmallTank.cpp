@@ -167,16 +167,16 @@ void SmallTank::draw() const
 	glTranslatef(0,-0.5,0);
 
 	_chassis->setRenderingParameters(_renderingParameters);
-	_tankTexture->setActive(true);
+	//_tankTexture->setActive(true);
 	_chassis->draw();
-	_tankTexture->setActive(false);
+	//_tankTexture->setActive(false);
 	glPopMatrix();
 
 	glPushMatrix();
 	_turret->setRenderingParameters(_renderingParameters);
 	Point tankPosition = getPosition();
 	_turret->setPosition(Point(tankPosition.x,tankPosition.y,tankPosition.z));
-	_tankTexture->setActive(true);
+	//_tankTexture->setActive(true);
 	_turret->draw();
 	glPopMatrix();
 }
