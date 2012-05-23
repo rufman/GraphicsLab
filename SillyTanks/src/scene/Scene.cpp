@@ -424,7 +424,7 @@ void Scene::drawScene() {
 	//the bullets should not use toon shading
 	//_shadingEngine->clearShaders();
 	glPushMatrix();
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();++projectileIter) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
