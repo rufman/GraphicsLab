@@ -1,21 +1,13 @@
-/**
- * application.hpp
-* See application.cpp
- */
-
 #ifndef GAME_APPLICATION_HPP
 #define GAME_APPLICATION_HPP
-
 
 // Global definitions include
 #include "../common/Definitions.hpp"
 
-// Includes
+// std includes
 #include <string>
 
-
 namespace game_space {
-
 
 // Forward declarations
 class Window;
@@ -24,17 +16,9 @@ class Window;
 class Application
 {
 public:
-	//###########
-	//Public members
-	//###########
-
     // Parameters
     struct Parameters
     {
-    	//#######
-    	// Members
-    	//#######
-
     	// Title of the application window
         std::string windowTitle;
 		
@@ -47,10 +31,6 @@ public:
 		//water height
 		float waterHeight;
 
-    	//#######
-    	// Methods
-    	//#######
-
 		// Constructor of parameters
         Parameters();
 
@@ -58,9 +38,6 @@ public:
         void parse( int argc, char **argv );
     };
 
-    //##########
-    // Public methods
-    //##########
     /**
      * Get the singleton instance.
      *
@@ -91,19 +68,12 @@ public:
     int run();
     
 private:
-    //###########
-    //Private Methods
-    //###########
 
     // Constructor
     Application();
     
-    /** Destructor */
+    // Destructor
     ~Application();    
-
-    //##########
-    //Public members
-    //##########
 
     // Singleton instance
     static Application *_instance;
@@ -115,9 +85,5 @@ private:
     Window *_mainWindow;    
     
 }; // class Application
-
-
 }
-
-
 #endif // GRAPHICSLAB_APPLICATION_HPP

@@ -5,12 +5,14 @@
 // Class declaration include
 #include "Application.hpp"
 
-// Includes
-#include "../common/Exception.hpp"
-#include "../common/GLIncludes.hpp"
+//windowing includes
 #include "../windowing/WindowManager.hpp"
 
-#include <cstdlib>
+// common includes
+#include "../common/Exception.hpp"
+#include "../common/GLIncludes.hpp"
+
+// std includes
 #include <iostream>
 #include <stdio.h>
 
@@ -66,12 +68,10 @@ void Application::initialize(int argc, char **argv) {
 
 	_parameters.parse(argc, argv);
 
-	// Initialize GLUT
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-
 	Window::Parameters windowParameters;
 	windowParameters.title = _parameters.windowTitle;
+	windowParameters.argc = argc;
+	windowParameters.argv = argv;
 	_mainWindow = windowManager.createWindow(windowParameters);
 }
 

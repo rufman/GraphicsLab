@@ -9,7 +9,9 @@
 // common includes
 #include "../common/GLIncludes.hpp"
 #include "../common/Exception.hpp"
-#include <stdio.h>
+
+//std includes
+#include <iostream>
 
 namespace game_space {
 
@@ -159,6 +161,11 @@ WindowManager::~WindowManager() {
 }
 
 Window *WindowManager::createWindow(Window::Parameters &parameters) {
+	// Initialize GLUT
+	glutInit(&parameters.argc, parameters.argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	std::cout << "WindowManager initialized glut.\n";
+
 	glutInitWindowPosition(parameters.posX, parameters.posY);
 	glutInitWindowSize(parameters.width, parameters.height);
 	// Create GLUT Window
@@ -179,8 +186,8 @@ Window *WindowManager::createWindow(Window::Parameters &parameters) {
 	glutKeyboardFunc(__keyPressed); // Tell GLUT to use the method "keyPressed" for key presses
 	glutKeyboardUpFunc(__keyUp); // Tell GLUT to use the method "keyUp" for key up events
 
-	glutSpecialFunc(__specialKeyPressed); // Tell GLUT to use the method "keySpecial" for special key presses
-	glutSpecialUpFunc(__specialKeyUp); // Tell GLUT to use the method "keySpecialUp" for special up key events
+	glutSpecialFunc(__specialKeyPressed); // Tell GLUT to use the method "specialKeyPressed" for special key presses
+	glutSpecialUpFunc(__specialKeyUp); // Tell GLUT to use the method "specialKeyUp" for special up key events
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -188,19 +195,19 @@ Window *WindowManager::createWindow(Window::Parameters &parameters) {
 	if (GLEW_OK != glewInit()) {
 		throw Exception(std::string("Failed to initialize GLEW library"));
 	}
-
-	if (!glewIsSupported("GL_ARB_texture_rectangle")) {
-		throw Exception(std::string("GL_TEXTURE_RECTANGLE_ARB extension supported"));
+	else
+	{
+		std::cout << "WindowManager initialized glew.\n";
 	}
 
 	if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
-	{
-		printf("Ready for GLSL\n");
-	}
-	else {
-		printf("No GLSL support\n");
-		exit(1);
-	}
+		{
+			std::cout << "WindowManager says: GLSL support.\n";
+		}
+		else {
+			std::cout << "WindowManager says: No GLSL support.\n";
+			exit(1);
+		}
 
 	Window *window = new Window(parameters);
 	window->setID(windowID);

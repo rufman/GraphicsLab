@@ -1,16 +1,21 @@
 /**
  * window.cpp
- * This is the setup for our window. It handles some of the keypresses that do not have to be handled by the graphics.
+ * This is the setup for our window. It handles some of the key presses that do not have to be handled by the graphics.
  */
 
 // Class declaration include
 #include "Window.hpp"
 
-// Includes
-#include "../common/GLIncludes.hpp"
+//windowing includes
 #include "WindowManager.hpp"
+
+// common includes
+#include "../common/GLIncludes.hpp"
+
+//scene includes
 #include "../scene/Scene.hpp"
 
+//std includes
 #include <cstdlib>
 
 namespace game_space {
@@ -18,7 +23,10 @@ namespace game_space {
 Window::Window( const Parameters &parameters ) :
 _parameters( parameters )
 {
+	//set all the keys as not pressed
 	resetKeys();
+
+	//instatiate a new scene
 	_scene = new Scene( *this );
 }
 
@@ -29,6 +37,7 @@ Window::~Window()
 
 void Window::initialize()
 {
+	//initialize the new scene
 	_scene->initialize();
 }
 
