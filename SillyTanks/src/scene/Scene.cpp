@@ -342,6 +342,19 @@ void Scene::drawScene() {
 		light->apply();
 	}
 
+	GLuint fogMode[] = { GL_EXP, GL_EXP2, GL_LINEAR }; // Storage For Three Types Of Fog
+	GLuint fogfilter = 2; // Which Fog To Use
+	GLfloat fogColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f }; // Fog Col
+	//glClearColor(0.5f, 0.5f, 0.5f, 1.0f); // We'll Clear To The Color Of The Fog ( Modified )
+
+//	glFogi(GL_FOG_MODE, fogMode[fogfilter]); // Fog Mode
+//	glFogfv(GL_FOG_COLOR, fogColor); // Set Fog Color
+//	glFogf(GL_FOG_DENSITY, 0.025f); // How Dense Will The Fog Be
+//	glHint(GL_FOG_HINT, GL_NICEST); // Fog Hint Value
+//	glFogf(GL_FOG_START, 1.0f); // Fog Start Depth
+//	glFogf(GL_FOG_END, 5.0f); // Fog End Depth
+//	glEnable(GL_FOG); // Enables GL_FOG
+
 	// draw sun light
 	_sunLight->setPosition(_skyDome->getSunPosition());
 	_sunLight->apply();
