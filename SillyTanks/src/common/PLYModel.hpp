@@ -28,7 +28,7 @@ public:
 	 *
 	 * @param[in, out]	scene	Owning scene
 	 */
-    PLYModel( Scene &scene );
+    PLYModel( Scene &scene,int textureSize );
     
     /** Destructor */
     ~PLYModel();
@@ -40,13 +40,14 @@ public:
 	 */
     void load( const std::string &modelFile);
 	void load( const std::string &modelFile, const std::string &textureFile);
-	
-    /** Draw the model to the screen. */
-    void draw() const;
-    void setPosition(Point &position);
-    Point &getPosition();
-    std::vector<Point>* getVertices();
 
+	/** Draw the model to the screen. */
+	void draw() const;
+	void setPosition(Point &position);
+	Point &getPosition();
+	std::vector<Point>* getVertices();
+	void setNeighbors();
+	void castShadow(const Point *lightPosition);
 
 protected:
 	void buildDisplayLists();
@@ -59,6 +60,9 @@ protected:
 
 	Material _material;
 	
+public:
+	int _textureSize;
+
 protected:
 	Point _position;
 	struct PLYData
@@ -78,11 +82,16 @@ protected:
 		
 		std::vector<Vector3D> vertexNormals;
 		std::vector<Vector3D> triangleNormals;
-		
-		Point min, max;
-		
-		void reset()
+		std::vector<bool> triangleVisible;
+		struct Neighbors // a basic vector class
 		{
+			int neigh[3];
+		};
+		std::vector<Neighbors> triangleNeighbors;
+
+		Point min, max;
+
+		void reset() {
 			vertices.clear();
 			triangles.clear();
 			vertexNormals.clear();

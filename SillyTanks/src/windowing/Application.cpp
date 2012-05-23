@@ -49,6 +49,8 @@ void Application::Parameters::parse(int argc, char **argv) {
 			skyTextureFile = argv[argID++];
 		} else if (arg == "-t" || arg == "-terrain") {
 			terrainFilePrefix = argv[argID++];
+		} else if (arg == "-w" || arg == "-water"){
+			waterHeight = atof(argv[argID++]);
 		} else {
 			std::cerr << "WARNING: Unknown application parameter \"" << arg << "\"" << std::endl;
 		}

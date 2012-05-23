@@ -44,6 +44,9 @@ public:
 		//terrain file prefix for the ground
 		std::string terrainFilePrefix;
 		
+		//water height
+		float waterHeight;
+
     	//#######
     	// Methods
     	//#######

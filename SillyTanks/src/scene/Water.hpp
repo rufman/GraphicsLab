@@ -26,7 +26,7 @@ public:
 	 * @param[in]		width	Width of the sea
 	 * @param[in]		length	Length of the sea
 	 */
-	Water(Scene &scene, float width, float length);
+	Water(Scene &scene, float waterHeight, float width, float length);
 
 	/** Destructor */
 	~Water();
@@ -69,6 +69,8 @@ public:
 	 * the mirror texture, which can be applied to the mirror surface rectangle.
 	 */
 	void capture();
+
+	float waterHeightOffset;
 
 private:
 	/** Calculate vertex heights */

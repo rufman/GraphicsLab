@@ -18,7 +18,7 @@ namespace game_space {
 
 Missile::Missile(Scene &scene, float size) :
 		Drawable(scene), _size(size), _waitBeforeAimingCounter(0), _didDamage(false), _detonated(false) {
-	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getTankCam(), 100);
+	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getTankCam(), 50);
 	_missileSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_missileSmokeParticleEngine->setActive(true);
 	_missileExplosionParticleEngine = new ParticleEngine<Explosion>(_scene.getTankCam(), 1);
@@ -26,6 +26,8 @@ Missile::Missile(Scene &scene, float size) :
 }
 
 Missile::~Missile() {
+	delete _missileSmokeParticleEngine;
+	delete _missileExplosionParticleEngine;
 }
 
 void Missile::draw() const {
@@ -70,11 +72,11 @@ void Missile::draw() const {
 	glVertex3f(0, 0, _size);
 	glEnd();
 
-	glutSolidCone(_size / 2.0, 0, 10, 10);
+	glutSolidCone(_size / 2.0, 0, 1, 1);
 
 	glPushMatrix();
 	glTranslatef(0, 0, _size * 4.0);
-	glutSolidSphere(_size / 2.0, 10, 10);
+	glutSolidSphere(_size / 2.0, 1, 1);
 	glPopMatrix();
 
 	glTranslatef(-_position.x, -_position.y, -_position.z);

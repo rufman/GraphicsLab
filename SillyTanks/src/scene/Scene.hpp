@@ -50,6 +50,7 @@ class Bullet;
 class Terrain;
 class Water;
 
+
 /** Class that contains contents of the screen to display */
 class Scene
 {
@@ -87,6 +88,7 @@ public:
 	Camera3D* getTankCam();
 	Camera3D* getCurrentlyActiveCamera();
 	MessageBus* getMessageBus();
+	Water* getWater();
 
 private:
 	/**
