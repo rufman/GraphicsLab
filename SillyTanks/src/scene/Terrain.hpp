@@ -9,6 +9,9 @@
 //pathfinding includes
 #include "pathfinding/Node.hpp"
 
+//common includes
+#include "../common/PLYModel.hpp"
+
 
 //std includes
 #include <sstream>

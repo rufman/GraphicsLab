@@ -6,6 +6,9 @@
 //header include
 #include "Smoke.hpp"
 #include <math.h>
+#include <stdlib.h>
+#include "../../common/Types.hpp"
+#include "../../common/Definitions.hpp"
 
 namespace game_space {
 
