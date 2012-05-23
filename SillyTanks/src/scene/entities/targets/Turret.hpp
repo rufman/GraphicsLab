@@ -47,6 +47,7 @@ public:
         
     float getPower() const ;
     void setPower( float power );
+    void load( const std::string &modelFile, const std::string &textureFile);
 
     /**
      * Return the coordinates of the tip of the cannon muzzle with reference to cannon base

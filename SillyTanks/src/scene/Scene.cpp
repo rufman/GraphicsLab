@@ -63,8 +63,10 @@ void VMatMult(GLmatrix16f M, Point v) {
 	v.z = res[2];
 	v.w = res[3]; // Homogenous Coordinate
 }
+
 PLYModel* cross;
 Tree *treeModel;
+
 Scene::Scene(Window &window) :
 		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _sunLight(NULL) {
 	_soundEngine = SoundEngine();
@@ -94,9 +96,6 @@ Scene::~Scene() {
 
 void Scene::initialize() {
 
-	cross = new PLYModel(*this, 400);
-	treeModel = new PineTree(*this);
-	treeModel->setNeighbors();
 	// Initialize lights
 	Color lightAmbient(0.4, 0.4, 0.4);
 	Color lightSpecular(0.8, 0.8, 0.8);
@@ -145,7 +144,9 @@ void Scene::initialize() {
 
 	//add playertank to game
 	_playerTank = new SmallTank(*this, false);
+
 	_playerTank->setPosition(_terrain->getRandomPointOnMap());
+	_playerTank->setNeighbors();
 	_targets.push_back(_playerTank);
 
 	//add some tanks to the scene
@@ -176,10 +177,6 @@ void Scene::initialize() {
 	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
 
 	//_shadingEngine  = new ShadingEngine();
-
-	//cross->setRenderingParameters(_renderingParameters);
-	//cross->load("resources/GFX/models/square.ply");
-	//cross->setNeighbors();
 }
 
 void Scene::reset() {
@@ -349,7 +346,7 @@ void Scene::drawScene() {
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
 
-	/*GLmatrix16f Minv;
+	GLmatrix16f Minv;
 	 Point lightpos = _skyDome->getSunPosition();
 	 glClearDepth(1.0f); // Depth Buffer Setup
 	 glClearStencil(0); // Stencil Buffer Setup
@@ -358,13 +355,21 @@ void Scene::drawScene() {
 	 glCullFace(GL_BACK); // Set Culling Face To Back Face
 	 glEnable(GL_CULL_FACE); // Enable Culling
 
-	 //glLoadIdentity();
-	 glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
-	 VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
-	 glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
-	 */
+	//glLoadIdentity();
+	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
+	VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
+	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
 
-	//_terrain->drawShadows(lightpos);
+	// Draw the terrain
+	_terrain->setRenderingParameters(_renderingParameters);
+	_terrain->draw();
+
+	_terrain->drawShadows(lightpos);
+
+	//draw water
+	_water->setRenderingParameters(_renderingParameters);
+	_water->draw();
+
 	//Draw the targets
 	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
@@ -377,7 +382,7 @@ void Scene::drawScene() {
 			tower->draw();
 		}
 	}
-
+	//_playerTank->drawShadow(lightpos);
 	glPopMatrix();
 
 	//the bullets should not use toon shading
@@ -404,17 +409,6 @@ void Scene::drawScene() {
 	glPopMatrix();
 	_endNode->draw();
 
-	glPushMatrix();
-	//glTranslatef(0, 10, 0);
-	//glutSolidSphere(10,100,100);
-	//cross->draw();
-//	Point lightpos = Point(lp[0], lp[1], lp[2]);
-	//cross->castShadow(&lightpos);
-
-	//glTranslatef(0, 10, 0);
-	//treeModel->draw();
-	//treeModel->castShadow(&lightpos);
-	glPopMatrix();
 
 	glEnable(GL_LIGHTING); // Enable Lighting
 	glDepthMask(GL_TRUE); // Enable Depth Mask

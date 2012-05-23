@@ -14,6 +14,7 @@ public:
 	Tree(Scene &scene, const std::string &file);
 	virtual ~Tree();
 	void draw() const;
+	void drawShadow(const Point &lightPosition);
 };
 
 }
