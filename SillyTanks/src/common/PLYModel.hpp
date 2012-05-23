@@ -59,9 +59,6 @@ protected:
 	GLuint _displayLists;
 
 	Material _material;
-	
-public:
-	int _textureSize;
 
 protected:
 	Point _position;
