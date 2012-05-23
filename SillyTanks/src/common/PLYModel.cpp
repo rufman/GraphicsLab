@@ -22,6 +22,7 @@ PLYModel::PLYModel(Scene &scene) :
 	_material.setSpecular(Color(0.7, 0.7, 0.7));
 	_material.setEmission(Color(0.1, 0.1, 0.1));
 	_material.setShininess(16);
+	_texture=NULL;
 }
 
 PLYModel::~PLYModel() {
@@ -38,8 +39,8 @@ void PLYModel::load(const std::string &modelFile) {
 }
 
 void PLYModel::load(const std::string &modelFile, const std::string &textureFile) {
+	_texture = new TGATexture(textureFile.c_str());
 	load(modelFile);
-	_texture(textureFile);
 }
 
 void PLYModel::processFile(const std::string &file) {
@@ -103,7 +104,7 @@ void PLYModel::processFile(const std::string &file) {
 		f >> x >> y >> z;
 		if (_plyData.textured) {
 			f >> u >> v;
-			_plyData.textureCoords.push_back(Point(u, v, 0));
+			_plyData.textureCoords.push_back(Point(_texture->getWidth()*u, _texture->getHeight()*v, 0));
 		}
 		_plyData.vertices.push_back(Point(x, y, z));
 
@@ -171,8 +172,8 @@ void PLYModel::buildDisplayLists() {
 
 	glShadeModel(GL_FLAT);
 	_material.setActive();
-	if(_plyData.textured){
-		_texture.setActive(true);
+	if(_plyData.textured&&_texture){
+		_texture->setActive(true);
 	}
 	glBegin(GL_TRIANGLES);
 
@@ -201,8 +202,8 @@ void PLYModel::buildDisplayLists() {
 	}
 
 	glEnd();
-	if(_plyData.textured){
-		_texture.setActive(false);
+	if(_plyData.textured&&_texture){
+		_texture->setActive(false);
 	}
 	glEndList();
 
@@ -211,8 +212,8 @@ void PLYModel::buildDisplayLists() {
 
 	glShadeModel(GL_SMOOTH);
 	_material.setActive();
-	if(_plyData.textured){
-		_texture.setActive(true);
+	if(_plyData.textured&&_texture){
+		_texture->setActive(true);
 	}
 	glBegin(GL_TRIANGLES);
 
@@ -248,8 +249,8 @@ void PLYModel::buildDisplayLists() {
 	}
 
 	glEnd();
-	if(_plyData.textured){
-		_texture.setActive(false);
+	if(_plyData.textured&&_texture){
+		_texture->setActive(false);
 	}
 	glEndList();
 }

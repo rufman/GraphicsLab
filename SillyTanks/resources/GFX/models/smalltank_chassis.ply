@@ -1,6 +1,6 @@
 ply
 format ascii 1.0
-comment Created by Blender 2.60 (sub 0) - www.blender.org, source file: ''
+comment Created by Blender 2.63 (sub 0) - www.blender.org, source file: 'untitled.blend'
 element vertex 894
 property float x
 property float y

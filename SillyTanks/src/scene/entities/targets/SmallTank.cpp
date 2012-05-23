@@ -25,13 +25,9 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 	float tankHeight = 0.6f;
 	float chassisHeight = tankHeight;
 
-
-
-
-
 	//create a new chassis
 	_chassis = new PLYModel(_scene);
-	_chassis->load(SMALLTANK_CHASSIS_MODEL);
+	_chassis->load(SMALLTANK_CHASSIS_MODEL,SMALLTANK_TEXTURE2);
 
 	//get a new turret
 	_turret = new Turret(_scene);
@@ -61,7 +57,7 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 		break;
 	}
 	}
-	_tankTexture = new TGATexture(tankTexture.c_str());
+	//_tankTexture = new TGATexture(tankTexture.c_str());
 
 	reset();
 
@@ -72,7 +68,7 @@ SmallTank::~SmallTank() {}
 void SmallTank::draw() const
 {
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	_tankTexture->setActive(true);
+	//_tankTexture->setActive(true);
 	glPushMatrix();
 	glTranslatef(_position.x,_position.y,_position.z);
 
@@ -98,7 +94,7 @@ void SmallTank::draw() const
 	_turret->setPosition(Point(tankPosition.x,tankPosition.y+0.5,tankPosition.z));
 	_turret->draw();
 	glPopMatrix();
-	_tankTexture->setActive(false);
+	//_tankTexture->setActive(false);
 }
 
 }

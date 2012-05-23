@@ -98,7 +98,7 @@ protected:
 	
 private:
 	float _angle;
-	TGATexture _texture;
+	TGATexture* _texture;
 
 }; // class PLYModel
 
