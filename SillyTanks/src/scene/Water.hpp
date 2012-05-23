@@ -9,10 +9,10 @@
 // could not remove them
 #include "../common/Drawable.hpp"
 #include "../common/ScreenTexture.hpp"
+#include "../common/Material.hpp"
 
 namespace game_space {
 
-class Material;
 class Point;
 
 /** Water */
