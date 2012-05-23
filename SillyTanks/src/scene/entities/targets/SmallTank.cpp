@@ -14,6 +14,8 @@
 #include "../../../scene/Terrain.hpp"
 
 #include "../../AI/TankAI.hpp"
+#include "../collisiondetection/Projectile.hpp"
+#include <algorithm>
 
 namespace game_space {
 
@@ -36,7 +38,7 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 
 	Point* pointArray = new Point[8];
 
-	pointArray[0] = frontRightUnder;
+	pointArray[0] =  frontRightUnder;
 	pointArray[1] = frontLeftUnder;
 	pointArray[2] = frontRightUpper;
 	pointArray[3] = frontLeftUpper;
@@ -189,6 +191,86 @@ void SmallTank::castShadow(const Point &lightPostion) const
 
 void SmallTank::setNeighbors() const {
 	_chassis->setNeighbors();
+}
+
+
+bool Target::checkHit(Projectile* projectile_){
+
+	Point projectilePosition = projectile_->getPosition();
+
+
+	//compute maximum height of bounding box (max z point)
+
+	float maxHeight;
+
+	float tmp = std::max(_boundingBox->frontLeftUpper.z , _boundingBox->frontRightUpper.z);
+	float tmp2 = std::max(_boundingBox->rearLeftUpper.z , _boundingBox->rearRightUpper.z);
+
+	maxHeight = std::max(tmp, tmp2) + _position.z;
+
+
+	//compute minimum height of bounding box (min z point)
+
+	float minHeight;
+
+	tmp = std::min(_boundingBox->frontLeftUnder.z , _boundingBox->frontRightUnder.z);
+	tmp2 = std::min(_boundingBox->rearLeftUnder.z , _boundingBox->rearRightUnder.z);
+
+	minHeight = std::min(tmp, tmp2) + _position.z;
+
+
+	if(projectilePosition.z > maxHeight || projectilePosition.z < minHeight){
+
+		return false;
+	}
+
+	//if programm reaches this point...the projectile has an appropriate height
+
+
+	float max_x, min_x;
+
+
+	//compute max x point
+	tmp = std::max(_boundingBox->frontLeftUpper.x, _boundingBox->rearLeftUpper.x);
+	tmp2 = std::max(_boundingBox->frontRightUpper.x, _boundingBox->rearRightUpper.x);
+
+	max_x = std::max(tmp, tmp2);
+
+	//compute min x point
+	tmp = std::min(_boundingBox->frontLeftUpper.x, _boundingBox->rearLeftUpper.x);
+	tmp2 = std::min(_boundingBox->frontRightUpper.x, _boundingBox->rearRightUpper.x);
+
+	min_x = std::min(tmp, tmp2);
+
+
+	if(projectilePosition.x > max_x || projectilePosition.x < min_x){
+		return false;
+	}
+
+
+	float max_y, min_y;
+
+	//copmute max y point
+
+	tmp = std::max(_boundingBox->frontLeftUpper.y, _boundingBox->rearLeftUpper.y);
+	tmp2 = std::max(_boundingBox->frontRightUpper.y, _boundingBox->rearRightUpper.y);
+
+	max_y = std::max(tmp, tmp2);
+
+
+	//compute min y point
+
+	tmp = std::min(_boundingBox->frontLeftUpper.y, _boundingBox->rearLeftUpper.y);
+	tmp2 = std::min(_boundingBox->frontRightUpper.y, _boundingBox->rearRightUpper.y);
+
+	min_y = std::min(tmp, tmp2);
+
+	if(projectilePosition.y > max_y || projectilePosition.y < min_y){
+		return false;
+	}else{
+		return true;
+	}
+
 }
 
 }

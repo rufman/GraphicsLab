@@ -8,11 +8,9 @@
 
 //std includes
 #include <string>
-
+#include "../../common/Types.hpp"
 namespace game_space {
 
-class Point;
-class Vector3D;
 
 class Particle {
 public:

@@ -12,6 +12,15 @@ void Projectile::draw() const
 {
 
 }
+
+
+Point Projectile::getPosition(){
+	Point dummyPoint = Point(0,0,0);
+
+	return  dummyPoint;
+
+	//TODO: change this
+}
 }
 
 

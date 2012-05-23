@@ -23,7 +23,7 @@ public:
 
 private:
 	TGATexture* _tankTexture;
-	BoundingBox* _boundingBox;
+	//BoundingBox* _boundingBox;
 };
 
 }

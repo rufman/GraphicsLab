@@ -6,9 +6,7 @@
 
 namespace game_space {
 Target::Target(Scene &scene,TargetType type):Drawable(scene),_targetType(type),_position(Point(0,0,0)){}
-bool Target::isHit(Projectile* projectile){
-	return false;
-}
+
 bool Target::collidesWithOtherTarget(Target* target)
 {
 	return false;
