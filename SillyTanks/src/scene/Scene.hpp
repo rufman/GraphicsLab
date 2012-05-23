@@ -1,12 +1,7 @@
-/**
- * scene.hpp
- * See scene.cpp
- */
-
 #ifndef GRAPHICSLAB_SCENE_HPP
 #define GRAPHICSLAB_SCENE_HPP
 
-// commons includes
+// common includes
 #include "../common/Definitions.hpp"
 #include "../common/GLIncludes.hpp"
 #include "../common/Types.hpp"
@@ -17,24 +12,28 @@
 //shading engine include
 #include "illumination/shading/ShadingEngine.hpp"
 
-//illumination include
+//illumination includes
 #include "illumination/DirectionalLight.hpp"
 
 //particle engine includes
 #include "particleEngine/ParticleEngine.hpp"
 #include "particleEngine/Smoke.hpp"
 
+//collision detection includes
 #include "entities/collisiondetection/Projectile.hpp"
 #include "entities/collisiondetection/Target.hpp"
+
+//projectiles includes
 #include "entities/projectiles/Bullet.hpp"
 #include "entities/projectiles/Missile.hpp"
 
 //pathfinding includes
 #include "pathfinding/Node.hpp"
 
+//AI includes
 #include "AI/MessageBus.hpp"
 
-
+//std includes
 #include <vector>
 
 namespace game_space {
@@ -72,7 +71,7 @@ public:
 	/** Reset scene data */
 	void reset();
 
-	// EVENT HANDLERS
+	// event handlers
 	void onPaint();
 	void onResize( int width, int height );
 	void onMouseEntry( int state );
@@ -82,6 +81,8 @@ public:
 	void onVisible( int state );
 	void onTimer( int value );
 	void onIdle();
+
+	//getters and setters
 	Terrain& getTerrain() const {return *_terrain;}
 	SoundEngine getSoundEngine();
 	void setPlayerTank(Tank* tank);
@@ -91,6 +92,7 @@ public:
 	MessageBus* getMessageBus();
 	Water* getWater();
 	std::vector<Target*> getTargets();
+	Window& getWindow();
 
 private:
 	/**
@@ -105,20 +107,13 @@ private:
 	void drawScene();
 	void drawGrid();
 	void drawOverlay();
-	void fireBullet();
-	void fireMissile();
+
 	void handleKeyboardInput();
-	Window& getWindow();
-
-
 public:
 	std::vector<Target*> _targets;
 	std::vector<Projectile*> _projectiles;
-	std::vector<Tank*> _tanks;
-	std::vector<Missile*> _missiles;
-	std::vector<Bullet*> _bullets;
-
 private:
+
 	Window &_window;
 
 	SoundEngine _soundEngine;

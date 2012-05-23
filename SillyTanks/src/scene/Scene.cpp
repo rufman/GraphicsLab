@@ -195,16 +195,21 @@ void Scene::reset() {
 	_skyDome->reset();
 	_water->reset();
 
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-		(*targetIter)->reset();
-	}
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+		Projectile *projectile = *projectileIter;
+		if (projectile->_projectileType == Projectile::BULLET) {
+			Bullet* bullet = static_cast<Bullet*>(projectile);
+			projectileIter = _projectiles.erase(projectileIter);
+			delete bullet;
 
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end(); ++bulletIter) {
-		Bullet *bullet = *bulletIter;
-		delete bullet;
-	}
-	_bullets.clear();
+		}
+		if (projectile->_projectileType == Projectile::MISSILE) {
+			Missile* missile = static_cast<Missile*>(projectile);
 
+			projectileIter = _projectiles.erase(projectileIter);
+			delete missile;
+		}
+	}
 }
 
 void Scene::update(float seconds) {
@@ -212,6 +217,7 @@ void Scene::update(float seconds) {
 
 	_skyDome->update(seconds);
 	_water->update(seconds);
+
 	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
@@ -230,30 +236,32 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end();) {
-		Bullet *bullet = *bulletIter;
-		bullet->move(seconds);
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+		Projectile *projectile = *projectileIter;
+		if (projectile->_projectileType == Projectile::BULLET) {
+			Bullet* bullet = static_cast<Bullet*>(projectile);
+			bullet->move(seconds);
 
-		// Remove bullet if out of window
-		const Point &bulletPosition = bullet->getPosition();
+			// Remove bullet if out of window
+			const Point &bulletPosition = bullet->getPosition();
 
-		if ((bulletPosition.y < _terrain->getHeight(bulletPosition))) {
-			bulletIter = _bullets.erase(bulletIter);
-			_terrain->doDamageAt(bulletPosition, 0.05);
-			delete bullet;
-		} else {
-			++bulletIter;
+			if ((bulletPosition.y < _terrain->getHeight(bulletPosition))) {
+				projectileIter = _projectiles.erase(projectileIter);
+				_terrain->doDamageAt(bulletPosition, 0.05);
+				delete bullet;
+			} else {
+				++projectileIter;
+			}
 		}
-	}
-
-	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end();) {
-		(*missileIter)->move(seconds);
-		if ((*missileIter)->isDetonated()) {
-			Missile* missile = *missileIter;
-			missileIter = _missiles.erase(missileIter);
-			delete missile;
-		} else {
-			missileIter++;
+		if (projectile->_projectileType == Projectile::MISSILE) {
+			Missile* missile = static_cast<Missile*>(projectile);
+			missile->move(seconds);
+			if (missile->isDetonated()) {
+				projectileIter = _projectiles.erase(projectileIter);
+				delete missile;
+			} else {
+				++projectileIter;
+			}
 		}
 	}
 
@@ -347,13 +355,13 @@ void Scene::drawScene() {
 	_water->draw();
 
 	GLmatrix16f Minv;
-	 Point lightpos = _skyDome->getSunPosition();
-	 glClearDepth(1.0f); // Depth Buffer Setup
-	 glClearStencil(0); // Stencil Buffer Setup
-	 glEnable(GL_DEPTH_TEST); // Enables Depth Testing
-	 glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
-	 glCullFace(GL_BACK); // Set Culling Face To Back Face
-	 glEnable(GL_CULL_FACE); // Enable Culling
+	Point lightpos = _skyDome->getSunPosition();
+	glClearDepth(1.0f); // Depth Buffer Setup
+	glClearStencil(0); // Stencil Buffer Setup
+	glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+	glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+	glCullFace(GL_BACK); // Set Culling Face To Back Face
+	glEnable(GL_CULL_FACE); // Enable Culling
 
 	//glLoadIdentity();
 	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
@@ -388,27 +396,30 @@ void Scene::drawScene() {
 	//the bullets should not use toon shading
 	//_shadingEngine->clearShaders();
 	glPushMatrix();
-	// Draw bullets
-	for (std::vector<Bullet*>::iterator bulletIter = _bullets.begin(); bulletIter != _bullets.end(); ++bulletIter) {
-		Bullet *bullet = *bulletIter;
-		bullet->setRenderingParameters(_renderingParameters);
-		bullet->draw();
-	}
+	for(std::vector<Projectile*>::iterator projectileIter = _projectiles.begin();projectileIter != _projectiles.end();)
+		{
+			Projectile *projectile = *projectileIter;
+			if(projectile->_projectileType == Projectile::BULLET)
+			{
+				Bullet* bullet = static_cast<Bullet*>(projectile);
+				bullet->setRenderingParameters(_renderingParameters);
+				bullet->draw();
+			}
+			if(projectile->_projectileType == Projectile::MISSILE)
+			{
+				Missile* missile = static_cast<Missile*>(projectile);
+				missile->setRenderingParameters(_renderingParameters);
+				missile->draw();
+			}
+		}
 
-	glPopMatrix();
 
-	glPushMatrix();
-
-	for (std::vector<Missile*>::iterator missileIter = _missiles.begin(); missileIter != _missiles.end(); missileIter++) {
-		(*missileIter)->draw();
-	}
 	glPopMatrix();
 
 	glPushMatrix();
 	_tankSmokeParticleEngine->draw();
 	glPopMatrix();
 	_endNode->draw();
-
 
 	glEnable(GL_LIGHTING); // Enable Lighting
 	glDepthMask(GL_TRUE); // Enable Depth Mask

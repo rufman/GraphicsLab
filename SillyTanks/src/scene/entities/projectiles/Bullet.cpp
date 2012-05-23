@@ -12,7 +12,7 @@
 namespace game_space {
 
 Bullet::Bullet( Scene &scene, float size ) :
-Drawable( scene ),
+Projectile( scene,Projectile::BULLET,0 ),
 _size( size ) {}
 
 Bullet::~Bullet() {}

@@ -161,7 +161,7 @@ void Tank::fireBullet() {
 	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	bullet->setVelocity(velocity);
 
-	_scene._bullets.push_back(bullet);
+	_scene._projectiles.push_back(bullet);
 }
 
 void Tank::fireMissile() {
@@ -173,7 +173,7 @@ void Tank::fireMissile() {
 	missile->setVelocity(velocity);
 
 	_scene.getSoundEngine().playExplosionSound();
-	_scene._missiles.push_back(missile);
+	_scene._projectiles.push_back(missile);
 }
 
 Tank::SELECTEDWEAPON Tank::getSelectedWeapon() {

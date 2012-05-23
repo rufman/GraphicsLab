@@ -9,18 +9,19 @@
 #define MISSILE_HPP_
 
 // Base class include
-#include "../../../common/Drawable.hpp"
+#include "../collisiondetection/Projectile.hpp"
 
-// Includes
+// common includes
 #include "../../../common/Types.hpp"
 
+//particle engine includes
 #include "../../particleEngine/ParticleEngine.hpp"
 #include "../../particleEngine/Smoke.hpp"
 #include "../../particleEngine/Explosion.hpp"
 
 namespace game_space {
 
-class Missile : public Drawable
+class Missile : public Projectile
 {
 public:
 	/**

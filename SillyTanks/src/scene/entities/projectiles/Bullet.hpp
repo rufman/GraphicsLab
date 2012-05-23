@@ -7,14 +7,14 @@
 #define GAME_BULLET_HPP
 
 // Base class include
-#include "../../../common/Drawable.hpp"
+#include "../collisiondetection/Projectile.hpp"
 
-// Includes
+// common includes
 #include "../../../common/Types.hpp"
 
 namespace game_space {
 
-class Bullet : public Drawable
+class Bullet : public Projectile
 {
 public:
 	/**

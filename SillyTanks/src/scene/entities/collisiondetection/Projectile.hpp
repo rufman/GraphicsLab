@@ -13,12 +13,15 @@ namespace game_space {
 
 class Projectile:public Drawable {
 public:
+	enum ProjectileType
+	{
+		BULLET,
+		MISSILE
+	}_projectileType;
 	//this is necessary for the AI to know what tank took a shot on it.
 	int _projectileOwnerID;
 public:
-	Projectile(Scene& scene,int projectileOwnerID) :Drawable(scene),
-			_projectileOwnerID(projectileOwnerID) {
-	}
+	Projectile(Scene& scene,ProjectileType projectileType,int projectileOwnerId);
 
 	//a projectile has a bounding radius to first check if the projectile is even near to the target
 	//(check if distance between projectile and target is higher than bounding radiuses added up)
