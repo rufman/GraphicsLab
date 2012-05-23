@@ -119,25 +119,11 @@ void SkyDome::reset()
 
 void SkyDome::update( float seconds )
 {
-	/////////////////////////////////////////////////////////////
-	////////////////////// GRAPHICS LAB 07 //////////////////////
-	/////////////////////////////////////////////////////////////
-	// Implement code here to update _textureDisplacement, so that
-	// the sky can be given the rotating motion effect using this variable.
-	/////////////////////////////////////////////////////////////
 	_textureDisplacement += seconds;
 }
 
 Point SkyDome::getSunPosition() const
 {
-	/////////////////////////////////////////////////////////////
-	////////////////////// GRAPHICS LAB 07 //////////////////////
-	/////////////////////////////////////////////////////////////
-	// Return a position that maps to the place where there is
-	// the sun shape on the texture image. You can find this by
-	// checking the pixel position on the texture image, and finding
-	// the approximate place on the sphere surface.
-	/////////////////////////////////////////////////////////////
 	float heightAngle = Utils::PI/3.1f;
 	float sunPosition = Utils::PI/0.955;
 	float sun_radius = _radius*15/16;
@@ -170,7 +156,7 @@ void SkyDome::draw() const
 	// texture needs to be applied with _texture->setActive( true )
 	// and disabled afterwards with a setActive( false ), and for
 	// each vertex proper glTexCoord* calls need to be made.
-	// Also, you have to use _textureDisplacement variable to 
+	// Also, you have to use _textureDisplacement variable to
 	// give the rotation effect
 	/////////////////////////////////////////////////////////////
 

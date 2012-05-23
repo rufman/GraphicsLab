@@ -361,6 +361,14 @@ void Scene::drawScene() {
 	//the terrain should use toon shading
 	//_shadingEngine->applyToonShader();
 
+	// Draw the terrain
+	_terrain->setRenderingParameters(_renderingParameters);
+	_terrain->draw();
+
+	//draw water
+	_water->setRenderingParameters(_renderingParameters);
+	_water->draw();
+
 	/*GLmatrix16f Minv;
 	Point lightpos = _skyDome->getSunPosition();
 	glClearDepth(1.0f); // Depth Buffer Setup
@@ -375,15 +383,8 @@ void Scene::drawScene() {
 	VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
 	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
 */
-	// Draw the terrain
-	_terrain->setRenderingParameters(_renderingParameters);
-	_terrain->draw();
 
 	//_terrain->drawShadows(lightpos);
-
-	//draw water
-	_water->setRenderingParameters(_renderingParameters);
-	_water->draw();
 
 	//Draw the targets
 	for (std::vector<Target*>::iterator targetIter = _targets.begin();
@@ -434,8 +435,8 @@ void Scene::drawScene() {
 //	Point lightpos = Point(lp[0], lp[1], lp[2]);
 	//cross->castShadow(&lightpos);
 
-	glTranslatef(0, 10, 0);
-	treeModel->draw();
+	//glTranslatef(0, 10, 0);
+	//treeModel->draw();
 	//treeModel->castShadow(&lightpos);
 	glPopMatrix();
 
@@ -839,5 +840,10 @@ void Scene::drawWaterImage() {
 	glPushMatrix();
 	_skyDome->draw();
 	glPopMatrix();
+}
+
+Water* Scene::getWater()
+{
+	return _water;
 }
 }

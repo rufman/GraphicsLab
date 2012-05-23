@@ -88,6 +88,7 @@ public:
 	Camera3D* getTankCam();
 	Camera3D* getCurrentlyActiveCamera();
 	MessageBus* getMessageBus();
+	Water* getWater();
 
 private:
 	/**
