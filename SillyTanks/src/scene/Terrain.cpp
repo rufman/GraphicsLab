@@ -14,12 +14,17 @@
 
 //pathfinding includes
 #include "pathfinding/Node.hpp"
+
+//targets includes
 #include "entities/targets/PineTree.hpp"
 #include "entities/targets/RoundTree.hpp"
 #include "entities/targets/PalmTree.hpp"
+
+//scene includes
 #include "Scene.hpp"
 #include "Water.hpp"
 
+//std includes
 #include <sstream>
 #include <cmath>
 #include <iostream>

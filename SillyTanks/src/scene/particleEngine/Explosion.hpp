@@ -8,10 +8,10 @@
 //base class include
 #include "Particle.hpp"
 
-//common includes
-#include "../../common/Types.hpp"
-
 namespace game_space {
+
+class Point;
+class Vector3D;
 
 class Explosion:virtual public Particle {
 public:

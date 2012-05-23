@@ -9,17 +9,15 @@
 //common includes
 #include "../common/Exception.hpp"
 #include "../common/Utils.hpp"
-
-//windowing includes
-#include "../windowing/Application.hpp"
-#include "../windowing/Window.hpp"
-
-//common includes
 #include "../common/Camera2D.hpp"
 #include "../common/Camera3D.hpp"
 #include "../common/TextBox.hpp"
 #include "../common/SoundEngine.hpp"
 #include "../common/PLYModel.hpp"
+
+//windowing includes
+#include "../windowing/Application.hpp"
+#include "../windowing/Window.hpp"
 
 //scene includes
 #include "SkyDome.hpp"
@@ -37,16 +35,30 @@
 
 #include "AI/TankAI.hpp"
 #include "AI/TowerAI.hpp"
+#include "AI/MessageBus.hpp"
+
+//targets includes
+#include "entities/targets/PineTree.hpp"
 
 //pathfinding includes
 #include "pathfinding/Node.hpp"
 
+//particle engine includes
+#include "particleEngine/ParticleEngine.hpp"
+#include "particleEngine/Smoke.hpp"
+
+//collision detection includes
+#include "entities/collisiondetection/Projectile.hpp"
+
+//projectile includes
+#include "entities/projectiles/Missile.hpp"
+#include "entities/projectiles/Bullet.hpp"
+
+//std includes
 #include <sstream>
 #include <cmath>
 #include <iostream>
 #include <vector>
-
-#include "entities/targets/PineTree.hpp"
 
 namespace game_space {
 
@@ -120,7 +132,8 @@ void Scene::initialize() {
 	glEnable(GL_LINE_SMOOTH);
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-	float ambientLight[4] = { 0.2, 0.2, 0.2, 1.0 };
+	//ambient light of the scene
+	float ambientLight[4] = { 0.5, 0.5, 0.5, 1.0 };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

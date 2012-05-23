@@ -6,15 +6,14 @@
 #ifndef GRAPHICSLAB_WATER_HPP
 #define GRAPHICSLAB_WATER_HPP
 
-// commons includes
+// could not remove them
 #include "../common/Drawable.hpp"
-#include "../common/Types.hpp"
 #include "../common/ScreenTexture.hpp"
-#include "../common/Material.hpp"
 
 namespace game_space {
 
 class Material;
+class Point;
 
 /** Water */
 class Water: public Drawable {

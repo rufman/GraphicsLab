@@ -7,7 +7,6 @@
 
 //common includes
 #include "../../common/Drawable.hpp"
-#include "../../common/GLIncludes.hpp"
 #include "../../common/Material.hpp"
 
 namespace game_space {

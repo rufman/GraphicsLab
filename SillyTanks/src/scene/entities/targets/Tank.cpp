@@ -21,6 +21,7 @@
 #include "../projectiles/Missile.hpp"
 
 #include "../../AI/TankAI.hpp"
+#include "../../AI/MessageBus.hpp"
 
 namespace game_space {
 

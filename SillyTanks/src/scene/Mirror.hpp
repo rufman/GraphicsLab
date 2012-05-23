@@ -1,22 +1,19 @@
-/*
- * Mirror.hpp
- *
- *  Created on: 22.05.2012
- *      Author: gregory
- */
-
 #ifndef MIRROR_HPP_
 #define MIRROR_HPP_
 
 // commons includes
+
+ //Could not remove those
 #include "../common/Drawable.hpp"
-#include "../common/Types.hpp"
 #include "../common/ScreenTexture.hpp"
-#include "../common/Material.hpp"
+
 
 namespace game_space {
 
 class Material;
+class Scene;
+class Point;
+
 
 /** Water */
 class Mirror: public Drawable {

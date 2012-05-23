@@ -9,7 +9,6 @@
 
 // common include
 #include "../common/Drawable.hpp"
-#include "../common/Types.hpp"
 
 #include <string>
 #include <vector>

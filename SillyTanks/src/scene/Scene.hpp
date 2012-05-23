@@ -1,37 +1,11 @@
 #ifndef GRAPHICSLAB_SCENE_HPP
 #define GRAPHICSLAB_SCENE_HPP
 
-// common includes
-#include "../common/Definitions.hpp"
+//somehow I could not remove them
 #include "../common/GLIncludes.hpp"
 #include "../common/Types.hpp"
 #include "../common/Time.hpp"
-#include "../common/TGATexture.hpp"
 #include "../common/SoundEngine.hpp"
-
-//shading engine include
-#include "illumination/shading/ShadingEngine.hpp"
-
-//illumination includes
-#include "illumination/DirectionalLight.hpp"
-
-//particle engine includes
-#include "particleEngine/ParticleEngine.hpp"
-#include "particleEngine/Smoke.hpp"
-
-//collision detection includes
-#include "entities/collisiondetection/Projectile.hpp"
-#include "entities/collisiondetection/Target.hpp"
-
-//projectiles includes
-#include "entities/projectiles/Bullet.hpp"
-#include "entities/projectiles/Missile.hpp"
-
-//pathfinding includes
-#include "pathfinding/Node.hpp"
-
-//AI includes
-#include "AI/MessageBus.hpp"
 
 //std includes
 #include <vector>
@@ -40,16 +14,48 @@ namespace game_space {
 
 // Forward declarations
 class Window;
+
+//common forward declarations
 class Camera2D;
 class Camera3D;
-class Tank;
+
+/*
+ Could not only use them. Don't know why.
+class Time;
+class RenderingParameters;
+class SoundEngine;
+*/
+
+//illumination forward declarations
 class Light;
+class DirectionalLight;
+
+//scene forward declarations
+class Tank;
 class SkyDome;
-class Bullet;
 class Terrain;
 class Water;
-class Target;
 
+//projectile forward declarations
+class Bullet;
+
+//collision detection forward declarations
+class Target;
+class Projectile;
+
+//AI forward declarations
+class MessageBus;
+
+//pathfinding forward declarations
+class Node;
+
+//particle engine forward declarations
+template <class T>
+class ParticleEngine;
+class Smoke;
+
+//shading engine forward declarations
+class ShadingEngine;
 
 /** Class that contains contents of the screen to display */
 class Scene

@@ -6,27 +6,17 @@
 #ifndef GRAPHICSLAB_TERRAIN_HPP
 #define GRAPHICSLAB_TERRAIN_HPP
 
-// common include
-#include "../common/Drawable.hpp"
-#include "../common/GLIncludes.hpp"
-#include "../common/Material.hpp"
-#include "../common/Definitions.hpp"
-#include "../common/Utils.hpp"
-#include "../common/TGAImage.hpp"
-#include "../common/TGATexture.hpp"
-#include "../common/PLYModel.hpp"
-
 //pathfinding includes
 #include "pathfinding/Node.hpp"
 
 
+//std includes
 #include <sstream>
 #include <cmath>
 #include <iostream>
 #include <algorithm>
 #include <string>
 #include <vector>
-#include <iterator>
 
 namespace game_space {
 

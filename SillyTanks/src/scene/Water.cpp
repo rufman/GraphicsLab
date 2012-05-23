@@ -1,10 +1,6 @@
 /**
- * water.cpp
- * 
- * Author   :   Fatih Erol
- * Date     :   05.03.2012
- *
- * All rights reserved.
+ * Water.cpp
+This class creates the water that is starting at a certain level.
  */
 
 // Class declaration include

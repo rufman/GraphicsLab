@@ -20,6 +20,7 @@
 #include "../projectiles/Missile.hpp"
 
 #include "../../AI/TowerAI.hpp"
+#include "../../AI/MessageBus.hpp"
 
 
 namespace game_space {

@@ -60,14 +60,11 @@ private:
 	// Sources are points of emitting sound.
 	ALuint Sources[NUM_SOURCES];
 
-
-
 	// Position of the source sounds.
 	ALfloat SourcesPos[NUM_SOURCES][3];
 
 	// Velocity of the source sounds.
 	ALfloat SourcesVel[NUM_SOURCES][3];
-
 
 
 	// Position of the listener.

@@ -5,6 +5,7 @@
 
 //header include
 #include "Explosion.hpp"
+#include "../../common/Types.hpp"
 
 namespace game_space {
 

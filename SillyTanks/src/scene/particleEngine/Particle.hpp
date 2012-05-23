@@ -6,11 +6,13 @@
 #ifndef GAME_PARTICLE_HPP
 #define GAME_PARTICLE_HPP
 
-//common includes
-#include "../../common/Types.hpp"
-#include "../../common/TGATexture.hpp"
+//std includes
+#include <string>
 
 namespace game_space {
+
+class Point;
+class Vector3D;
 
 class Particle {
 public:
