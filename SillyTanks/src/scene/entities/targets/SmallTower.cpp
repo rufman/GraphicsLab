@@ -15,7 +15,7 @@ SmallTower::SmallTower(Scene & scene, bool isAIControlled) :
 	_baseWidth = 1.0f;
 
 	//create a new tower base
-	_towerBase = new PLYModel(_scene,400);
+	_towerBase = new PLYModel(_scene);
 	_towerBase->load(SMALLTOWER_TOWERBASE_MODEL,SMALLTANK_TEXTURE2);
 
 	//get a new turret
@@ -41,8 +41,8 @@ SmallTower::SmallTower(Scene & scene, bool isAIControlled) :
 		break;
 	}
 	}
-	_towerTexture = new TGATexture(tankTexture.c_str());
-
+	//_towerTexture = new TGATexture(tankTexture.c_str());
+	_towerBase->load(SMALLTOWER_TOWERBASE_MODEL,tankTexture.c_str());
 	reset();
 
 }
@@ -53,7 +53,7 @@ SmallTower::~SmallTower() {
 void SmallTower::draw() const {
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glPushMatrix();
-	_towerTexture->setActive(true);
+	//_towerTexture->setActive(true);
 	glTranslatef(_position.x, _position.y, _position.z);
 
 	//a little bit higher over the ground because otherwise the model sinks into the ground
@@ -66,17 +66,17 @@ void SmallTower::draw() const {
 
 	_towerBase->setRenderingParameters(_renderingParameters);
 	_towerBase->draw();
-	_towerTexture->setActive(false);
+	//_towerTexture->setActive(false);
 	glPopMatrix();
 
 	glPushMatrix();
-	_towerTexture->setActive(true);
+	//_towerTexture->setActive(true);
 	_turret->setRenderingParameters(_renderingParameters);
 	Point towerPosition = getPosition();
 	_turret->setPosition(Point(towerPosition.x, towerPosition.y+13, towerPosition.z));
 	_turret->draw();
 	glPopMatrix();
-	_towerTexture->setActive(false);
+	//_towerTexture->setActive(false);
 }
 
 } /* namespace game_space */

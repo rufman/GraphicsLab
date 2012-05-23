@@ -28,7 +28,7 @@ public:
 	 *
 	 * @param[in, out]	scene	Owning scene
 	 */
-    PLYModel( Scene &scene,int textureSize );
+    PLYModel( Scene &scene );
     
     /** Destructor */
     ~PLYModel();

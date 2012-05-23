@@ -96,7 +96,7 @@ Scene::~Scene() {
 
 void Scene::initialize() {
 
-	cross = new PLYModel(*this, 400);
+	cross = new PLYModel(*this);
 	treeModel = new PineTree(*this);
 	treeModel->setNeighbors();
 	// Initialize lights

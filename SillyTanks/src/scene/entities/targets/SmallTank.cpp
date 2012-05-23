@@ -48,8 +48,8 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 	_boundingBox = new BoundingBox(pointArray);
 
 	//create a new chassis / with texture size 400
-	_chassis = new PLYModel(_scene,400);
-	_chassis->load(SMALLTANK_CHASSIS_MODEL,SMALLTANK_TEXTURE2);
+	_chassis = new PLYModel(_scene);
+
 	//get a new turret
 	_turret = new Turret(_scene);
 
@@ -144,7 +144,8 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 	}
 	}
 	//_tankTexture = new TGATexture(tankTexture.c_str());
-
+	_chassis->load(SMALLTANK_CHASSIS_MODEL,tankTexture.c_str());
+	_turret->load(SMALLTANK_CHASSIS_MODEL,tankTexture.c_str());
 	reset();
 
 }
