@@ -821,4 +821,9 @@ void Scene::drawWaterImage() {
 	_skyDome->draw();
 	glPopMatrix();
 }
+
+Water* Scene::getWater()
+{
+	return _water;
+}
 }

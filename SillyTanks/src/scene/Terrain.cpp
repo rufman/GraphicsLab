@@ -17,6 +17,8 @@
 #include "entities/targets/PineTree.hpp"
 #include "entities/targets/RoundTree.hpp"
 #include "entities/targets/PalmTree.hpp"
+#include "Scene.hpp"
+#include "Water.hpp"
 
 #include <sstream>
 #include <cmath>
@@ -603,7 +605,7 @@ Point Terrain::getRandomPointOnMap() {
 		x = (-_width / 2.0) + (rand() % (int) _width);
 		z = (_length / 2.0) - (rand() % (int) _length);
 		y = getHeight(Point(x, 0, z));
-	} while (y < -2);
+	} while ( y < _scene.getWater()->getHeight(Point(x,y,z)) ||checkBorder(Point(x,y,z)));
 
 	return Point(x, y, z);
 }
