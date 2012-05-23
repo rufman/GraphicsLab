@@ -80,7 +80,7 @@ PLYModel* cross;
 Tree *treeModel;
 
 Scene::Scene(Window &window) :
-		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _sunLight(NULL) {
+		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _sunLight(NULL), _shadowsActive(false) {
 	_soundEngine = SoundEngine();
 	_messageBus = new MessageBus();
 
@@ -214,7 +214,6 @@ void Scene::reset() {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
 			projectileIter = _projectiles.erase(projectileIter);
 			delete bullet;
-
 		}
 		if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
@@ -380,25 +379,28 @@ void Scene::drawScene() {
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
 
-	GLmatrix16f Minv;
-	Point lightpos = _skyDome->getSunPosition();
-	glClearDepth(1.0f); // Depth Buffer Setup
-	glClearStencil(0); // Stencil Buffer Setup
-	glEnable(GL_DEPTH_TEST); // Enables Depth Testing
-	glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
-	glCullFace(GL_BACK); // Set Culling Face To Back Face
-	glEnable(GL_CULL_FACE); // Enable Culling
-
-	//glLoadIdentity();
-	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
-	VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
-	glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
-
 	// Draw the terrain
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
 
-	_terrain->drawShadows(lightpos);
+	//if shadows are active then draw shadows
+	if (_shadowsActive) {
+		GLmatrix16f Minv;
+		Point lightpos = _skyDome->getSunPosition();
+		glClearDepth(1.0f); // Depth Buffer Setup
+		glClearStencil(0); // Stencil Buffer Setup
+		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+		glCullFace(GL_BACK); // Set Culling Face To Back Face
+		glEnable(GL_CULL_FACE); // Enable Culling
+
+		//glLoadIdentity();
+		glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
+		VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
+		glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
+
+		_terrain->drawShadows(lightpos);
+	}
 
 	//draw water
 	_water->setRenderingParameters(_renderingParameters);
@@ -422,23 +424,19 @@ void Scene::drawScene() {
 	//the bullets should not use toon shading
 	//_shadingEngine->clearShaders();
 	glPushMatrix();
-	for(std::vector<Projectile*>::iterator projectileIter = _projectiles.begin();projectileIter != _projectiles.end();)
-		{
-			Projectile *projectile = *projectileIter;
-			if(projectile->_projectileType == Projectile::BULLET)
-			{
-				Bullet* bullet = static_cast<Bullet*>(projectile);
-				bullet->setRenderingParameters(_renderingParameters);
-				bullet->draw();
-			}
-			if(projectile->_projectileType == Projectile::MISSILE)
-			{
-				Missile* missile = static_cast<Missile*>(projectile);
-				missile->setRenderingParameters(_renderingParameters);
-				missile->draw();
-			}
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+		Projectile *projectile = *projectileIter;
+		if (projectile->_projectileType == Projectile::BULLET) {
+			Bullet* bullet = static_cast<Bullet*>(projectile);
+			bullet->setRenderingParameters(_renderingParameters);
+			bullet->draw();
 		}
-
+		if (projectile->_projectileType == Projectile::MISSILE) {
+			Missile* missile = static_cast<Missile*>(projectile);
+			missile->setRenderingParameters(_renderingParameters);
+			missile->draw();
+		}
+	}
 
 	glPopMatrix();
 
@@ -661,6 +659,9 @@ void Scene::handleKeyboardInput() {
 			_cameraMode = TANK_CAM;
 		}
 	}
+	if (_window.keyHit('6')) {
+		_shadowsActive = !_shadowsActive;
+	}
 	if (_window.keyHit('p') || _window.keyHit('P')) {
 		_terrain->findPath(_playerTank->getPosition(), _endNode->_position);
 	}
@@ -813,8 +814,6 @@ MessageBus* Scene::getMessageBus() {
  */
 
 void Scene::drawWaterImage() {
-	int width = glutGet(GLUT_WINDOW_WIDTH);
-	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
 	// Set camera parameters
 	_water->applyCamera();

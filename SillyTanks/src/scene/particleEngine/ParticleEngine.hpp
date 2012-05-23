@@ -54,7 +54,6 @@ public:
 			delete particle;
 		}
 		delete _particleTexture;
-		delete _particleType;
 	}
 
 	void loadParticleTexture(const std::string &textureFilePath) {
@@ -200,7 +199,6 @@ private:
 	Vector3D _startAcceleration;
 
 	TGATexture* _particleTexture;
-	Particle* _particleType;
 	bool _engineActive;
 
 	int _numberOfRenderedParticles;

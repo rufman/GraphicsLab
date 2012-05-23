@@ -168,6 +168,7 @@ private:
 	Camera3D *_tankCam;
 	Camera3D *_overviewCam;
 	Camera3D* _currentlyActiveCamera;
+	bool _shadowsActive;
 
 	typedef std::vector<Light*> LightVector;
 	LightVector _lights;
