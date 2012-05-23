@@ -62,7 +62,6 @@ protected:
 public:
 	int _textureSize;
 
-protected:
 	Point _position;
 	struct PLYData
 	{
