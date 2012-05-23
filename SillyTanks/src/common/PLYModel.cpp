@@ -353,7 +353,7 @@ void PLYModel::setNeighbors() {
 	}
 }
 
-void PLYModel::castShadow(const Point *lightPosition) {
+void PLYModel::castShadow(const Point *lightPosition){
 	//set the triangle that are visible from the light
 	for (uint i = 0; i < _plyData.triangles.size(); i++) {
 		Vector3D triangleNormal = _plyData.triangleNormals[i];
@@ -510,10 +510,10 @@ void PLYModel::castShadow(const Point *lightPosition) {
 	glPushMatrix();
 	glLoadIdentity();
 	glBegin(GL_TRIANGLE_STRIP);
-	glVertex3f(-0.1f, 0.1f, -0.10f);
-	glVertex3f(-0.1f, -0.1f, -0.10f);
-	glVertex3f(0.1f, 0.1f, -0.10f);
-	glVertex3f(0.1f, -0.1f, -0.10f);
+	glVertex3f(-0.2f, 0.1f, -0.10f);
+	glVertex3f(-0.2f, -0.1f, -0.10f);
+	glVertex3f(0.2f, 0.1f, -0.10f);
+	glVertex3f(0.2f, -0.1f, -0.10f);
 	glEnd();
 	glPopMatrix();
 	glDisable(GL_BLEND);

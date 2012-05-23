@@ -18,6 +18,8 @@ public:
 	SmallTank(Scene &scene,bool isAIControlled);
 	virtual ~SmallTank();
 	void draw() const;
+	void castShadow(const Point &lightPostion) const;
+	void setNeighbors() const;
 
 private:
 	TGATexture* _tankTexture;
