@@ -14,7 +14,7 @@
 #include "../../../scene/Terrain.hpp"
 
 #include "../../AI/TankAI.hpp"
-
+#include "../collisiondetection/Projectile.hpp"
 #include <algorithm>
 
 namespace game_space {
@@ -194,7 +194,7 @@ void SmallTank::setNeighbors() const {
 }
 
 
-bool SmallTank::checkHit(Projectile* projectile_){
+bool Target::checkHit(Projectile* projectile_){
 
 	Point projectilePosition = projectile_->getPosition();
 

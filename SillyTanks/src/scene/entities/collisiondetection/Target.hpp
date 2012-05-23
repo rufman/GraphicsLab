@@ -23,13 +23,14 @@ public:
 	}_targetType;
 private:
 	std::vector<BoundingBox> _boundingBoxes;
-	BoundingBox* _boundingBox;
+
 
 protected:
+	BoundingBox* _boundingBox;
 	Point _position;
 public:
 	Target(Scene &scene,TargetType type);
-	bool checkHit(Projectile* projectile_);
+	virtual bool checkHit(Projectile* projectile_);
 	virtual bool collidesWithOtherTarget(Target* target);
 
 	//a projectile has a bounding radius to first check if the projectile is even near to the target

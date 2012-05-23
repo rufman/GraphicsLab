@@ -8,7 +8,7 @@
 
 //std includes
 #include <string>
-
+#include "../../common/Types.hpp"
 namespace game_space {
 
 
