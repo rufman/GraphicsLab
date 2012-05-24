@@ -3,26 +3,23 @@
  */
 
 #include "Projectile.hpp"
+#include "Target.hpp"
 
 namespace game_space {
-Projectile::Projectile(Scene &scene,ProjectileType projectileType,int projectileOwnerId):Drawable(scene),_projectileType(projectileType),_projectileOwnerID(projectileOwnerId){}
+Projectile::Projectile(Scene& scene,ProjectileType projectileType,Target* projectileOwner) :
+		Drawable(scene), _projectileType(projectileType), _projectileOwner(projectileOwner) {}
 
+Projectile::~Projectile(){}
 
-void Projectile::draw() const
-{
+void Projectile::draw() const {}
 
+void Projectile::setPosition(Point position) {
+	_position = position;
 }
 
-
-Point Projectile::getPosition(){
-
-
-	return  _position;
-
-	//FIXME: _position is never set or initialized...
-}
+const Point Projectile::getPosition() const {
+	return _position;
 }
 
-
-
+}
 
