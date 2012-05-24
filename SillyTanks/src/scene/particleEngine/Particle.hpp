@@ -14,7 +14,7 @@ namespace game_space {
 
 class Particle {
 public:
-	~Particle(){}
+	virtual ~Particle(){}
 	virtual void resetParticle(Point startPosition,Vector3D startAcceleration) = 0;
 	virtual void update(float seconds) = 0;
 

@@ -8,9 +8,6 @@
 
 // common includes
 #include "../../../common/Drawable.hpp"
-#include "../../../common/Types.hpp"
-#include "../../../common/PLYModel.hpp"
-#include "../../../common/Camera3D.hpp"
 
 
 #include <math.h>
@@ -24,7 +21,13 @@ namespace game_space {
 
 //forward declaration
 class TankAI;
+class PLYModel;
+class LookAt;
 
+//particle engine forward declarations
+template <class T>
+class ParticleEngine;
+class Smoke;
 class Tank: public Target {
 public:
 	enum SELECTEDWEAPON {
@@ -49,6 +52,8 @@ protected:
 	bool _isAIControlled;
 
 	SELECTEDWEAPON _selectedWeapon;
+
+	ParticleEngine<Smoke> *_tankSmokeParticleEngine;
 
 public:
 	Tank(Scene &scene,bool isAIControlled);
