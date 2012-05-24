@@ -28,8 +28,8 @@ void TankAI::brainTick(float seconds) {
 
 	sense();
 	// if pickTarget is null, sensing failed and we have to explore further
-	if (pickTarget() == -1) {
-		switchStrategy(EXPLORE, -1);
+	if (pickTarget() == NULL) {
+		switchStrategy(EXPLORE, NULL);
 	}
 
 	//we have a target and we hunt it
@@ -50,12 +50,12 @@ void TankAI::brainTick(float seconds) {
 
 }
 
-void TankAI::switchStrategy(enum TANKAI_STRATEGY newStrategy, int target) {
+void TankAI::switchStrategy(enum TANKAI_STRATEGY newStrategy, Target* target) {
 	_strategy = newStrategy;
 	_currentTarget = target;
 }
 
-int TankAI::pickTarget() {
+Target* TankAI::pickTarget() {
 	return _currentTarget;
 }
 
@@ -130,10 +130,13 @@ void TankAI::aimAndFire() {
 	if(_currentTarget != NULL)
 	{
 		//get the direction of the enemy tank and point towards it (aim azimuth)
-		Vector3D enemyDirection = _currentTarget->getPosition()- _tank->getPosition();
+
+		/*Vector3D enemyDirection;
+		enemyDirection.x =
+		_currentTarget->getPosition()- _tank->getPosition();
 		Vector3D muzzleDirection = Vector3D(0,0,1);
 		Utils::rotate(_tank->getAzimuth(),muzzleDirection,Vector3D(0,1,0));
-		_tank->setAzimuth(Utils::dot(muzzleDirection,enemyDirection));
+		_tank->setAzimuth(Utils::dot(muzzleDirection,enemyDirection));*/
 
 		//get the elevation
 

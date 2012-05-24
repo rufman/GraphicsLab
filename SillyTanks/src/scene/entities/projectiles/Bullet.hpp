@@ -51,9 +51,6 @@ private:
 	/** Size of the bullet */
 	float _size;
 
-	/** Position of the bullet compared to the cannon */
-	Point _position;
-
 	/** Velocity of the bullet */
 	Vector3D _velocity;
 
