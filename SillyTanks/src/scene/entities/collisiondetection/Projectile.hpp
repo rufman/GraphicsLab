@@ -34,7 +34,7 @@ public:
 	/** Draw the object to the screen. */
 	void draw() const;
 
-private:
+protected:
 
 	Point _position;
 };
