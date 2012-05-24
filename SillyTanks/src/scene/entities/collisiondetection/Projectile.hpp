@@ -11,6 +11,10 @@
 
 namespace game_space {
 
+class Target;
+class Scene;
+class Point;
+
 class Projectile:public Drawable {
 
 public:
@@ -20,21 +24,23 @@ public:
 		MISSILE
 	}_projectileType;
 	//this is necessary for the AI to know what tank took a shot on it.
-	int _projectileOwnerID;
+	Target* _projectileOwner;
 
 
 public:
-	Projectile(Scene& scene,ProjectileType projectileType,int projectileOwnerId);
+	Projectile(Scene& scene,ProjectileType projectileType,Target* projectileOwner);
+	virtual ~Projectile();
 
 	//a projectile has a bounding radius to first check if the projectile is even near to the target
 	//(check if distance between projectile and target is higher than bounding radiuses added up)
 	float getBoundingRadius() const;
-	Point getPosition();
+	void setPosition(Point position);
+	const Point getPosition() const;
 
 	/** Draw the object to the screen. */
 	void draw() const;
 
-private:
+protected:
 
 	Point _position;
 };

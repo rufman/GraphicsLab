@@ -44,11 +44,6 @@ void Bullet::draw() const
 	glPopMatrix();
 }
 
-void Bullet::setPosition( const Point &position )
-{
-	_position = position;
-}
-
 void Bullet::setVelocity( const Vector3D &velocity )
 {
 	_velocity = velocity;

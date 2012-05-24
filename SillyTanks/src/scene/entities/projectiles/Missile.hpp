@@ -41,9 +41,6 @@ public:
 	// Get/Set functions
 	float getSize() const {return _size;}
 
-	const Point &getPosition() const {return _position;}
-	void setPosition( const Point &position );
-
 	const Vector3D &getVelocity() const {return _velocity;}
 	void setVelocity( const Vector3D &velocity );
 

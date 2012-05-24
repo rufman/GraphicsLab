@@ -88,10 +88,6 @@ void Missile::draw() const {
 	glPopMatrix();
 }
 
-void Missile::setPosition(const Point &position) {
-	_position = position;
-}
-
 void Missile::setVelocity(const Vector3D &velocity) {
 	_velocity = velocity;
 }
