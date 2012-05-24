@@ -48,9 +48,9 @@ void Application::Parameters::parse(int argc, char **argv) {
 	fogRed = 0.8;
 	fogGreen = 0.8;
 	fogBlue = 0.8;
-	fogDensity = 0.0025;
+	fogDensity = 0.025;
 	fogStart = 1;
-	fogEnd = 80;
+	fogEnd = 20;
 
 	// Parse arguments (they will be set later on by the menu)
 	for (int argID = 1; argID < argc;) {
