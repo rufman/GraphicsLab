@@ -166,26 +166,29 @@ void SmallTank::draw() const
 	glPushMatrix();
 	glTranslatef(_position.x,_position.y,_position.z);
 
-	Utils::applyGLRotation(Vector3D(0.0f,1.0f,0.0f),_scene.getTerrain().getNormal(_position));
+	Utils::applyGLRotation(Vector3D(0.0f,0.0f,1.0f),_scene.getTerrain().getNormal(_position));
 
 	glScalef(_baseWidth*5,_baseWidth*5,_baseWidth*5);
-	glRotatef(-90,1,0,0);
 
 	//glRotation seems to be counter intuitive as we have to rotate in negative direction (check Utils::applyRotation)
 	glRotatef(-getDirection(),0,0,1);
 	glTranslatef(0,-0.5,0);
 
 	_chassis->setRenderingParameters(_renderingParameters);
-	//_tankTexture->setActive(true);
 	_chassis->draw();
-	//_tankTexture->setActive(false);
-	glPopMatrix();
 
-	glPushMatrix();
+	//translate the turret to the right position
+	glTranslatef(0,0.5, 0.3);
+
+	//scale down the turret
+	glScalef(0.5,0.5,0.5);
+
+	//rotate back the chassis turning
+	glRotatef(getDirection(),0,0,1);
+
 	_turret->setRenderingParameters(_renderingParameters);
 	Point tankPosition = getPosition();
 	_turret->setPosition(Point(tankPosition.x,tankPosition.y,tankPosition.z));
-	//_tankTexture->setActive(true);
 	_turret->draw();
 	glPopMatrix();
 }

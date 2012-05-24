@@ -33,7 +33,7 @@ void Turret::load(const std::string &modelFile, const std::string &textureFile) 
 }
 
 void Turret::reset() {
-	_elevation = -15;
+	_elevation = -10;
 	_azimuth = -85;
 	_power = 0.5;
 	_position = Point(0, 0, 0, 1);
@@ -45,7 +45,7 @@ float Turret::getElevation() const {
 
 void Turret::setElevation(float elevation) {
 	//stop the turret from pointing to strange angles.
-	if(elevation < 80 && elevation >= -15)
+	if(elevation < 80 && elevation >= -10)
 	{
 		_elevation = elevation;
 	}
@@ -100,27 +100,17 @@ void Turret::draw() const {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
-	glTranslatef(_position.x, _position.y, _position.z);
-
-	//a little bit higher over the ground because otherwise the turret is inside of the chassis
-	glTranslatef(0, 1.5, 0);
-
-	Utils::applyGLRotation(Vector3D(0.0f, 1.0f, 0.0f), _scene.getTerrain().getNormal(_position));
-
 	//counter intuitive again (see Utils::applyGlRotation
-	glRotatef(-_azimuth,0,1,0);
-	glRotatef(-90, 1, 0, 0);
+	glRotatef(-_azimuth,0,0,1);
 	glTranslatef(0,-0.5,0);
-	glScalef(_baseWidth*2.5 , _baseWidth*2.5 , _baseWidth *2.5);
 
 	_turret->setRenderingParameters(_renderingParameters);
 	_turret->draw();
-	glRotatef(90, 1, 0, 0);
 
-	glTranslatef(0,0.25,-0.3);
+	glTranslatef(0,0.25,0.15);
 
 	//counter intuitive again
-	glRotatef(_elevation+180, 1.0, 0.0, 0.0);
+	glRotatef(_elevation+270, 1.0, 0.0, 0.0);
 	GLUquadric *quadric = gluNewQuadric();
 	gluCylinder(quadric, _baseWidth / 8, _baseWidth / 8, _baseWidth, 20, 20);
 	gluDeleteQuadric(quadric);

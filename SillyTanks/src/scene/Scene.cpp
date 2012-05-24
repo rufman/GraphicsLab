@@ -313,7 +313,7 @@ void Scene::drawScene() {
 		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_currentlyActiveCamera = _overviewCam;
-		_currentlyActiveCamera->setLookAt(LookAt(Point(50, 100, 50), _playerTank->getPosition(), Vector3D(0, 1, 0)));
+		_currentlyActiveCamera->setLookAt(LookAt(Point(_playerTank->getPosition().x+50, _playerTank->getPosition().y+50, _playerTank->getPosition().z+50), _playerTank->getPosition(), Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL Lighting
@@ -401,11 +401,7 @@ void Scene::drawScene() {
 	if (_shadowsActive) {
 		GLmatrix16f Minv;
 		Point lightpos = Point(100, 100, 100);
-//			Point lightpos = _skyDome->getSunPosition();
-		glPushMatrix();
-		glTranslatef(lightpos.x, lightpos.y, lightpos.z);
-		glutSolidSphere(10, 100, 100);
-		glPopMatrix();
+		//Point lightpos = _skyDome->getSunPosition();
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glClearStencil(0); // Stencil Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
