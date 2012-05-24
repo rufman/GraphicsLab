@@ -76,9 +76,6 @@ void VMatMult(GLmatrix16f M, Point v) {
 	v.w = res[3]; // Homogenous Coordinate
 }
 
-PLYModel* cross;
-Tree *treeModel;
-
 Scene::Scene(Window &window) :
 		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _sunLight(NULL), _shadowsActive(false) {
 	_soundEngine = SoundEngine();
@@ -379,33 +376,6 @@ void Scene::drawScene() {
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
 
-	// Draw the terrain
-	_terrain->setRenderingParameters(_renderingParameters);
-	_terrain->draw();
-
-	//if shadows are active then draw shadows
-	if (_shadowsActive) {
-		GLmatrix16f Minv;
-		Point lightpos = _skyDome->getSunPosition();
-		glClearDepth(1.0f); // Depth Buffer Setup
-		glClearStencil(0); // Stencil Buffer Setup
-		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
-		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
-		glCullFace(GL_BACK); // Set Culling Face To Back Face
-		glEnable(GL_CULL_FACE); // Enable Culling
-
-		//glLoadIdentity();
-		glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
-		VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
-		glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
-
-		_terrain->drawShadows(lightpos);
-	}
-
-	//draw water
-	_water->setRenderingParameters(_renderingParameters);
-	_water->draw();
-
 	//Draw the targets
 	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
@@ -444,6 +414,35 @@ void Scene::drawScene() {
 	_tankSmokeParticleEngine->draw();
 	glPopMatrix();
 	_endNode->draw();
+
+	//if shadows are active then draw shadows
+		if (_shadowsActive) {
+			GLmatrix16f Minv;
+			Point lightpos = Point(100,100,100);
+//			Point lightpos = _skyDome->getSunPosition();
+			glPushMatrix();
+			glTranslatef(lightpos.x, lightpos.y, lightpos.z);
+			glutSolidSphere(10,100,100);
+			glPopMatrix();
+			glClearDepth(1.0f); // Depth Buffer Setup
+			glClearStencil(0); // Stencil Buffer Setup
+			glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+			glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+			glCullFace(GL_BACK); // Set Culling Face To Back Face
+			glEnable(GL_CULL_FACE); // Enable Culling
+
+			//glLoadIdentity();
+			glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
+			VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
+			glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
+			Point wlp = Point(0,0,0,1);
+			lightpos.x += wlp.x;
+			lightpos.y += wlp.y;
+			lightpos.z += wlp.z;
+			lightpos.w += wlp.w;
+
+			_terrain->drawShadows(lightpos);
+		}
 
 	glEnable(GL_LIGHTING); // Enable Lighting
 	glDepthMask(GL_TRUE); // Enable Depth Mask
