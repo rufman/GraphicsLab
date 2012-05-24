@@ -232,14 +232,14 @@ void Scene::update(float seconds) {
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
 			if (tank->isAIControlled()) {
-				tank->getAI()->brainTick();
+				tank->getAI()->brainTick(seconds);
 			}
 			tank->update(seconds);
 		}
 		if (target->_targetType == Target::TOWER) {
 			Tower * tower = static_cast<Tower*>(target);
 			if (tower->isAIControlled()) {
-				tower->getAI()->brainTick();
+				tower->getAI()->brainTick(seconds);
 			}
 			tower->update(seconds);
 		}

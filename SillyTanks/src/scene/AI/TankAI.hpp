@@ -27,15 +27,18 @@ public:
 
 	std::vector<Message*>* _aiMessages;
 	Tank* _tank;
-	int _currentTarget;
+	Target* _currentTarget;
 	std::vector<Point>* _path;
 	Scene& _scene;
+
+	//delay the shooting a bit
+	float reloadTime;
 public:
 	TankAI(Scene &scene,std::vector<Message*>* aiMessages);
 	virtual ~TankAI();
 	//ai methods
 	//main method of the ai, activates all the other ai methods, represents one single reflection
-	void brainTick();
+	void brainTick(float seconds);
 
 	//if the conditions are met, the ai switches the strategy
 	void switchStrategy(TANKAI_STRATEGY strategy,int target);
@@ -64,7 +67,7 @@ public:
 
 	//helper methods
 	void followPath();
-	void aimAndFire(int target);
+	void aimAndFire();
 };
 
 }
