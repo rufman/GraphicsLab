@@ -25,12 +25,15 @@ public:
 	Target* _currentTarget;
 	std::vector<Point>* _path;
 	Scene& _scene;
+
+	//delay the shooting a bit
+	float reloadTime;
 public:
 	TowerAI(Scene &scene, std::vector<Message*>* aiMessages);
 	virtual ~TowerAI();
 
 	//AI methods
-	void brainTick();
+	void brainTick(float seconds);
 
 	//if the conditions are met, the ai switches the strategy
 	void switchStrategy(TOWERAI_STRATEGY strategy, Target* target);

@@ -26,7 +26,9 @@ TowerAI::~TowerAI() {
 
 }
 
-void TowerAI::brainTick() {
+void TowerAI::brainTick(float seconds) {
+
+	//TODO: add reloading time
 	sense();
 	// if pickTarget is null, sensing failed and we have to explore further
 	if (pickTarget() == NULL) {
