@@ -26,6 +26,9 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 	float tankWidth = 1.0f;
 	float tankHeight = 0.6f;
 
+	//TODO: here something is weird with the axes of the coordinate system
+	// maybe exchange x and y axis (width and length of the tank) for the boundingBox only..
+
 	Point frontRightUnder = Point(0,0,0);
 	Point frontLeftUnder = Point(-tankWidth,0,0);
 	Point frontRightUpper = Point(0,0,tankHeight);
@@ -219,6 +222,7 @@ bool Target::checkHit(Projectile* projectile_){
 	minHeight = std::min(tmp, tmp2) + _position.z;
 
 
+	//check if projectile is in the right height to hit the target
 	if(projectilePosition.z > maxHeight || projectilePosition.z < minHeight){
 
 		return false;
@@ -243,6 +247,8 @@ bool Target::checkHit(Projectile* projectile_){
 	min_x = std::min(tmp, tmp2);
 
 
+
+	//check if the projectile is between the right x coordinates to hit the target
 	if(projectilePosition.x > max_x || projectilePosition.x < min_x){
 		return false;
 	}
@@ -265,10 +271,12 @@ bool Target::checkHit(Projectile* projectile_){
 
 	min_y = std::min(tmp, tmp2);
 
+
+	//last check: check if projectile is between y coordinates of the target
 	if(projectilePosition.y > max_y || projectilePosition.y < min_y){
 		return false;
 	}else{
-		return true;
+		return true;  //collision happens!!
 	}
 
 }
