@@ -15,14 +15,16 @@
 namespace game_space {
 
 TankAI::TankAI(Scene &scene, std::vector<Message*>* aiMessages) :
-		_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(-1), _scene(scene) {
+		_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(NULL), _scene(scene) {
 
 }
 
 TankAI::~TankAI() {
 }
 
-void TankAI::brainTick() {
+void TankAI::brainTick(float seconds) {
+
+	//TODO:add reloadingtime
 
 	sense();
 	// if pickTarget is null, sensing failed and we have to explore further
@@ -80,8 +82,8 @@ void TankAI::sense() {
 void TankAI::explore() {
 	//choose some random position on the map and find a way from here to this position
 	if (_path == NULL) {
-		Point randomGoal = _scene.getTerrain().getRandomPointOnMap();
-		_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
+		//Point randomGoal = _scene.getTerrain().getRandomPointOnMap();
+		//_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
 	}
 
 	//followPath();
@@ -89,7 +91,6 @@ void TankAI::explore() {
 }
 
 void TankAI::hunt() {
-
 }
 
 void TankAI::escape() {
@@ -125,8 +126,20 @@ void TankAI::followPath() {
 	_tank->move(SMALLTANK_SPEED);
 }
 
-void TankAI::aimAndFire(int target) {
+void TankAI::aimAndFire() {
+	if(_currentTarget != NULL)
+	{
+		//get the direction of the enemy tank and point towards it (aim azimuth)
+		Vector3D enemyDirection = _currentTarget->getPosition()- _tank->getPosition();
+		Vector3D muzzleDirection = Vector3D(0,0,1);
+		Utils::rotate(_tank->getAzimuth(),muzzleDirection,Vector3D(0,1,0));
+		_tank->setAzimuth(Utils::dot(muzzleDirection,enemyDirection));
 
+		//get the elevation
+
+		//shoot
+		_tank->fireBullet();
+	}
 }
 
 }

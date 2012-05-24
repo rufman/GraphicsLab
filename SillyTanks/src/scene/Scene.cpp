@@ -54,6 +54,8 @@
 #include "entities/projectiles/Missile.hpp"
 #include "entities/projectiles/Bullet.hpp"
 
+#include "illumination/shading/ShadingEngine.hpp"
+
 //std includes
 #include <sstream>
 #include <cmath>
@@ -147,6 +149,7 @@ void Scene::initialize() {
 	_overlayCam = new Camera2D(*this);
 	_tankCam = new Camera3D(*this);
 	_overviewCam = new Camera3D(*this);
+	_currentlyActiveCamera = _tankCam;
 
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
@@ -160,11 +163,11 @@ void Scene::initialize() {
 	_targets.push_back(_playerTank);
 
 	//add some tanks to the scene
-	/*for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 10; i++) {
 	 Tank* tank = new SmallTank(*this, true);
 	 tank->setPosition(_terrain->getRandomPointOnMap());
 	 _targets.push_back(tank);
-	 }*/
+	 }
 
 	//add some towers to the scene
 	for (int i = 0; i < 4; i++) {
@@ -172,10 +175,6 @@ void Scene::initialize() {
 		tower->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tower);
 	}
-
-	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_tankCam, 20);
-	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
-	_tankSmokeParticleEngine->setActive(true);
 
 	// reset data
 	reset();
@@ -232,14 +231,14 @@ void Scene::update(float seconds) {
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
 			if (tank->isAIControlled()) {
-				tank->getAI()->brainTick();
+				tank->getAI()->brainTick(seconds);
 			}
 			tank->update(seconds);
 		}
 		if (target->_targetType == Target::TOWER) {
 			Tower * tower = static_cast<Tower*>(target);
 			if (tower->isAIControlled()) {
-				tower->getAI()->brainTick();
+				tower->getAI()->brainTick(seconds);
 			}
 			tower->update(seconds);
 		}
@@ -273,10 +272,6 @@ void Scene::update(float seconds) {
 			}
 		}
 	}
-
-	//TODO migrate smoke engine into tank
-	_tankSmokeParticleEngine->setStartPosition(_playerTank->getPosition());
-	_tankSmokeParticleEngine->update(seconds);
 }
 
 void Scene::onPaint() {
@@ -410,9 +405,6 @@ void Scene::drawScene() {
 
 	glPopMatrix();
 
-	glPushMatrix();
-	_tankSmokeParticleEngine->draw();
-	glPopMatrix();
 	_endNode->draw();
 
 	//if shadows are active then draw shadows
