@@ -416,6 +416,7 @@ void Terrain::draw() const {
 
 void Terrain::drawShadows(const Point &lightPostion) const {
 	for (uint i = 0; i < _models.size(); i++) {
+	 	 glClear(GL_STENCIL_BUFFER_BIT);
 		((Tree*) _models[i])->drawShadow(lightPostion);
 	}
 }
