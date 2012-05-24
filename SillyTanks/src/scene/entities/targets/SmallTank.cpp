@@ -159,6 +159,9 @@ SmallTank::~SmallTank() {}
 
 void SmallTank::draw() const
 {
+	//to draw the particle engine
+	Tank::draw();
+
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glPushMatrix();
 	glTranslatef(_position.x,_position.y,_position.z);

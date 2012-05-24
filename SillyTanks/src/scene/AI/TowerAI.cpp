@@ -78,14 +78,14 @@ void TowerAI::sense() {
 
 void TowerAI::explore() {
 
-	for (std::vector<Target*>::iterator targetsIter = _scene.getTargets().begin(); targetsIter != _scene.getTargets().end(); targetsIter++) {
+	/*for (std::vector<Target*>::iterator targetsIter = _scene.getTargets().begin(); targetsIter != _scene.getTargets().end(); targetsIter++) {
 		Target* target = *targetsIter;
-		/*if	(Utils::distance(_tower->getPosition(),target->getPosition()) < 10)
+		if	(Utils::distance(_tower->getPosition(),target->getPosition()) < 10)
 		{
 			_currentTarget = target;
 			break;
-		}*/
-	}
+		}
+	}*/
 	if(_currentTarget != NULL)
 	{
 		//point towards enemy

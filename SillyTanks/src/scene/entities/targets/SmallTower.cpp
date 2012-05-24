@@ -66,11 +66,9 @@ void SmallTower::draw() const {
 
 	_towerBase->setRenderingParameters(_renderingParameters);
 	_towerBase->draw();
-	//_towerTexture->setActive(false);
 	glPopMatrix();
 
 	glPushMatrix();
-	//_towerTexture->setActive(true);
 	_turret->setRenderingParameters(_renderingParameters);
 	Point towerPosition = getPosition();
 	_turret->setPosition(Point(towerPosition.x, towerPosition.y+13, towerPosition.z));

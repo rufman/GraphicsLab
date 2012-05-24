@@ -80,8 +80,8 @@ void TankAI::sense() {
 void TankAI::explore() {
 	//choose some random position on the map and find a way from here to this position
 	if (_path == NULL) {
-		Point randomGoal = _scene.getTerrain().getRandomPointOnMap();
-		_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
+		//Point randomGoal = _scene.getTerrain().getRandomPointOnMap();
+		//_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
 	}
 
 	//followPath();

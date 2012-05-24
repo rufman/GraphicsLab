@@ -9,7 +9,9 @@
 #include "../../../common/Utils.hpp"
 #include "../../../common/GLIncludes.hpp"
 #include "../../../common/Drawable.hpp"
+#include "../../../common/Types.hpp"
 
+//std includes
 #include <math.h>
 #include <iostream>
 
@@ -17,11 +19,15 @@
 #include "../../../scene/Scene.hpp"
 #include "../../../scene/Terrain.hpp"
 
+//projectile includes
 #include "../projectiles/Bullet.hpp"
 #include "../projectiles/Missile.hpp"
 
+//AI includes
 #include "../../AI/TankAI.hpp"
 #include "../../AI/MessageBus.hpp"
+
+//particle engine includes
 
 namespace game_space {
 
@@ -34,9 +40,14 @@ Tank::Tank(Scene &scene, bool isAIControlled) :
 		_controllingAI = new TankAI(scene, messageBus);
 		_controllingAI->_tank = this;
 	}
+
+	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getCurrentlyActiveCamera(), 20);
+	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
+	_tankSmokeParticleEngine->setActive(true);
 }
 
 Tank::~Tank() {
+	delete _tankSmokeParticleEngine;
 }
 
 void Tank::reset() {
@@ -46,7 +57,7 @@ void Tank::reset() {
 }
 
 void Tank::draw() const {
-
+	_tankSmokeParticleEngine->draw();
 }
 
 void Tank::drawShadow(const Point &lightPostion) const
@@ -128,6 +139,9 @@ void Tank::update(float seconds) {
 	_position.z += _velocity.z * _speed * seconds + relativeGravity.z * seconds;
 
 	_speed = 0;
+
+	_tankSmokeParticleEngine->setStartPosition(_position);
+	_tankSmokeParticleEngine->update(seconds);
 }
 
 LookAt Tank::getLookAt() const {

@@ -49,10 +49,6 @@ class MessageBus;
 //pathfinding forward declarations
 class Node;
 
-//particle engine forward declarations
-template <class T>
-class ParticleEngine;
-class Smoke;
 
 //shading engine forward declarations
 class ShadingEngine;
@@ -177,8 +173,6 @@ private:
 	Terrain *_terrain;
 	Water *_water;
 	DirectionalLight* _sunLight;
-
-	ParticleEngine<Smoke> *_tankSmokeParticleEngine;
 
 	Node* _endNode;
 
