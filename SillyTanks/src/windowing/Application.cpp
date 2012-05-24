@@ -44,6 +44,14 @@ Application::Parameters::Parameters() :
 }
 
 void Application::Parameters::parse(int argc, char **argv) {
+	//default fog params
+	fogRed = 0.8;
+	fogGreen = 0.8;
+	fogBlue = 0.8;
+	fogDensity = 0.0025;
+	fogStart = 1;
+	fogEnd = 80;
+
 	// Parse arguments (they will be set later on by the menu)
 	for (int argID = 1; argID < argc;) {
 		std::string arg = argv[argID++];
@@ -51,12 +59,26 @@ void Application::Parameters::parse(int argc, char **argv) {
 			skyTextureFile = argv[argID++];
 		} else if (arg == "-t" || arg == "-terrain") {
 			terrainFilePrefix = argv[argID++];
-		} else if (arg == "-w" || arg == "-water"){
+		} else if (arg == "-w" || arg == "-water") {
 			waterHeight = atof(argv[argID++]);
+		} else if (arg == "-fd" || arg == "-fogdensity") {
+			fogDensity = atof(argv[argID++]);
+		} else if (arg == "-fs" || arg == "-fogstart") {
+			fogStart = atof(argv[argID++]);
+		} else if (arg == "-fe" || arg == "-fogend") {
+			fogEnd = atof(argv[argID++]);
+		} else if (arg == "-fr" || arg == "-fogr") {
+			fogRed = atof(argv[argID++]);
+		} else if (arg == "-fg" || arg == "-fogg") {
+			fogGreen = atof(argv[argID++]);
+		} else if (arg == "-fb" || arg == "-fogb") {
+			fogBlue = atof(argv[argID++]);
 		} else {
-			std::cerr << "WARNING: Unknown application parameter \"" << arg << "\"" << std::endl;
+			std::cerr << "WARNING: Unknown application parameter \"" << arg
+					<< "\"" << std::endl;
 		}
 	}
+
 }
 
 void Application::initialize(int argc, char **argv) {

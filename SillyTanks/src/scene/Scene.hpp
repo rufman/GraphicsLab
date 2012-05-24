@@ -7,6 +7,8 @@
 #include "../common/Time.hpp"
 #include "../common/SoundEngine.hpp"
 
+#include "Fog.hpp"
+
 //std includes
 #include <vector>
 
@@ -35,6 +37,7 @@ class Tank;
 class SkyDome;
 class Terrain;
 class Water;
+class Fog;
 
 //projectile forward declarations
 class Bullet;
@@ -165,6 +168,7 @@ private:
 	Camera3D *_overviewCam;
 	Camera3D* _currentlyActiveCamera;
 	bool _shadowsActive;
+	bool _fogActive;
 
 	typedef std::vector<Light*> LightVector;
 	LightVector _lights;
@@ -173,6 +177,7 @@ private:
 	Terrain *_terrain;
 	Water *_water;
 	DirectionalLight* _sunLight;
+	Fog* _fog;
 
 	Node* _endNode;
 
