@@ -22,12 +22,14 @@ public:
 		TOWER
 	}_targetType;
 private:
-	std::vector<BoundingBox> _boundingBoxes;
 
 
 protected:
 	BoundingBox* _boundingBox;
 	Point _position;
+	float _boundingRadius;
+
+
 public:
 	Target(Scene &scene,TargetType type);
 	virtual bool checkHit(Projectile* projectile_);
@@ -35,15 +37,9 @@ public:
 
 	//a projectile has a bounding radius to first check if the projectile is even near to the target
 	//(check if distance between projectile and target is higher than bounding radiuses added up)
-	float getBoundingRadius() const;
+	float getBoundingRadius() ;
 
-	void addBoundingBox(BoundingBox box);
-		std::vector<BoundingBox> getBoundingBoxes() const;
-	/** Draw the object to the screen. */
-
-		//TODO: I don't think it is necessary to have multiple boundinboxes.
-		//we don't gain efficiency or something for it an we would spent time
-		//which we could spend for other things
+	BoundingBox* getBoundingBox();
 
 
 	void draw() const;

@@ -12,17 +12,13 @@ bool Target::collidesWithOtherTarget(Target* target)
 	return false;
 }
 
-void Target::addBoundingBox(BoundingBox box)
-{
-_boundingBoxes.push_back(box);
-}
+BoundingBox* Target::getBoundingBox(){
+	return _boundingBox;
 
-std::vector<BoundingBox> Target::getBoundingBoxes() const
-{
-	return _boundingBoxes;
 }
 void Target::draw() const
 {
+
 
 }
 void Target::reset()
@@ -37,6 +33,12 @@ void Target::setPosition(Point position) {
 Point Target::getPosition() const {
 	return _position;
 }
+
+float Target::getBoundingRadius(){
+	return _boundingRadius;
+}
+
+
 }
 
 
