@@ -54,6 +54,8 @@
 #include "entities/projectiles/Missile.hpp"
 #include "entities/projectiles/Bullet.hpp"
 
+#include "illumination/shading/ShadingEngine.hpp"
+
 //std includes
 #include <sstream>
 #include <cmath>
