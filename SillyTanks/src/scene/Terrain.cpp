@@ -452,6 +452,8 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 	//Implemented the a-star algorithm as it is written in pseudo code on wikipedia.org
 	//http://en.wikipedia.org/wiki/A*_search_algorithm
 	//for the open set and closed set I use a vector sorted in-place as a heap
+	// I had to find out that according to the wiki article that my estimate is non-monotonic and that is why
+	// I have to update the nodes of the closed set too.
 
 	Node* start = getNodeFromPoint(startPoint);
 	Node* goal = getNodeFromPoint(goalPoint);

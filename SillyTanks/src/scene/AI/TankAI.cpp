@@ -15,7 +15,7 @@
 namespace game_space {
 
 TankAI::TankAI(Scene &scene, std::vector<Message*>* aiMessages) :
-		_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(NULL), _scene(scene) {
+		_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(NULL), _scene(scene),_path(NULL) {
 
 }
 
@@ -82,11 +82,11 @@ void TankAI::sense() {
 void TankAI::explore() {
 	//choose some random position on the map and find a way from here to this position
 	if (_path == NULL) {
-		//Point randomGoal = _scene.getTerrain().getRandomPointOnMap();
-		//_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
+		Point randomGoal = _scene.getTerrain().getRandomPointOnMap();
+		_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
 	}
 
-	//followPath();
+	followPath();
 
 }
 
@@ -111,6 +111,12 @@ void TankAI::followPath() {
 			//we already reached that point
 			_path->pop_back();
 		}
+	}
+
+	if(_path->size() == 0)
+	{
+		_path = NULL;
+		return;
 	}
 
 	Vector3D directionToCheckPoint;
