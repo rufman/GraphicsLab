@@ -79,7 +79,7 @@ private:
 	};
 	std::vector<Triangle> _triangles;
 	std::vector<Vector3D> _triangleNormals;
-	std::vector<PLYModel*> _models;
+	std::vector<PLYModel*> _trees;
 
 	float _width, _length;
 	uint _widthResolution, _lengthResolution;
