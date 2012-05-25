@@ -185,18 +185,18 @@ void Scene::initialize() {
 	_targets.push_back(_playerTank);
 
 	//add some tanks to the scene
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 1; i++) {
 		Tank* tank = new SmallTank(*this, true);
 		tank->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tank);
 	}
 
 	//add some towers to the scene
-	for (int i = 0; i < 4; i++) {
+	/*for (int i = 0; i < 4; i++) {
 		Tower* tower = new SmallTower(*this, true);
 		tower->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tower);
-	}
+	}*/
 
 	_fog = new Fog(parameters.fogDensity, parameters.fogStart,
 			parameters.fogEnd, parameters.fogRed, parameters.fogGreen,

@@ -28,17 +28,21 @@ TankAI::~TankAI() {
 
 void TankAI::brainTick(float seconds) {
 
-	//TODO:add reloadingtime
+	reloadTime -= seconds;
 
+	//listen closely and watch out for enemies.
 	sense();
-	// if pickTarget is null, sensing failed and we have to explore further
+
+	//take a decision
 	if (_currentTarget == NULL) {
 		switchStrategy(EXPLORE, NULL);
 	} else {
-		switchStrategy(ESCAPE, _currentTarget);
+		switchStrategy(HUNT, _currentTarget);
+		delete _path;
+		_path = NULL;
 	}
 
-	//we have a target and we hunt it
+	//do what you decided to do
 	switch (_strategy) {
 	case HUNT: {
 		hunt();
@@ -73,6 +77,7 @@ void TankAI::sense() {
 					static_cast<AttackedByMessage*>(message);
 			std::cout << "Tank " << " is attacked by Tank "
 					<< abMessage->_attackingEnemyID;
+			switchStrategy(ESCAPE, _currentTarget);
 			break;
 		}
 		case Message::DETONATION_SOUND: {
@@ -81,9 +86,18 @@ void TankAI::sense() {
 			if (Utils::distance(_tank->getPosition(),
 					dsMessage->_detonationPoint)
 					< dsMessage->_detonationStrength) {
+
 				std::cout << "Tank " << " heard some detonation at point "
 						<< dsMessage->_detonationPoint.x << ","
 						<< dsMessage->_detonationPoint.z;
+
+				//if the tank heard a detonation it goes and checks out who's there
+				if (_path == NULL) {
+					delete _path;
+					_path = NULL;
+				}
+				_path = _scene.getTerrain().findPath(_tank->getPosition(),
+						dsMessage->_detonationPoint);
 			}
 			break;
 		}
@@ -96,21 +110,20 @@ void TankAI::sense() {
 		for (std::vector<Target*>::iterator targetsIter = targets.begin();
 				targetsIter != targets.end(); targetsIter++) {
 			Target* target = *targetsIter;
-			if (Utils::distance(_tank->getPosition(),
-					target->getPosition()) < SMALLTANK_VISION_DISTANCE) {
-				_currentTarget = target;
-				break;
-			}
+
+			//if the target near you is not yourself and it is near enough that you can see it
+			if (target != _tank&& Utils::distance(_tank->getPosition(),
+					target->getPosition()) < SMALLTANK_VISION_DISTANCE) {_currentTarget = target;
+			break;
 		}
 	}
-	else
-	{
-		//if the target gets out of sight, we lost it
-		if(Utils::distance(_tank->getPosition(),_currentTarget->getPosition()) > SMALLTANK_VISION_DISTANCE)
-		{
-			_currentTarget = NULL;
-		}
+} else {
+	//if the target gets out of sight, we lose it
+	if (Utils::distance(_tank->getPosition(),
+					_currentTarget->getPosition()) > SMALLTANK_VISION_DISTANCE) {
+		_currentTarget = NULL;
 	}
+}
 }
 
 void TankAI::explore() {
@@ -123,14 +136,29 @@ void TankAI::explore() {
 	followPath();
 
 	//as long as we dont have a target, do some searching animation
-	if (_currentTarget == NULL) {
-		_tank->setAzimuth(_tank->getAzimuth() + 5);
-	}
-
+	_tank->setAzimuth(_tank->getAzimuth() + 5);
 }
 
 void TankAI::hunt() {
+	//choose some random position on the map and find a way from here to this position
+	if(Utils::distance(_tank->getPosition(),_currentTarget->getPosition()) > SHOOTING_DISTANCE)
+	{
+		while (_path == NULL) {
+			Point randomGoal;
+			do
+			{
+				randomGoal = _scene.getTerrain().getRandomPointOnMap();
+			}while(Utils::distance(randomGoal,_currentTarget->getPosition()) < SHOOTING_DISTANCE);
+			_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
+		}
 
+		followPath();
+	}
+
+	if (reloadTime < 0) {
+		aimAndFire();
+		reloadTime = SMALLTANK_RELOADING_TIME;
+	}
 }
 
 void TankAI::escape() {
@@ -200,14 +228,17 @@ void TankAI::aimAndFire() {
 		enemyDirection.z = _currentTarget->getPosition().z
 				- _tank->getPosition().z;
 
-		Vector3D muzzleDirection = Vector3D(0, 0, 1);
+		Vector3D muzzleDirection = Vector3D(1, 0, 0);
 		Utils::rotate(_tank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
 		_tank->setAzimuth(Utils::dot(muzzleDirection, enemyDirection));
 
 		//get the elevation
+		_tank->setElevation(
+				Utils::getElevation(_tank->getPosition(),
+						_currentTarget->getPosition(),
+						_tank->getShootingPower()));
 		//shoot
 		_tank->fireBullet();
 	}
 }
-
 }
