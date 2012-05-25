@@ -278,7 +278,7 @@ void Terrain::buildDisplayLists() {
 }
 
 void Terrain::draw() const {
-	_texture->setActive(true);
+
 	for (uint i = 0; i < _vertices.size(); i++) {
 		//_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
 		_nodes[i]->draw();
@@ -289,7 +289,7 @@ void Terrain::draw() const {
 	for (uint i = 0; i < _trees.size(); i++) {
 		_trees[i]->draw();
 	}
-
+	_texture->setActive(true);
 	glEnable(GL_LIGHTING);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
