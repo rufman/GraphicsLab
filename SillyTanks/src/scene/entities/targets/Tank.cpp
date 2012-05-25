@@ -130,15 +130,17 @@ void Tank::update(float seconds) {
 
 	if (_scene.getTerrain().checkBorder(nextPosition)) {
 		_speed = 0;
-		relativeGravity.x = -1*relativeGravity.x;
-		relativeGravity.z = -1*relativeGravity.z;
-		relativeGravity.y = -1*relativeGravity.y;
+		//make the gravity move the tank away, otherwise the tank can get stuck
+		relativeGravity.x = -relativeGravity.x;
+		relativeGravity.z = -relativeGravity.z;
+		relativeGravity.y = -relativeGravity.y;
 	}
 
 	_position.x += _velocity.x * _speed * seconds + relativeGravity.x * seconds;
 	_position.y = averagedHeight;
 	_position.z += _velocity.z * _speed * seconds + relativeGravity.z * seconds;
 
+	//reset speed to make it necessary to keep the button pressed
 	_speed = 0;
 
 	_tankSmokeParticleEngine->setStartPosition(_position);
@@ -189,7 +191,7 @@ void Tank::fireMissile(Point targetPosition) {
 	missile->setVelocity(velocity);
 
 	_scene._projectiles.push_back(missile);
-	_scene.getSoundEngine().playExplosionSoundAt(_position.x,_position.y,_position.z);
+	_scene.getSoundEngine().playExplosionSound();
 }
 
 Tank::SELECTEDWEAPON Tank::getSelectedWeapon() {

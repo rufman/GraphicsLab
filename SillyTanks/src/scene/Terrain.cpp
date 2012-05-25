@@ -279,11 +279,6 @@ void Terrain::buildDisplayLists() {
 
 void Terrain::draw() const {
 
-	for (uint i = 0; i < _vertices.size(); i++) {
-		//_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
-		_nodes[i]->draw();
-	}
-
 	glPolygonMode(GL_FRONT_AND_BACK, (_renderingParameters.drawMode == RenderingParameters::WIREFRAME) ? GL_LINE : GL_FILL);
 
 	for (uint i = 0; i < _trees.size(); i++) {
@@ -439,6 +434,7 @@ void Terrain::doDamageAt(const Point &point, float damageStrength) {
 }
 
 std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
+
 	for (uint i = 0; i < _nodes.size(); i++) {
 		_nodes.at(i)->_f_score = 0;
 		_nodes.at(i)->_g_score = 0;
@@ -447,6 +443,11 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 		}
 		_nodes.at(i)->_pathState = Node::NOTHING;
 		_nodes.at(i)->_nextNode = NULL;
+	}
+
+	//read in all the blocked nodes
+	for (uint i = 0; i < _vertices.size(); i++) {
+		_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
 	}
 
 	//Implemented the a-star algorithm as it is written in pseudo code on wikipedia.org

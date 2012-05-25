@@ -15,7 +15,7 @@
 namespace game_space {
 
 TankAI::TankAI(Scene &scene, std::vector<Message*>* aiMessages) :
-		_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(NULL), _scene(scene),_path(NULL) {
+		_scene(scene),_strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(NULL),_path(NULL) {
 
 }
 

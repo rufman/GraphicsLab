@@ -25,11 +25,12 @@ public:
 		ESCAPE
 	}_strategy;
 
+	Scene& _scene;
+
 	std::vector<Message*>* _aiMessages;
 	Tank* _tank;
 	Target* _currentTarget;
 	std::vector<Point>* _path;
-	Scene& _scene;
 
 	//delay the shooting a bit
 	float reloadTime;

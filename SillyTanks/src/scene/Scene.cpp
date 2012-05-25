@@ -65,7 +65,7 @@
 
 namespace game_space {
 
-typedef float GLmatrix16f[16]; // Typedef's For VMatMult Procedur
+typedef float GLmatrix16f[16]; // Typedef's For VMatMult Procedure
 
 void VMatMult(GLmatrix16f M, Point v) {
 	GLfloat res[4]; // Hold Calculated Results
@@ -88,7 +88,6 @@ Scene::Scene(Window &window) :
 	_messageBus = new MessageBus();
 
 	_endNode = new Node(Point(1, 2, 1), *this);
-	_endNode->_pathState = Node::ENDPOINT;
 }
 
 Scene::~Scene() {
@@ -108,6 +107,22 @@ Scene::~Scene() {
 	delete _overviewCam;
 
 	glDeleteLists(_gridDisplayList, 1);
+
+	delete _endNode;
+	delete _fog;
+	delete _playerTank;
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();) {
+		Projectile* projectile = *projectileIter;
+		delete projectile;
+	}
+
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++)
+	{
+		Target* target = *targetIter;
+		delete target;
+	}
 }
 
 void Scene::initialize() {
@@ -252,8 +267,7 @@ void Scene::update(float seconds) {
 				tank->getAI()->brainTick(seconds);
 			}
 			tank->update(seconds);
-		}
-		else if (target->_targetType == Target::TOWER) {
+		} else if (target->_targetType == Target::TOWER) {
 			Tower * tower = static_cast<Tower*>(target);
 			if (tower->isAIControlled()) {
 				tower->getAI()->brainTick(seconds);
@@ -275,8 +289,7 @@ void Scene::update(float seconds) {
 			} else {
 				++projectileIter;
 			}
-		}
-		else if (projectile->_projectileType == Projectile::MISSILE) {
+		} else if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
 			missile->move(seconds);
 			if (missile->isDetonated()) {
@@ -338,7 +351,6 @@ void Scene::drawScene() {
 	_currentlyActiveCamera->applyViewport();
 	_currentlyActiveCamera->applyProjection();
 	_currentlyActiveCamera->applyModelview();
-
 
 // Set scene parameters
 	glEnable(GL_DEPTH_TEST);
@@ -420,7 +432,6 @@ void Scene::drawScene() {
 
 	glPopMatrix();
 
-	_endNode->draw();
 
 //if shadows are active then draw shadows
 	if (_shadowsActive) {
@@ -580,23 +591,8 @@ void Scene::handleKeyboardInput() {
 		_shaderActive = !_shaderActive;
 	}
 	if (_window.keyHit('p') || _window.keyHit('P')) {
-		_terrain->findPath(_playerTank->getPosition(), _endNode->_position);
-	}
-	if (_window.specialKeyPressed(GLUT_KEY_LEFT)) {
-		_endNode->_position.x--;
-		_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
-	}
-	if (_window.specialKeyPressed(GLUT_KEY_RIGHT)) {
-		_endNode->_position.x++;
-		_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
-	}
-	if (_window.specialKeyPressed(GLUT_KEY_UP)) {
-		_endNode->_position.z--;
-		_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
-	}
-	if (_window.specialKeyPressed(GLUT_KEY_DOWN)) {
-		_endNode->_position.z++;
-		_endNode->_position.y = getTerrain().getHeight(_endNode->_position);
+		_terrain->findPath(_playerTank->getPosition(),
+				_terrain->getRandomPointOnMap());
 	}
 }
 
@@ -749,7 +745,6 @@ void Scene::drawWaterImage() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
-
 
 	for (LightVector::iterator lightIter = _lights.begin();
 			lightIter != _lights.end(); ++lightIter) {
