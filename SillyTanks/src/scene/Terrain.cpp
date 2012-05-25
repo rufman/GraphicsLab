@@ -604,13 +604,19 @@ Point Terrain::getRandomPointOnMap() {
 		x = (-_width / 2.0) + (rand() % (int) _width);
 		z = (_length / 2.0) - (rand() % (int) _length);
 		y = getHeight(Point(x, 0, z));
-	} while (y < _scene.getWater()->getHeight(Point(x, y, z)) || checkBorder(Point(x, y, z)));
+	} while (checkBorder(Point(x, y, z)));
 
 	return Point(x, y, z);
 }
 
 bool Terrain::checkBorder(const Point &point) const {
 	float threshold = 3.0;
+//	std::cout<<"Water Offset:"<<_scene.getWater()->getHeightOffset()<<std::endl;
+//	std::cout<<"Water Height:"<<_scene.getWater()->getHeight(point)<<std::endl;
+//	std::cout<<"Point Height"<<point.y<<std::endl;
+	if(_scene.getWater()->getHeightOffset()>point.y){
+		return true;
+	}
 
 	float angleGravityNormal = acos(Utils::dot(Vector3D(0, 1, 0), getNormal(point)));
 
@@ -619,12 +625,14 @@ bool Terrain::checkBorder(const Point &point) const {
 		return true;
 	}
 
+//	std::cout<<"Checking trees"<<std::endl;
 	for (uint i = 0; i < _trees.size(); i++) {
-		if (Utils::distance(_trees[i]->getPosition(), point) <= threshold) {
+		if (Utils::distance(_trees[i]->getPosition(), point) < threshold) {
 			return true;
 		}
 	}
 
+//	std::cout<<"Returning false"<<std::endl;
 	return false;
 }
 

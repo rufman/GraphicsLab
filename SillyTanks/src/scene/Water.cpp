@@ -74,9 +74,7 @@ Water::~Water() {
 
 void Water::reset() {
 	_displacement = 0.0f;
-
 	calculateVertexHeights();
-
 	calculateNormals();
 }
 
@@ -168,6 +166,10 @@ float Water::getHeight(const Point &point) const {
 	point_y = (_triangleNormals[triangle_id].x * (point.x - _vertices[_triangles[triangle_id].vertex1].x) + _triangleNormals[triangle_id].z * (point.z - _vertices[_triangles[triangle_id].vertex1].z)) / -_triangleNormals[triangle_id].y + _vertices[_triangles[triangle_id].vertex1].y;
 
 	return point_y;
+}
+
+float Water::getHeightOffset() const {
+	return waterHeightOffset;
 }
 
 Vector3D Water::getNormal(const Point &point) const {
@@ -310,6 +312,9 @@ void Water::draw() const {
 	//glEnable(GL_DEPTH_TEST);
 }
 
+/**
+ * Mirroring functions
+ */
 void Water::applyCamera() const {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
@@ -331,5 +336,6 @@ void Water::capture() {
 
 	_texture.capture(0, 0, width, height);
 }
+
 
 }

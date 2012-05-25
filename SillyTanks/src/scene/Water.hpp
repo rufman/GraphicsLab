@@ -48,6 +48,8 @@ public:
 	 */
 	float getHeight(const Point &point) const;
 
+	float getHeightOffset() const;
+
 	/**
 	 * Get normal at a point.
 	 *
