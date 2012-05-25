@@ -166,6 +166,8 @@ private:
 
 	bool _shadersAlreadyCompiled;
 
+	bool _chooseTarget;
+
 	//lights
 	typedef std::vector<Light*> LightVector;
 	LightVector _lights;
@@ -179,6 +181,8 @@ private:
 	Fog* _fog;
 
 	Node* _endNode;
+
+	Point _targetChooser;
 
 	Tank* _playerTank;
 	std::vector<Target*> _targets;

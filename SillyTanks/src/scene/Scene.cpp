@@ -80,12 +80,11 @@ void VMatMult(GLmatrix16f M, Point v) {
 }
 
 Scene::Scene(Window &window) :
-_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(
-		NULL), _tankCam(NULL), _overviewCam(NULL),
-		_shadowsActive(false), _fogActive(false), _shaderActive(false),
-		 _shadersAlreadyCompiled(false) ,_sunLight(NULL),
-		_skyDome(NULL), _terrain(NULL), _water(NULL)
-		{
+		_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(
+				NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(
+				false), _fogActive(false), _shaderActive(false), _shadersAlreadyCompiled(
+				false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(
+				NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)) {
 
 	//create the soundengine
 	_soundEngine = SoundEngine();
@@ -265,6 +264,10 @@ void Scene::update(float seconds) {
 	_skyDome->update(seconds);
 	_water->update(seconds);
 
+	if (_chooseTarget) {
+		_targetChooser.y = _terrain->getHeight(_targetChooser);
+	}
+
 	for (std::vector<Target*>::iterator targetIter = _targets.begin();
 			targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
@@ -347,12 +350,16 @@ void Scene::drawScene() {
 		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_currentlyActiveCamera = _overviewCam;
-		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(), Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
+		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(),
+				Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
 		_currentlyActiveCamera->setLookAt(
 				LookAt(
-						Point(_playerTank->getPosition().x + _tankDirection.x*50,
+						Point(
+								_playerTank->getPosition().x
+										+ _tankDirection.x * 50,
 								_playerTank->getPosition().y + 50,
-								_playerTank->getPosition().z + _tankDirection.z*50),
+								_playerTank->getPosition().z
+										+ _tankDirection.z * 50),
 						_playerTank->getPosition(), Vector3D(0, 1, 0)));
 	}
 
@@ -420,6 +427,13 @@ void Scene::drawScene() {
 			Tower* tower = static_cast<Tower*>(target);
 			tower->draw();
 		}
+	}
+
+	if (_chooseTarget) {
+		glPushMatrix();
+		glTranslatef(_targetChooser.x, _targetChooser.y, _targetChooser.z);
+		glutSolidCube(1);
+		glPopMatrix();
 	}
 
 	//##################################
@@ -491,9 +505,9 @@ void Scene::drawScene() {
 
 void Scene::drawOverlay() {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
-	int height = glutGet(GLUT_WINDOW_HEIGHT) / 4;
+	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-// Set camera parameters
+	// Set camera parameters
 	_overlayCam->setViewport(
 			Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
 
@@ -501,14 +515,14 @@ void Scene::drawOverlay() {
 	_overlayCam->applyProjection();
 	_overlayCam->applyModelview();
 
-// Set overlay parameters
+	// Set overlay parameters
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-// Draw overlay
+	// Draw overlay
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
@@ -579,6 +593,10 @@ void Scene::handleKeyboardInput() {
 		}
 	}
 
+	if (_window.keyHit('3')) {
+		_shaderActive = !_shaderActive;
+	}
+
 	if (_window.keyHit('4')) {
 		if (_renderingParameters.normalMode == RenderingParameters::OFF) {
 			_renderingParameters.normalMode = RenderingParameters::VERTEX;
@@ -589,6 +607,7 @@ void Scene::handleKeyboardInput() {
 			_renderingParameters.normalMode = RenderingParameters::OFF;
 		}
 	}
+
 	if (_window.keyHit('5')) {
 		if (_cameraMode == TANK_CAM) {
 			_cameraMode = OVERVIEW_CAM;
@@ -596,18 +615,13 @@ void Scene::handleKeyboardInput() {
 			_cameraMode = TANK_CAM;
 		}
 	}
+
 	if (_window.keyHit('6')) {
 		_shadowsActive = !_shadowsActive;
 	}
+
 	if (_window.keyHit('7')) {
 		_fogActive = !_fogActive;
-	}
-	if (_window.keyHit('8')) {
-		_shaderActive = !_shaderActive;
-	}
-	if (_window.keyHit('p') || _window.keyHit('P')) {
-		_terrain->findPath(_playerTank->getPosition(),
-				_terrain->getRandomPointOnMap());
 	}
 }
 
@@ -619,42 +633,43 @@ void Scene::onMouseEntry(int state) {
 
 void Scene::onMouseClick(int button, int state, int x, int y) {
 
-	// do not change these as they are defined like that from the mouse api of opengl, I just did not find the constants
-	const int leftButton = 0;
-	const int middleButton = 1;
-	const int rightButton = 2;
-	const int mouseDown = 0;
-	const int mouseUp = 1;
+	if (state == GLUT_DOWN) {
+		if (!_chooseTarget) {
+			switch (button) {
+			case GLUT_LEFT_BUTTON: {
+				switch (_playerTank->getSelectedWeapon()) {
+				case Tank::BULLET: {
+					_playerTank->fireBullet();
+					break;
+				}
+				case Tank::MISSILE: {
+					_cameraMode = OVERVIEW_CAM;
+					_targetChooser = Point(0, 0, 0);
+					_chooseTarget = true;
 
-	if (state == mouseDown) {
-		switch (button) {
-		case leftButton: {
-			switch (_playerTank->getSelectedWeapon()) {
-			case Tank::BULLET: {
-				_playerTank->fireBullet();
+					break;
+				}
+				}
 				break;
 			}
-			case Tank::MISSILE: {
-				_playerTank->fireMissile(_terrain->getRandomPointOnMap());
-				break;
-			}
-			}
-
-			break;
-		}
-		case rightButton: {
-			switch (_playerTank->getSelectedWeapon()) {
-			case Tank::BULLET: {
-				_playerTank->setSelectedWeapon(Tank::MISSILE);
-				break;
-			}
-			case Tank::MISSILE: {
-				_playerTank->setSelectedWeapon(Tank::BULLET);
+			case GLUT_RIGHT_BUTTON: {
+				switch (_playerTank->getSelectedWeapon()) {
+				case Tank::BULLET: {
+					_playerTank->setSelectedWeapon(Tank::MISSILE);
+					break;
+				}
+				case Tank::MISSILE: {
+					_playerTank->setSelectedWeapon(Tank::BULLET);
+					break;
+				}
+				}
 				break;
 			}
 			}
-			break;
-		}
+		} else {
+			_playerTank->fireMissile(_targetChooser);
+			_chooseTarget = false;
+			_cameraMode = TANK_CAM;
 		}
 	}
 }
@@ -664,6 +679,7 @@ void Scene::onMouseMove(int x, int y) {
 }
 
 void Scene::onMousePassiveMove(int x, int y) {
+
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
@@ -671,12 +687,20 @@ void Scene::onMousePassiveMove(int x, int y) {
 	int yMove = y - _mouseY;
 	_mouseX = width / 2;
 	_mouseY = height / 2;
-	if (abs(xMove) > 3 || abs(yMove) > 3) {
+	if (abs(xMove) > 1 || abs(yMove) > 1) {
 		glutWarpPointer(width / 2, height / 2);
 	}
 
-	_playerTank->setElevation(_playerTank->getElevation() - yMove / 2);
-	_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove / 2);
+	if (!_chooseTarget) {
+		_playerTank->setElevation(_playerTank->getElevation() - yMove / 5);
+		_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove / 5);
+	} else {
+		Vector3D _tankDirection = Utils::rotate(-_playerTank->getAzimuth(),
+						Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
+		Vector3D _cross = Utils::cross(_tankDirection,Vector3D(0,1,0));
+		_targetChooser.x = _targetChooser.x -_tankDirection.x*yMove / 4 - _cross.x*xMove/4;
+		_targetChooser.z = _targetChooser.z +_tankDirection.z*yMove / 4 + _cross.z*xMove/4;
+	}
 	glutPostRedisplay();
 }
 
