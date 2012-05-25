@@ -30,7 +30,7 @@ class ParticleEngine;
 class Smoke;
 class Tank: public Target {
 public:
-	enum SELECTEDWEAPON {
+	enum SelectedWeapon {
 		BULLET, MISSILE
 	};
 protected:
@@ -51,7 +51,7 @@ protected:
 	TankAI* _controllingAI;
 	bool _isAIControlled;
 
-	SELECTEDWEAPON _selectedWeapon;
+	SelectedWeapon _selectedWeapon;
 
 	ParticleEngine<Smoke> *_tankSmokeParticleEngine;
 
@@ -85,8 +85,8 @@ public:
 	void fireMissile(Point targetPosition);
 
 	//only used for a human player
-	SELECTEDWEAPON getSelectedWeapon();
-	void setSelectedWeapon(SELECTEDWEAPON weapon);
+	SelectedWeapon getSelectedWeapon();
+	void setSelectedWeapon(SelectedWeapon weapon);
 
 };
 }

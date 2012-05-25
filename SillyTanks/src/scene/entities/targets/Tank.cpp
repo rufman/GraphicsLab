@@ -194,11 +194,11 @@ void Tank::fireMissile(Point targetPosition) {
 	_scene.getSoundEngine().playExplosionSound();
 }
 
-Tank::SELECTEDWEAPON Tank::getSelectedWeapon() {
+Tank::SelectedWeapon Tank::getSelectedWeapon() {
 	return _selectedWeapon;
 }
 
-void Tank::setSelectedWeapon(SELECTEDWEAPON weapon) {
+void Tank::setSelectedWeapon(SelectedWeapon weapon) {
 	_selectedWeapon = weapon;
 }
 
