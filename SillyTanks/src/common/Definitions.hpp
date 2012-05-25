@@ -53,12 +53,14 @@ namespace game_space {
 #define SMALLTANK_CHASSIS_MODEL "resources/GFX/models/smalltank_chassis.ply"
 #define TURRET_MODEL "resources/GFX/models/turret.ply"
 #define SMALLTANK_SPEED 8
+#define SMALLTANK_VISION_DISTANCE 10
+#define SMALLTANK_ESPACE_DISTANCE 20
 
 //#################
 // Tower definitions
 //#################
 #define SMALLTOWER_TOWERBASE_MODEL "resources/GFX/models/smalltower_towerbase.ply"
-#define SMALLTOWER_VISION_DISTANCE 20;
+#define SMALLTOWER_VISION_DISTANCE 20
 
 //#################
 //Tank textures definitions
