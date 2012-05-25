@@ -100,6 +100,6 @@ namespace game_space {
 #define EXPLOSION_TEXTURE "resources/GFX/textures/explosion.tga"
 #define SMOKE_TEXTURE "resources/GFX/textures/smoke.tga"
 
-#define TOON_VERTEX_SHADER "resources/shaders/toonvshader.vert"
-#define TOON_FRAGMENT_SHADER "resources/shaders/toonfshader.frag"
+#define TOON_VERTEX_SHADER "resources/shaders/toonvshader_notex.vert"
+#define TOON_FRAGMENT_SHADER "resources/shaders/toonfshader_notex.frag"
 #endif // GAME_DEFS_HPP

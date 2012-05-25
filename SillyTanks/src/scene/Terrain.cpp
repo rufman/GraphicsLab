@@ -290,6 +290,7 @@ void Terrain::draw() const {
 		_trees[i]->draw();
 	}
 	_texture->setActive(true);
+	_scene.getShadingEngine().setTextureForShader(_texture->getID());
 	glEnable(GL_LIGHTING);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 

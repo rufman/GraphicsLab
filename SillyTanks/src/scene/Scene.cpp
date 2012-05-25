@@ -80,7 +80,7 @@ void VMatMult(GLmatrix16f M, Point v) {
 }
 
 Scene::Scene(Window &window) :
-		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _sunLight(NULL), _shadowsActive(false), _fogActive(false) {
+		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _sunLight(NULL), _shadowsActive(false), _fogActive(false),_shadersAlreadyCompiled(false),_shaderActive(false) {
 	_soundEngine = SoundEngine();
 	_messageBus = new MessageBus();
 
@@ -187,7 +187,6 @@ void Scene::initialize() {
 	//move the pointer to the middle of the panel
 	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
 
-	_shadingEngine  = new ShadingEngine();
 
 }
 
@@ -224,6 +223,13 @@ void Scene::reset() {
 }
 
 void Scene::update(float seconds) {
+
+	if(_shaderActive && !_shadersAlreadyCompiled)
+	{
+		_shadingEngine = ShadingEngine();
+		_shadersAlreadyCompiled = true;
+	}
+
 	handleKeyboardInput();
 
 	_skyDome->update(seconds);
@@ -342,24 +348,34 @@ void Scene::drawScene() {
 
 	// Draw scene
 	glMatrixMode(GL_MODELVIEW);
+
+
 	//The Sky dome should not use toon shading
-	_shadingEngine->clearShaders();
+	if(_shaderActive)
+	{
+	_shadingEngine.clearShaders();
+	}
 	glPushMatrix();
 
 	// Draw the sky
 	_skyDome->setRenderingParameters(_renderingParameters);
 	_skyDome->draw();
 
+
+	//draw water
+	_water->setRenderingParameters(_renderingParameters);
+	_water->draw();
+
 	//the terrain should use toon shading
-	_shadingEngine->applyToonShader();
+	if(_shaderActive)
+	{
+	_shadingEngine.applyToonShader();
+	}
 
 	// Draw the terrain
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
 
-	//draw water
-	_water->setRenderingParameters(_renderingParameters);
-	_water->draw();
 
 	//Draw the targets
 	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
@@ -377,7 +393,10 @@ void Scene::drawScene() {
 	glPopMatrix();
 
 	//the bullets should not use toon shading
-	_shadingEngine->clearShaders();
+	if(_shaderActive)
+	{
+	_shadingEngine.clearShaders();
+	}
 	glPushMatrix();
 	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end(); ++projectileIter) {
 		Projectile *projectile = *projectileIter;
@@ -651,6 +670,10 @@ void Scene::handleKeyboardInput() {
 	if (_window.keyHit('7')) {
 		_fogActive = !_fogActive;
 	}
+	if(_window.keyHit('8'))
+	{
+		_shaderActive = !_shaderActive;
+	}
 	if (_window.keyHit('p') || _window.keyHit('P')) {
 		_terrain->findPath(_playerTank->getPosition(), _endNode->_position);
 	}
@@ -777,6 +800,10 @@ Window& Scene::getWindow() {
 
 SoundEngine Scene::getSoundEngine() {
 	return _soundEngine;
+}
+
+ShadingEngine Scene::getShadingEngine() {
+	return _shadingEngine;
 }
 
 void Scene::setPlayerTank(Tank* tank) {

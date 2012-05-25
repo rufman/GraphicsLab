@@ -50,4 +50,9 @@ const uchar *TGATexture::getData() const
 	return _image->getData();
 }
 
+GLuint TGATexture::getID()
+{
+	 return _id;
+}
+
 }

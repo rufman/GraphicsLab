@@ -20,6 +20,7 @@ public:
 
 	void applyToonShader();
 	void clearShaders();
+	void setTextureForShader(GLuint i);
 private:
 	char* readInShader(char* fn);
 	void compileShaders();

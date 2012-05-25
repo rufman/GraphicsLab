@@ -36,6 +36,7 @@ public:
 	uint getWidth() const;
 	uint getHeight() const;
 	const uchar *getData() const;
+	GLuint getID();
 	
 private:
 	TGAImage *_image;

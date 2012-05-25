@@ -6,6 +6,7 @@
 #include "../common/Types.hpp"
 #include "../common/Time.hpp"
 #include "../common/SoundEngine.hpp"
+#include "../scene/illumination/shading/ShadingEngine.hpp"
 
 #include "Fog.hpp"
 
@@ -26,6 +27,7 @@ class Camera3D;
 class Time;
 class RenderingParameters;
 class SoundEngine;
+class ShadingEngine;
 */
 
 //illumination forward declarations
@@ -52,9 +54,6 @@ class MessageBus;
 //pathfinding forward declarations
 class Node;
 
-
-//shading engine forward declarations
-class ShadingEngine;
 
 /** Class that contains contents of the screen to display */
 class Scene
@@ -90,6 +89,7 @@ public:
 	//getters and setters
 	Terrain& getTerrain() const {return *_terrain;}
 	SoundEngine getSoundEngine();
+	ShadingEngine getShadingEngine();
 	void setPlayerTank(Tank* tank);
 	Tank* getPlayerTank();
 	Camera3D* getTankCam();
@@ -183,9 +183,11 @@ private:
 
 	Tank* _playerTank;
 
-	ShadingEngine* _shadingEngine;
+	ShadingEngine _shadingEngine;
 
 	MessageBus* _messageBus;
+	bool _shadersAlreadyCompiled;
+	bool _shaderActive;
 
 }; // class Scene
 
