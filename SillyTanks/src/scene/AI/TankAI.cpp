@@ -81,7 +81,8 @@ void TankAI::sense() {
 
 void TankAI::explore() {
 	//choose some random position on the map and find a way from here to this position
-	if (_path == NULL) {
+	while(_path == NULL)
+	{
 		Point randomGoal = _scene.getTerrain().getRandomPointOnMap();
 		_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
 	}
@@ -125,7 +126,8 @@ void TankAI::followPath() {
 	directionToCheckPoint.z = nextCheckPoint.z - _tank->getPosition().z;
 
 	Utils::normalize(directionToCheckPoint);
-	float rotationAngle = Utils::dot(_tank->getDirection(), directionToCheckPoint);
+	Vector3D tankDirection = Utils::rotate(_tank->getDirection(),Vector3D(0,0,1),Vector3D(0,1,0));
+	float rotationAngle = Utils::dot(tankDirection, directionToCheckPoint);
 	if (rotationAngle != 0) {
 		_tank->setDirection(_tank->getDirection() + Utils::toDegree(rotationAngle));
 	}
