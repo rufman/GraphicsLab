@@ -84,13 +84,14 @@ namespace game_space {
 // Object map definitions
 //#################
 #define PINETREE_MODEL "resources/GFX/models/pinetree.ply"
-#define PINETREE_TEXTURE "resources/GFX/textures/cube.png"
+#define PINETREE_TEXTURE "resources/GFX/textures/targets/trees/pinetree.tga"
 #define PINETREE_MAPNR 0
 
 #define PALMTREE_MODEL "resources/GFX/models/palmtree.ply"
 #define PALMTREE_MAPNR 20
 
 #define ROUNDTREE_MODEL "resources/GFX/models/roundtree.ply"
+#define ROUNDTREE_TEXTURE "resources/GFX/textures/targets/trees/roundtree.tga"
 #define ROUNDTREE_MAPNR 40
 
 //###########

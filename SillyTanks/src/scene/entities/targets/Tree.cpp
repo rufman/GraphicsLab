@@ -18,6 +18,10 @@ Tree::Tree(Scene & scene, const std::string &file) :
 	load(file);
 }
 
+Tree::Tree(Scene & scene, const std::string &modelFile, const std::string &textureFile) : PLYModel(scene){
+	load(modelFile,textureFile);
+}
+
 Tree::~Tree() {
 }
 

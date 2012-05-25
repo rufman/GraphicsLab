@@ -12,6 +12,7 @@ class Scene;
 class Tree: public PLYModel {
 public:
 	Tree(Scene &scene, const std::string &file);
+	Tree(Scene &scene, const std::string &modelFile, const std::string &textureFile);
 	virtual ~Tree();
 	void draw() const;
 	void drawShadow(const Point &lightPosition);

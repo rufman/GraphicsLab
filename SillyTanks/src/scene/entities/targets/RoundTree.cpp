@@ -8,7 +8,7 @@
 namespace game_space {
 
 RoundTree::RoundTree(Scene & scene) :
-		Tree(scene, ROUNDTREE_MODEL) {
+		Tree(scene, ROUNDTREE_MODEL, ROUNDTREE_TEXTURE) {
 }
 
 }

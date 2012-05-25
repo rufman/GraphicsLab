@@ -8,7 +8,7 @@
 namespace game_space {
 
 PineTree::PineTree(Scene & scene) :
-		Tree(scene, PINETREE_MODEL) {
+		Tree(scene, PINETREE_MODEL, PINETREE_TEXTURE) {
 }
 
 }
