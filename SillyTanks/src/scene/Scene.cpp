@@ -339,9 +339,6 @@ void Scene::drawScene() {
 	_currentlyActiveCamera->applyProjection();
 	_currentlyActiveCamera->applyModelview();
 
-// Grid
-	if (_gridOn)
-		drawGrid();
 
 // Set scene parameters
 	glEnable(GL_DEPTH_TEST);
@@ -556,10 +553,6 @@ void Scene::handleKeyboardInput() {
 		}
 	}
 
-	if (_window.keyHit('3')) {
-		drawGrid();
-	}
-
 	if (_window.keyHit('4')) {
 		if (_renderingParameters.normalMode == RenderingParameters::OFF) {
 			_renderingParameters.normalMode = RenderingParameters::VERTEX;
@@ -757,9 +750,6 @@ void Scene::drawWaterImage() {
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-// Grid
-	if (_gridOn)
-		drawGrid();
 
 	for (LightVector::iterator lightIter = _lights.begin();
 			lightIter != _lights.end(); ++lightIter) {
