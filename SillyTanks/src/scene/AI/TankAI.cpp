@@ -34,9 +34,9 @@ void TankAI::brainTick(float seconds) {
 	sense();
 
 	//take a decision
-	if (_currentTarget == NULL) {
+	if (_currentTarget == NULL && _strategy != EXPLORE) {
 		switchStrategy(EXPLORE, NULL);
-	} else {
+	} else if(_currentTarget != NULL && _strategy != HUNT) {
 		switchStrategy(HUNT, _currentTarget);
 		delete _path;
 		_path = NULL;

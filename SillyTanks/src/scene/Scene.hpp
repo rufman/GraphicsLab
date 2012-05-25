@@ -97,6 +97,7 @@ public:
 	MessageBus* getMessageBus();
 	Water* getWater();
 	std::vector<Target*> getTargets();
+	std::vector<Projectile*> getProjectiles();
 	Window& getWindow();
 
 private:
@@ -113,18 +114,10 @@ private:
 	void drawOverlay();
 
 	void handleKeyboardInput();
-public:
-	std::vector<Target*> _targets;
-	std::vector<Projectile*> _projectiles;
+
 private:
 
 	Window &_window;
-
-	SoundEngine _soundEngine;
-
-	bool _gridOn;
-	GLuint _gridDisplayList;
-	bool _dashBoardOn;
 
 	// Scene data
 	RenderingParameters _renderingParameters;
@@ -136,7 +129,6 @@ private:
 
 	enum CameraMode
 	{
-		INSIDE_CAM,
 		TANK_CAM,
 		OVERVIEW_CAM
 	}_cameraMode;
@@ -166,27 +158,37 @@ private:
 	Camera3D *_tankCam;
 	Camera3D *_overviewCam;
 	Camera3D* _currentlyActiveCamera;
+
+	//toggles
 	bool _shadowsActive;
 	bool _fogActive;
+	bool _shaderActive;
 
+	bool _shadersAlreadyCompiled;
+
+	//lights
 	typedef std::vector<Light*> LightVector;
 	LightVector _lights;
+	DirectionalLight* _sunLight;
 
+
+	//scene components
 	SkyDome *_skyDome;
 	Terrain *_terrain;
 	Water *_water;
-	DirectionalLight* _sunLight;
 	Fog* _fog;
 
 	Node* _endNode;
 
 	Tank* _playerTank;
+	std::vector<Target*> _targets;
+	std::vector<Projectile*> _projectiles;
 
 	ShadingEngine _shadingEngine;
 
 	MessageBus* _messageBus;
-	bool _shadersAlreadyCompiled;
-	bool _shaderActive;
+
+	SoundEngine _soundEngine;
 
 }; // class Scene
 

@@ -80,13 +80,20 @@ void VMatMult(GLmatrix16f M, Point v) {
 }
 
 Scene::Scene(Window &window) :
-		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(
-				TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(
-				NULL), _water(NULL), _sunLight(NULL), _shadowsActive(false), _fogActive(
-				false), _shadersAlreadyCompiled(false), _shaderActive(false) {
+_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(
+		NULL), _tankCam(NULL), _overviewCam(NULL),
+		_shadowsActive(false), _fogActive(false), _shaderActive(false),
+		 _shadersAlreadyCompiled(false) ,_sunLight(NULL),
+		_skyDome(NULL), _terrain(NULL), _water(NULL)
+		{
+
+	//create the soundengine
 	_soundEngine = SoundEngine();
+
+	//create the messagebus
 	_messageBus = new MessageBus();
 
+	//i can not remove it because the game crashes...strange bug...
 	_endNode = new Node(Point(1, 2, 1), *this);
 }
 
@@ -94,7 +101,9 @@ Scene::~Scene() {
 	delete _skyDome;
 	delete _terrain;
 	delete _water;
+	delete _fog;
 
+	// delete lights
 	for (LightVector::iterator lightIter = _lights.begin();
 			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
@@ -102,26 +111,26 @@ Scene::~Scene() {
 	}
 	_lights.clear();
 
+	// delete cameras
 	delete _overlayCam;
 	delete _tankCam;
 	delete _overviewCam;
 
-	glDeleteLists(_gridDisplayList, 1);
-
 	delete _endNode;
-	delete _fog;
+
+	//delete targets
 	delete _playerTank;
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
+		Target* target = *targetIter;
+		delete target;
+	}
+
+	//delete projectiles
 	for (std::vector<Projectile*>::iterator projectileIter =
 			_projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile* projectile = *projectileIter;
 		delete projectile;
-	}
-
-	for (std::vector<Target*>::iterator targetIter = _targets.begin();
-			targetIter != _targets.end(); targetIter++)
-	{
-		Target* target = *targetIter;
-		delete target;
 	}
 }
 
@@ -160,50 +169,6 @@ void Scene::initialize() {
 
 	glEnable(GL_NORMALIZE);
 
-	Application &application = Application::getInstance();
-	const Application::Parameters &parameters = application.getParameters();
-
-	glClearColor(parameters.fogRed, parameters.fogGreen, parameters.fogBlue,
-			0.0);
-
-	// Initialize scene components
-	_overlayCam = new Camera2D(*this);
-	_tankCam = new Camera3D(*this);
-	_overviewCam = new Camera3D(*this);
-	_currentlyActiveCamera = _tankCam;
-
-	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
-	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4,
-			100 * 4, 50, 50);
-	_water = new Water(*this, parameters.waterHeight, 100 * 4, 100 * 4);
-
-	//add playertank to game
-	_playerTank = new SmallTank(*this, false);
-
-	_playerTank->setPosition(_terrain->getRandomPointOnMap());
-	_playerTank->setNeighbors();
-	_targets.push_back(_playerTank);
-
-	//add some tanks to the scene
-	for (int i = 0; i < 1; i++) {
-		Tank* tank = new SmallTank(*this, true);
-		tank->setPosition(_terrain->getRandomPointOnMap());
-		_targets.push_back(tank);
-	}
-
-	//add some towers to the scene
-	/*for (int i = 0; i < 4; i++) {
-		Tower* tower = new SmallTower(*this, true);
-		tower->setPosition(_terrain->getRandomPointOnMap());
-		_targets.push_back(tower);
-	}*/
-
-	_fog = new Fog(parameters.fogDensity, parameters.fogStart,
-			parameters.fogEnd, parameters.fogRed, parameters.fogGreen,
-			parameters.fogBlue);
-	// reset data
-	reset();
-
 	//hiding the default cursor and putting the cursor position to the middle of the window
 	glutSetCursor(GLUT_CURSOR_NONE);
 
@@ -211,15 +176,57 @@ void Scene::initialize() {
 	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2,
 			glutGet(GLUT_WINDOW_HEIGHT) / 2);
 
+	Application &application = Application::getInstance();
+	const Application::Parameters &parameters = application.getParameters();
+
+	glClearColor(parameters.fogRed, parameters.fogGreen, parameters.fogBlue,
+			0.0);
+	_fog = new Fog(parameters.fogDensity, parameters.fogStart,
+			parameters.fogEnd, parameters.fogRed, parameters.fogGreen,
+			parameters.fogBlue);
+
+	// Initialize cameras
+	_overlayCam = new Camera2D(*this);
+	_tankCam = new Camera3D(*this);
+	_overviewCam = new Camera3D(*this);
+	_currentlyActiveCamera = _tankCam;
+
+	//##############################
+	//initialize scene components
+	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
+	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4,
+			100 * 4, 50, 50);
+	_water = new Water(*this, parameters.waterHeight, 100 * 4, 100 * 4);
+
+	//create human player's tank
+	_playerTank = new SmallTank(*this, false);
+	_playerTank->setPosition(_terrain->getRandomPointOnMap());
+	_playerTank->setNeighbors();
+	_targets.push_back(_playerTank);
+
+	//add some AI tanks to the scene
+	for (int i = 0; i < 1; i++) {
+		Tank* tank = new SmallTank(*this, true);
+		tank->setPosition(_terrain->getRandomPointOnMap());
+		_targets.push_back(tank);
+	}
+
+	//add some  AI towers to the scene
+	/*for (int i = 0; i < 4; i++) {
+	 Tower* tower = new SmallTower(*this, true);
+	 tower->setPosition(_terrain->getRandomPointOnMap());
+	 _targets.push_back(tower);
+	 }*/
+
+	// reset the scene
+	reset();
 }
 
 void Scene::reset() {
 	_renderingParameters.drawMode = RenderingParameters::POLYGON;
 	_renderingParameters.shadeMode = RenderingParameters::SMOOTH;
 
-	_dashBoardOn = false;
-	_gridOn = false;
-
+	//the next update will be the first
 	_firstUpdate = true;
 
 	_cameraMode = TANK_CAM;
@@ -311,19 +318,22 @@ void Scene::onPaint() {
 		update(secondsSinceLastUpdate);
 		_updateTime.start();
 	}
+
+	//capture water reflection image
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-// Draw mirror image
+	// Draw mirror image
 	drawWaterImage();
 	_water->capture();
-// Clear the screen
+	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-// Draw screen
+	// Draw screen
 	drawScene();
-	if (_dashBoardOn)
-		drawOverlay();
 
-// Swap buffers
+	// Draw overlay
+	//drawOverlay();
+
+	// Swap buffers
 	glutSwapBuffers();
 }
 
@@ -331,28 +341,28 @@ void Scene::drawScene() {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-// Set camera parameters
-
+	// Set camera parameters
 	if (_cameraMode == TANK_CAM) {
 		_currentlyActiveCamera = _tankCam;
 		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_currentlyActiveCamera = _overviewCam;
+		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(), Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
 		_currentlyActiveCamera->setLookAt(
 				LookAt(
-						Point(_playerTank->getPosition().x + 50,
+						Point(_playerTank->getPosition().x + _tankDirection.x*50,
 								_playerTank->getPosition().y + 50,
-								_playerTank->getPosition().z + 50),
+								_playerTank->getPosition().z + _tankDirection.z*50),
 						_playerTank->getPosition(), Vector3D(0, 1, 0)));
 	}
 
-// OpenGL Lighting
+	// OpenGL camera
 	_currentlyActiveCamera->setViewport(Viewport(0, 0, width, height));
 	_currentlyActiveCamera->applyViewport();
 	_currentlyActiveCamera->applyProjection();
 	_currentlyActiveCamera->applyModelview();
 
-// Set scene parameters
+	// Set scene parameters
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
@@ -363,37 +373,42 @@ void Scene::drawScene() {
 		light->apply();
 	}
 
-// draw sun light
+	// draw sun light
 	_sunLight->setPosition(_skyDome->getSunPosition());
 	_sunLight->apply();
 
-// Draw scene
+	// Draw scene
 	glMatrixMode(GL_MODELVIEW);
 
-//The Sky dome should not use toon shading
+	//#############################
+	// Sky dome and water
+	//The Sky dome and water should not use toon shading
 	if (_shaderActive) {
 		_shadingEngine.clearShaders();
 	}
-	glPushMatrix();
 
-// Draw the sky
+	// Draw the sky
 	_skyDome->setRenderingParameters(_renderingParameters);
 	_skyDome->draw();
 
-//draw water
+	//draw water
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
 
-//the terrain should use toon shading
+	//###############################
+	// Terrain
+	//the terrain should use toon shading
 	if (_shaderActive) {
 		_shadingEngine.applyToonShader();
 	}
 
-// Draw the terrain
+	// Draw the terrain
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
 
-//Draw the targets
+	//################################
+	// The targets should use toon shading as well
+	//Draw the targets
 	for (std::vector<Target*>::iterator targetIter = _targets.begin();
 			targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
@@ -406,14 +421,13 @@ void Scene::drawScene() {
 			tower->draw();
 		}
 	}
-//_playerTank->drawShadow(lightpos);
-	glPopMatrix();
 
-//the bullets should not use toon shading
+	//##################################
+	// Projectiles
+	//the projectiles should not use toon shading
 	if (_shaderActive) {
 		_shadingEngine.clearShaders();
 	}
-	glPushMatrix();
 	for (std::vector<Projectile*>::iterator projectileIter =
 			_projectiles.begin(); projectileIter != _projectiles.end();
 			++projectileIter) {
@@ -430,14 +444,13 @@ void Scene::drawScene() {
 		}
 	}
 
-	glPopMatrix();
-
-
-//if shadows are active then draw shadows
+	//##################################
+	// Shadowing
+	//if shadows are active then draw shadows
 	if (_shadowsActive) {
 		GLmatrix16f Minv;
-		Point lightpos = Point(100, 100, 100);
-		//Point lightpos = _skyDome->getSunPosition();
+		//Point lightpos = Point(100, 100, 100);
+		Point lightpos = _skyDome->getSunPosition();
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glClearStencil(0); // Stencil Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
@@ -445,10 +458,8 @@ void Scene::drawScene() {
 		glCullFace(GL_BACK); // Set Culling Face To Back Face
 		glEnable(GL_CULL_FACE); // Enable Culling
 
-		//glLoadIdentity();
 		glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix (Stores In Minv)
 		VMatMult(Minv, lightpos); // We Store Rotated Light Vector In 'lp' Array
-		glGetFloatv(GL_MODELVIEW_MATRIX, Minv); // Retrieve ModelView Matrix From Minv
 		Point wlp = Point(0, 0, 0, 1);
 		lightpos.x += wlp.x;
 		lightpos.y += wlp.y;
@@ -456,11 +467,14 @@ void Scene::drawScene() {
 		lightpos.w += wlp.w;
 
 		_terrain->drawShadows(lightpos);
+		//_playerTank->drawShadow(lightpos);
 	}
 
 	glEnable(GL_LIGHTING); // Enable Lighting
 	glDepthMask(GL_TRUE); // Enable Depth Mask
 
+	//############################
+	// Fog
 	if (_cameraMode == TANK_CAM) {
 		if (_fogActive) {
 			_fog->apply();
@@ -470,6 +484,7 @@ void Scene::drawScene() {
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_fog->remove();
 	}
+
 	glFlush();
 	glutSwapBuffers();
 }
@@ -604,7 +619,7 @@ void Scene::onMouseEntry(int state) {
 
 void Scene::onMouseClick(int button, int state, int x, int y) {
 
-// do not change these as they are defined like that from the mouse api of opengl, I just did not find the constants
+	// do not change these as they are defined like that from the mouse api of opengl, I just did not find the constants
 	const int leftButton = 0;
 	const int middleButton = 1;
 	const int rightButton = 2;
@@ -765,5 +780,9 @@ Water* Scene::getWater() {
 
 std::vector<Target*> Scene::getTargets() {
 	return _targets;
+}
+
+std::vector<Projectile*> Scene::getProjectiles() {
+	return _projectiles;
 }
 }
