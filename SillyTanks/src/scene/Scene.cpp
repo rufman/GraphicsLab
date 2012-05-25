@@ -187,7 +187,7 @@ void Scene::initialize() {
 	//move the pointer to the middle of the panel
 	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
 
-	//_shadingEngine  = new ShadingEngine();
+	_shadingEngine  = new ShadingEngine();
 
 }
 
@@ -343,7 +343,7 @@ void Scene::drawScene() {
 	// Draw scene
 	glMatrixMode(GL_MODELVIEW);
 	//The Sky dome should not use toon shading
-	//_shadingEngine->clearShaders();
+	_shadingEngine->clearShaders();
 	glPushMatrix();
 
 	// Draw the sky
@@ -351,7 +351,7 @@ void Scene::drawScene() {
 	_skyDome->draw();
 
 	//the terrain should use toon shading
-	//_shadingEngine->applyToonShader();
+	_shadingEngine->applyToonShader();
 
 	// Draw the terrain
 	_terrain->setRenderingParameters(_renderingParameters);
@@ -377,7 +377,7 @@ void Scene::drawScene() {
 	glPopMatrix();
 
 	//the bullets should not use toon shading
-	//_shadingEngine->clearShaders();
+	_shadingEngine->clearShaders();
 	glPushMatrix();
 	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end(); ++projectileIter) {
 		Projectile *projectile = *projectileIter;
