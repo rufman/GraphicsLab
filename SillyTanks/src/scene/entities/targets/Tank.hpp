@@ -82,7 +82,7 @@ public:
 	bool isAIControlled() const;
 	TankAI* getAI() const;
 	void fireBullet();
-	void fireMissile();
+	void fireMissile(Point targetPosition);
 
 	//only used for a human player
 	SELECTEDWEAPON getSelectedWeapon();

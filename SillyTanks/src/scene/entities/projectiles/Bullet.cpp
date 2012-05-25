@@ -6,14 +6,18 @@
 // Class declaration include
 #include "Bullet.hpp"
 
-// Includes
+// common includes
 #include "../../../common/GLIncludes.hpp"
+
+//scene includes
+#include "../../Scene.hpp"
+#include "../../Terrain.hpp"
 
 namespace game_space {
 
 Bullet::Bullet( Scene &scene, float size ) :
 Projectile( scene,Projectile::BULLET,0 ),
-_size( size ) {}
+_size( size ),_detonated(false) {}
 
 Bullet::~Bullet() {}
 
@@ -57,6 +61,17 @@ void Bullet::move( float seconds )
 	_position.z += _velocity.z*seconds;
 
 	_velocity.y += GRAVITATIONAL_ACCELERATION*seconds;
+
+	//if the bullet hits the ground it detonates
+	if ((_position.y < _scene.getTerrain().getHeight(_position))) {
+		_scene.getTerrain().doDamageAt(_position, 0.05);
+		_detonated = true;
+	}
+}
+
+
+bool Bullet::isDetonated() {
+	return _detonated;
 }
 
 }

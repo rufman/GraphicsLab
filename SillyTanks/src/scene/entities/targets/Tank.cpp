@@ -170,7 +170,6 @@ TankAI* Tank::getAI() const {
 void Tank::fireBullet() {
 	Bullet* bullet = new Bullet(_scene);
 
-	_scene.getSoundEngine().playMuzzleSound();
 	bullet->setPosition(getMuzzlePosition());
 
 	float velocityScale = 30;
@@ -178,18 +177,19 @@ void Tank::fireBullet() {
 	bullet->setVelocity(velocity);
 
 	_scene._projectiles.push_back(bullet);
+	_scene.getSoundEngine().playMuzzleSound();
 }
 
-void Tank::fireMissile() {
+void Tank::fireMissile(Point targetPosition) {
 	Missile* missile = new Missile(_scene);
-
 	missile->setPosition(getMuzzlePosition());
+	missile->setTargetPosition(targetPosition);
 
 	Vector3D velocity(-getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), getShootingPower() * std::sin(Utils::toRadian(getElevation())), -getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	missile->setVelocity(velocity);
 
-	_scene.getSoundEngine().playExplosionSound();
 	_scene._projectiles.push_back(missile);
+	_scene.getSoundEngine().playExplosionSoundAt(_position.x,_position.y,_position.z);
 }
 
 Tank::SELECTEDWEAPON Tank::getSelectedWeapon() {

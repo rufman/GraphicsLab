@@ -80,7 +80,10 @@ void VMatMult(GLmatrix16f M, Point v) {
 }
 
 Scene::Scene(Window &window) :
-		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _sunLight(NULL), _shadowsActive(false), _fogActive(false),_shadersAlreadyCompiled(false),_shaderActive(false) {
+		_window(window), _gridDisplayList(0), _firstUpdate(true), _cameraMode(
+				TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _skyDome(NULL), _terrain(
+				NULL), _water(NULL), _sunLight(NULL), _shadowsActive(false), _fogActive(
+				false), _shadersAlreadyCompiled(false), _shaderActive(false) {
 	_soundEngine = SoundEngine();
 	_messageBus = new MessageBus();
 
@@ -93,7 +96,8 @@ Scene::~Scene() {
 	delete _terrain;
 	delete _water;
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		delete light;
 	}
@@ -144,7 +148,8 @@ void Scene::initialize() {
 	Application &application = Application::getInstance();
 	const Application::Parameters &parameters = application.getParameters();
 
-	glClearColor(parameters.fogRed, parameters.fogGreen, parameters.fogBlue, 0.0);
+	glClearColor(parameters.fogRed, parameters.fogGreen, parameters.fogBlue,
+			0.0);
 
 	// Initialize scene components
 	_overlayCam = new Camera2D(*this);
@@ -153,7 +158,8 @@ void Scene::initialize() {
 	_currentlyActiveCamera = _tankCam;
 
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
-	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
+	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4,
+			100 * 4, 50, 50);
 	_water = new Water(*this, parameters.waterHeight, 100 * 4, 100 * 4);
 
 	//add playertank to game
@@ -177,7 +183,9 @@ void Scene::initialize() {
 		_targets.push_back(tower);
 	}
 
-	_fog = new Fog(parameters.fogDensity, parameters.fogStart, parameters.fogEnd, parameters.fogRed, parameters.fogGreen, parameters.fogBlue);
+	_fog = new Fog(parameters.fogDensity, parameters.fogStart,
+			parameters.fogEnd, parameters.fogRed, parameters.fogGreen,
+			parameters.fogBlue);
 	// reset data
 	reset();
 
@@ -185,8 +193,8 @@ void Scene::initialize() {
 	glutSetCursor(GLUT_CURSOR_NONE);
 
 	//move the pointer to the middle of the panel
-	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
-
+	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2,
+			glutGet(GLUT_WINDOW_HEIGHT) / 2);
 
 }
 
@@ -206,7 +214,8 @@ void Scene::reset() {
 	_skyDome->reset();
 	_water->reset();
 
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
@@ -224,8 +233,7 @@ void Scene::reset() {
 
 void Scene::update(float seconds) {
 
-	if(_shaderActive && !_shadersAlreadyCompiled)
-	{
+	if (_shaderActive && !_shadersAlreadyCompiled) {
 		_shadingEngine = ShadingEngine();
 		_shadersAlreadyCompiled = true;
 	}
@@ -235,7 +243,8 @@ void Scene::update(float seconds) {
 	_skyDome->update(seconds);
 	_water->update(seconds);
 
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
@@ -244,7 +253,7 @@ void Scene::update(float seconds) {
 			}
 			tank->update(seconds);
 		}
-		if (target->_targetType == Target::TOWER) {
+		else if (target->_targetType == Target::TOWER) {
 			Tower * tower = static_cast<Tower*>(target);
 			if (tower->isAIControlled()) {
 				tower->getAI()->brainTick(seconds);
@@ -253,24 +262,21 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
 			bullet->move(seconds);
 
-			// Remove bullet if out of window
-			const Point &bulletPosition = bullet->getPosition();
-
-			if ((bulletPosition.y < _terrain->getHeight(bulletPosition))) {
+			if (bullet->isDetonated()) {
 				projectileIter = _projectiles.erase(projectileIter);
-				_terrain->doDamageAt(bulletPosition, 0.05);
 				delete bullet;
 			} else {
 				++projectileIter;
 			}
 		}
-		if (projectile->_projectileType == Projectile::MISSILE) {
+		else if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
 			missile->move(seconds);
 			if (missile->isDetonated()) {
@@ -293,18 +299,18 @@ void Scene::onPaint() {
 		_updateTime.start();
 	}
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	// Draw mirror image
+// Draw mirror image
 	drawWaterImage();
 	_water->capture();
-	// Clear the screen
+// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	// Draw screen
+// Draw screen
 	drawScene();
 	if (_dashBoardOn)
 		drawOverlay();
 
-	// Swap buffers
+// Swap buffers
 	glutSwapBuffers();
 }
 
@@ -312,73 +318,75 @@ void Scene::drawScene() {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-	// Set camera parameters
+// Set camera parameters
 
 	if (_cameraMode == TANK_CAM) {
 		_currentlyActiveCamera = _tankCam;
 		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_currentlyActiveCamera = _overviewCam;
-		_currentlyActiveCamera->setLookAt(LookAt(Point(_playerTank->getPosition().x+50, _playerTank->getPosition().y+50, _playerTank->getPosition().z+50), _playerTank->getPosition(), Vector3D(0, 1, 0)));
+		_currentlyActiveCamera->setLookAt(
+				LookAt(
+						Point(_playerTank->getPosition().x + 50,
+								_playerTank->getPosition().y + 50,
+								_playerTank->getPosition().z + 50),
+						_playerTank->getPosition(), Vector3D(0, 1, 0)));
 	}
 
-	// OpenGL Lighting
+// OpenGL Lighting
 	_currentlyActiveCamera->setViewport(Viewport(0, 0, width, height));
 	_currentlyActiveCamera->applyViewport();
 	_currentlyActiveCamera->applyProjection();
 	_currentlyActiveCamera->applyModelview();
 
-	// Grid
+// Grid
 	if (_gridOn)
 		drawGrid();
 
-	// Set scene parameters
+// Set scene parameters
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}
 
-	// draw sun light
+// draw sun light
 	_sunLight->setPosition(_skyDome->getSunPosition());
 	_sunLight->apply();
 
-	// Draw scene
+// Draw scene
 	glMatrixMode(GL_MODELVIEW);
 
-
-	//The Sky dome should not use toon shading
-	if(_shaderActive)
-	{
-	_shadingEngine.clearShaders();
+//The Sky dome should not use toon shading
+	if (_shaderActive) {
+		_shadingEngine.clearShaders();
 	}
 	glPushMatrix();
 
-	// Draw the sky
+// Draw the sky
 	_skyDome->setRenderingParameters(_renderingParameters);
 	_skyDome->draw();
 
-
-	//draw water
+//draw water
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
 
-	//the terrain should use toon shading
-	if(_shaderActive)
-	{
-	_shadingEngine.applyToonShader();
+//the terrain should use toon shading
+	if (_shaderActive) {
+		_shadingEngine.applyToonShader();
 	}
 
-	// Draw the terrain
+// Draw the terrain
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
 
-
-	//Draw the targets
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+//Draw the targets
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
@@ -389,16 +397,17 @@ void Scene::drawScene() {
 			tower->draw();
 		}
 	}
-	//_playerTank->drawShadow(lightpos);
+//_playerTank->drawShadow(lightpos);
 	glPopMatrix();
 
-	//the bullets should not use toon shading
-	if(_shaderActive)
-	{
-	_shadingEngine.clearShaders();
+//the bullets should not use toon shading
+	if (_shaderActive) {
+		_shadingEngine.clearShaders();
 	}
 	glPushMatrix();
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end(); ++projectileIter) {
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();
+			++projectileIter) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
@@ -416,7 +425,7 @@ void Scene::drawScene() {
 
 	_endNode->draw();
 
-	//if shadows are active then draw shadows
+//if shadows are active then draw shadows
 	if (_shadowsActive) {
 		GLmatrix16f Minv;
 		Point lightpos = Point(100, 100, 100);
@@ -457,123 +466,26 @@ void Scene::drawScene() {
 	glutSwapBuffers();
 }
 
-void Scene::drawGrid() {
-	GLboolean lightingEnabled;
-	glGetBooleanv(GL_LIGHTING, &lightingEnabled);
-	if (lightingEnabled) {
-		glDisable(GL_LIGHTING);
-	}
-
-	float lineWidth;
-	glGetFloatv(GL_LINE_WIDTH, &lineWidth);
-
-	float width = 100.0;
-
-	if (_gridDisplayList) {
-		glCallList(_gridDisplayList);
-	} else {
-		_gridDisplayList = glGenLists(1);
-
-		glNewList(_gridDisplayList, GL_COMPILE_AND_EXECUTE);
-
-		glLineWidth(2.0f);
-		glBegin(GL_LINES);
-
-		glColor3fv(Color::RED());
-		glVertex3f(-width, 0.0, 0.0);
-		glVertex3f(width, 0.0, 0.0);
-		glColor3fv(Color::GREEN());
-		glVertex3f(0.0, -width, 0.0);
-		glVertex3f(0.0, width, 0.0);
-		glColor3fv(Color::BLUE());
-		glVertex3f(0.0, 0.0, -width);
-		glVertex3f(0.0, 0.0, width);
-
-		glEnd();
-
-		uint resolution = 10;
-		float tickWidth = 0.12;
-		glLineWidth(0.5f);
-		glBegin(GL_LINES);
-
-		glColor3fv(Color::RED());
-		for (uint i = 0; i < resolution; i++) {
-			float x = width - (2 * width) * i * 1.0 / resolution;
-			glVertex3f(x, 0.0, -tickWidth);
-			glVertex3f(x, 0.0, tickWidth);
-			glVertex3f(x, -tickWidth, 0.0);
-			glVertex3f(x, tickWidth, 0.0);
-		}
-		glColor3fv(Color::GREEN());
-		for (uint i = 0; i < resolution; i++) {
-			float y = width - (2 * width) * i * 1.0 / resolution;
-			glVertex3f(-tickWidth, y, 0.0);
-			glVertex3f(tickWidth, y, 0.0);
-			glVertex3f(0.0, y, -tickWidth);
-			glVertex3f(0.0, y, tickWidth);
-		}
-		glColor3fv(Color::BLUE());
-		for (uint i = 0; i < resolution; i++) {
-			float z = width - (2 * width) * i * 1.0 / resolution;
-			glVertex3f(-tickWidth, 0.0, z);
-			glVertex3f(tickWidth, 0.0, z);
-			glVertex3f(0.0, -tickWidth, z);
-			glVertex3f(0.0, tickWidth, z);
-		}
-
-		glEnd();
-
-		float textHeight = 1.0 / width;
-		TextBox x(*this, "x", textHeight, 1.5);
-		TextBox y(*this, "y", textHeight, 1.5);
-		TextBox z(*this, "z", textHeight, 1.5);
-
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glTranslatef(width * 1.02, 0.0, x.getWidth() / 2.0);
-		glRotatef(90, 0.0, 1.0, 0.0);
-		glColor3fv(Color::RED());
-		x.draw();
-		glPopMatrix();
-		glPushMatrix();
-		glTranslatef(-y.getWidth() / 2.0, width * 1.02, 0.0);
-		glColor3fv(Color::GREEN());
-		y.draw();
-		glPopMatrix();
-		glPushMatrix();
-		glTranslatef(-z.getWidth() / 2.0, 0.0, width * 1.02);
-		glColor3fv(Color::BLUE());
-		z.draw();
-		glPopMatrix();
-
-		glEndList();
-	}
-
-	if (lightingEnabled)
-		glEnable(GL_LIGHTING);
-
-	glLineWidth(lineWidth);
-}
-
 void Scene::drawOverlay() {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT) / 4;
 
-	// Set camera parameters
-	_overlayCam->setViewport(Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
+// Set camera parameters
+	_overlayCam->setViewport(
+			Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
 
 	_overlayCam->applyViewport();
 	_overlayCam->applyProjection();
 	_overlayCam->applyModelview();
 
-	// Set overlay parameters
+// Set overlay parameters
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	// Draw overlay
+// Draw overlay
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
@@ -651,7 +563,8 @@ void Scene::handleKeyboardInput() {
 	if (_window.keyHit('4')) {
 		if (_renderingParameters.normalMode == RenderingParameters::OFF) {
 			_renderingParameters.normalMode = RenderingParameters::VERTEX;
-		} else if (_renderingParameters.normalMode == RenderingParameters::VERTEX) {
+		} else if (_renderingParameters.normalMode
+				== RenderingParameters::VERTEX) {
 			_renderingParameters.normalMode = RenderingParameters::TRIANGLE;
 		} else {
 			_renderingParameters.normalMode = RenderingParameters::OFF;
@@ -670,8 +583,7 @@ void Scene::handleKeyboardInput() {
 	if (_window.keyHit('7')) {
 		_fogActive = !_fogActive;
 	}
-	if(_window.keyHit('8'))
-	{
+	if (_window.keyHit('8')) {
 		_shaderActive = !_shaderActive;
 	}
 	if (_window.keyHit('p') || _window.keyHit('P')) {
@@ -703,7 +615,7 @@ void Scene::onMouseEntry(int state) {
 
 void Scene::onMouseClick(int button, int state, int x, int y) {
 
-	// do not change these as they are defined like that from the mouse api of opengl, I just did not find the constants
+// do not change these as they are defined like that from the mouse api of opengl, I just did not find the constants
 	const int leftButton = 0;
 	const int middleButton = 1;
 	const int rightButton = 2;
@@ -719,7 +631,7 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 				break;
 			}
 			case Tank::MISSILE: {
-				_playerTank->fireMissile();
+				_playerTank->fireMissile(_terrain->getRandomPointOnMap());
 				break;
 			}
 			}
@@ -777,7 +689,12 @@ void Scene::onIdle() {
 }
 
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
-	Point from(radius * std::cos(Utils::toRadian(elevation)) * std::sin(Utils::toRadian(azimuth)) * -1, radius * std::sin(Utils::toRadian(elevation)), radius * std::cos(Utils::toRadian(elevation)) * std::cos(Utils::toRadian(azimuth)) * -1);
+	Point from(
+			radius * std::cos(Utils::toRadian(elevation))
+					* std::sin(Utils::toRadian(azimuth)) * -1,
+			radius * std::sin(Utils::toRadian(elevation)),
+			radius * std::cos(Utils::toRadian(elevation))
+					* std::cos(Utils::toRadian(azimuth)) * -1);
 
 	Vector3D up(0.0, 1.0, 0.0);
 	Vector3D dir(-from.x, -from.y, -from.z);
@@ -788,7 +705,8 @@ void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Vector3D upMove = up;
 	upMove *= moveY;
 
-	Point newFrom(from.x + normalMove.x + upMove.x, from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
+	Point newFrom(from.x + normalMove.x + upMove.x,
+			from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
 	Point to(newFrom.x - from.x, newFrom.y - from.y, newFrom.z - from.z);
 
 	camera.setLookAt(LookAt(newFrom, to, up));
@@ -831,24 +749,25 @@ MessageBus* Scene::getMessageBus() {
 
 void Scene::drawWaterImage() {
 
-	// Set camera parameters
+// Set camera parameters
 	_water->applyCamera();
 
-	// Set scene parameters
+// Set scene parameters
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-	// Grid
+// Grid
 	if (_gridOn)
 		drawGrid();
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}
 
-	// Draw scene
+// Draw scene
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	_skyDome->draw();

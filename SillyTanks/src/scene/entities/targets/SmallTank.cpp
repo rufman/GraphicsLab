@@ -207,83 +207,70 @@ bool Target::checkHit(Projectile* projectile_){
 
 	Point projectilePosition = projectile_->getPosition();
 
+	//max and min to store the highest and smallest value temporary
+	float max,min;
 
-	//compute maximum height of bounding box (max z point)
+	//compute maximum height of bounding box (max y point)
+	float frontMin = std::max(_boundingBox->frontLeftUpper.y , _boundingBox->frontRightUpper.y);
+	float rearMin = std::max(_boundingBox->rearLeftUpper.y , _boundingBox->rearRightUpper.y);
 
-	float maxHeight;
-
-	float tmp = std::max(_boundingBox->frontLeftUpper.z , _boundingBox->frontRightUpper.z);
-	float tmp2 = std::max(_boundingBox->rearLeftUpper.z , _boundingBox->rearRightUpper.z);
-
-	maxHeight = std::max(tmp, tmp2) + _position.z;
+	max = std::max(frontMin, rearMin) + _position.y;
 
 
-	//compute minimum height of bounding box (min z point)
+	//compute minimum height of bounding box (min y point)
+	frontMin = std::min(_boundingBox->frontLeftUnder.y , _boundingBox->frontRightUnder.y);
+	rearMin = std::min(_boundingBox->rearLeftUnder.y , _boundingBox->rearRightUnder.y);
 
-	float minHeight;
-
-	tmp = std::min(_boundingBox->frontLeftUnder.z , _boundingBox->frontRightUnder.z);
-	tmp2 = std::min(_boundingBox->rearLeftUnder.z , _boundingBox->rearRightUnder.z);
-
-	minHeight = std::min(tmp, tmp2) + _position.z;
+	min = std::min(frontMin, rearMin) + _position.y;
 
 
 	//check if projectile is in the right height to hit the target
-	if(projectilePosition.z > maxHeight || projectilePosition.z < minHeight){
+	if(projectilePosition.y > max || projectilePosition.y < min){
 
 		return false;
 	}
 
-	//if programm reaches this point...the projectile has an appropriate height
-
-
-	float max_x, min_x;
+	//##########################################################
+	//the projectile has an appropriate height to hit the target
 
 
 	//compute max x point
-	tmp = std::max(_boundingBox->frontLeftUpper.x, _boundingBox->rearLeftUpper.x);
-	tmp2 = std::max(_boundingBox->frontRightUpper.x, _boundingBox->rearRightUpper.x);
+	frontMin = std::max(_boundingBox->frontLeftUpper.x, _boundingBox->rearLeftUpper.x);
+	rearMin = std::max(_boundingBox->frontRightUpper.x, _boundingBox->rearRightUpper.x);
 
-	max_x = std::max(tmp, tmp2);
+	max = std::max(frontMin, rearMin);
 
 	//compute min x point
-	tmp = std::min(_boundingBox->frontLeftUpper.x, _boundingBox->rearLeftUpper.x);
-	tmp2 = std::min(_boundingBox->frontRightUpper.x, _boundingBox->rearRightUpper.x);
+	frontMin = std::min(_boundingBox->frontLeftUpper.x, _boundingBox->rearLeftUpper.x);
+	rearMin = std::min(_boundingBox->frontRightUpper.x, _boundingBox->rearRightUpper.x);
 
-	min_x = std::min(tmp, tmp2);
+	min = std::min(frontMin,rearMin);
 
 
 
 	//check if the projectile is between the right x coordinates to hit the target
-	if(projectilePosition.x > max_x || projectilePosition.x < min_x){
+	if(projectilePosition.x > max || projectilePosition.x < min){
 		return false;
 	}
 
 
-	float max_y, min_y;
+	//compute max z point
+	frontMin = std::max(_boundingBox->frontLeftUpper.z, _boundingBox->rearLeftUpper.z);
+	rearMin = std::max(_boundingBox->frontRightUpper.z, _boundingBox->rearRightUpper.z);
 
-	//copmute max y point
-
-	tmp = std::max(_boundingBox->frontLeftUpper.y, _boundingBox->rearLeftUpper.y);
-	tmp2 = std::max(_boundingBox->frontRightUpper.y, _boundingBox->rearRightUpper.y);
-
-	max_y = std::max(tmp, tmp2);
+	max = std::max(frontMin,rearMin);
 
 
-	//compute min y point
+	//compute min z point
 
-	tmp = std::min(_boundingBox->frontLeftUpper.y, _boundingBox->rearLeftUpper.y);
-	tmp2 = std::min(_boundingBox->frontRightUpper.y, _boundingBox->rearRightUpper.y);
+	frontMin = std::min(_boundingBox->frontLeftUpper.z, _boundingBox->rearLeftUpper.z);
+	rearMin = std::min(_boundingBox->frontRightUpper.z, _boundingBox->rearRightUpper.z);
 
-	min_y = std::min(tmp, tmp2);
+	min = std::min(frontMin,rearMin);
 
 
 	//last check: check if projectile is between y coordinates of the target
-	if(projectilePosition.y > max_y || projectilePosition.y < min_y){
-		return false;
-	}else{
-		return true;  //collision happens!!
-	}
+	return (projectilePosition.y <= max && projectilePosition.y >= min);
 
 }
 

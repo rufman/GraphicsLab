@@ -43,9 +43,6 @@ public:
 	//if the conditions are met, the ai switches the strategy
 	void switchStrategy(TANKAI_STRATEGY strategy,Target* target);
 
-	//picks the target that sense has found from the messages or returns -1 if no target has been found.
-	Target* pickTarget();
-
 	//sense processes the messages sent to the ai, that means for instance when you hear something, the ai is allowed to react on this.
 	void sense();
 

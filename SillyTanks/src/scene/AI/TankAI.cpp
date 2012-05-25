@@ -20,6 +20,10 @@ TankAI::TankAI(Scene &scene, std::vector<Message*>* aiMessages) :
 }
 
 TankAI::~TankAI() {
+	if(_path != NULL)
+	{
+		delete _path;
+	}
 }
 
 void TankAI::brainTick(float seconds) {
@@ -28,8 +32,12 @@ void TankAI::brainTick(float seconds) {
 
 	sense();
 	// if pickTarget is null, sensing failed and we have to explore further
-	if (pickTarget() == NULL) {
+	if (_currentTarget == NULL) {
 		switchStrategy(EXPLORE, NULL);
+	}
+	else
+	{
+		switchStrategy(HUNT,_currentTarget);
 	}
 
 	//we have a target and we hunt it
@@ -53,10 +61,6 @@ void TankAI::brainTick(float seconds) {
 void TankAI::switchStrategy(enum TANKAI_STRATEGY newStrategy, Target* target) {
 	_strategy = newStrategy;
 	_currentTarget = target;
-}
-
-Target* TankAI::pickTarget() {
-	return _currentTarget;
 }
 
 void TankAI::sense() {
@@ -116,6 +120,7 @@ void TankAI::followPath() {
 
 	if(_path->size() == 0)
 	{
+		delete _path;
 		_path = NULL;
 		return;
 	}
