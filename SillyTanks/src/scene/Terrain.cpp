@@ -614,7 +614,7 @@ bool Terrain::checkBorder(const Point &point) const {
 //	std::cout<<"Water Offset:"<<_scene.getWater()->getHeightOffset()<<std::endl;
 //	std::cout<<"Water Height:"<<_scene.getWater()->getHeight(point)<<std::endl;
 //	std::cout<<"Point Height"<<point.y<<std::endl;
-	if(_scene.getWater()->getHeightOffset()>point.y){
+	if(-1*(_scene.getWater()->getHeightOffset())>point.y){
 		return true;
 	}
 
