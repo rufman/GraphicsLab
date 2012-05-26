@@ -154,9 +154,13 @@ void Robot::move( float seconds )
 
 	uint lastFrame = _animation.frames.rbegin()->first;
 	if ( _animation.currentFrame == lastFrame )
+	{
 		_animation.currentFrame = _animation.frames.begin()->first;
+	}
 	else
+	{
 		_animation.currentFrame++;
+	}
 }
 
 void Robot::loadAnimation( const std::string &animationFile )
