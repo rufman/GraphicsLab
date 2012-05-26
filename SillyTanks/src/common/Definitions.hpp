@@ -66,7 +66,7 @@ namespace game_space {
 //#################
 #define SMALLTOWER_TOWERBASE_MODEL "resources/GFX/models/smalltower_towerbase.ply"
 #define SMALLTOWER_VISION_DISTANCE 200
-#define SMALLTOWER_RELOADING_TIME 3
+
 
 //#################
 //Tank textures definitions
@@ -119,4 +119,24 @@ namespace game_space {
 
 #define TOON_VERTEX_SHADER "resources/shaders/toonvshader_notex.vert"
 #define TOON_FRAGMENT_SHADER "resources/shaders/toonfshader_notex.frag"
+
+
+//##########################
+// Game Logic
+//##########################
+
+#define SMALLTANK_LIFE 100
+#define SMALLTANK_SHIELD 10
+#define SMALLTANK_QTYMISSILES 5
+#define SMALLTANK_QTYROBOTS 5
+#define SMALLTOWER_RELOADING_TIME 3
+
+
+#define SMALLTOWER_LIFE 200
+#define SMALLTOWER_SHIELD 20
+#define SMALLTOWER_QTYMISSILES 5
+#define SMALLTOWER_QTYROBOTS 5
+#define SMALLTANK_RELOADING_TIME 2
+
+
 #endif // GAME_DEFS_HPP

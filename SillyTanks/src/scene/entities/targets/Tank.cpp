@@ -267,7 +267,7 @@ void Tank::fireRobot() {
 	}
 	}
 
-	robot->loadAnimation(animFile);
+	//robot->loadAnimation(animFile);
 	float velocityScale = 30;
 	Vector3D velocity(
 			-velocityScale * getShootingPower()
