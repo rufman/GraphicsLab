@@ -104,7 +104,9 @@ Robot::Robot( Scene &scene ) :
 
 Robot::~Robot()
 {
-}
+	//nothing to do here!	0,,
+	//9gag.com			   DO
+}	//					  *//
 
 void Robot::reset()
 {
