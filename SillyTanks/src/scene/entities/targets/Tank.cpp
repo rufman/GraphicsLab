@@ -171,9 +171,7 @@ TankAI* Tank::getAI() const {
 
 void Tank::fireBullet() {
 	Bullet* bullet = new Bullet(_scene);
-
 	bullet->setPosition(getMuzzlePosition());
-
 	float velocityScale = 30;
 	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	bullet->setVelocity(velocity);

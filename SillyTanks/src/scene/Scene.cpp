@@ -305,7 +305,8 @@ void Scene::update(float seconds) {
 			} else {
 				++projectileIter;
 			}
-		} else if (projectile->_projectileType == Projectile::MISSILE) {
+		}
+		else if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
 			missile->move(seconds);
 			if (missile->isDetonated()) {
