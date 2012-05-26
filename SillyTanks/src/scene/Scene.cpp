@@ -627,12 +627,12 @@ void Scene::handleKeyboardInput() {
 		glutPostRedisplay();
 	}
 
-	if (_window.keyPressed('+')) {
+	if (_window.keyPressed('q') || _window.keyPressed('Q')) {
 		float power = _playerTank->getShootingPower() + 0.1;
 		_playerTank->setShootingPower((power > 1.0) ? 1.0 : power);
 	}
 
-	if (_window.keyPressed('-')) {
+	if (_window.keyPressed('e') || _window.keyPressed('E')) {
 		float power = _playerTank->getShootingPower() - 0.1;
 		_playerTank->setShootingPower((power < 0.1) ? 0.1 : power);
 	}

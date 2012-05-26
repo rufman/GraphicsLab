@@ -244,6 +244,30 @@ void Tank::fireMissile(Point targetPosition) {
 void Tank::fireRobot() {
 	Robot* robot = new Robot(_scene);
 	robot->setPosition(getMuzzlePosition());
+
+	int anim = rand()%3;
+	std::string animFile;
+
+	switch(anim)
+	{
+	case 0:
+	{
+		animFile = ROBOT_ANIMATION1;
+		break;
+	}
+	case 1:
+	{
+		animFile = ROBOT_ANIMATION2;
+		break;
+	}
+	case 2:
+	{
+		animFile = ROBOT_ANIMATION3;
+		break;
+	}
+	}
+
+	robot->loadAnimation(animFile);
 	float velocityScale = 30;
 	Vector3D velocity(
 			-velocityScale * getShootingPower()

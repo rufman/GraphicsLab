@@ -93,6 +93,9 @@ namespace game_space {
 // Robot definitions
 //#######################
 #define ROBOT_TIMETOLIVE 8
+#define ROBOT_ANIMATION1 "resources/GFX/animation/anim.txt"
+#define ROBOT_ANIMATION2 "resources/GFX/animation/anim.txt"
+#define ROBOT_ANIMATION3 "resources/GFX/animation/anim.txt"
 
 //#################
 // Object map definitions
