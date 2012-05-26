@@ -40,6 +40,8 @@ namespace game_space {
 // Default window title
 #define WINDOW_TITLE "SillyTanks v0.1"
 
+#define MOUSE_SENSITIVITY 0.05
+
 //#################
 // Game Physics definitions
 //#################
