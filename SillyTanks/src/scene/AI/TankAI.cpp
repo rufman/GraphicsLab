@@ -228,15 +228,15 @@ void TankAI::aimAndFire() {
 		enemyDirection.z = _currentTarget->getPosition().z
 				- _tank->getPosition().z;
 
-		Vector3D muzzleDirection = Vector3D(1, 0, 0);
-		Utils::rotate(_tank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
-		_tank->setAzimuth(Utils::dot(muzzleDirection, enemyDirection));
+		Vector3D muzzleDirection = Vector3D(0, 0, 1);
+		Utils::rotate(-_tank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
+		_tank->setAzimuth(Utils::toDegree(Utils::dot(muzzleDirection, enemyDirection)));
 
 		//get the elevation
 		_tank->setElevation(
-				Utils::getElevation(_tank->getPosition(),
+				Utils::toDegree(Utils::getElevation(_tank->getPosition(),
 						_currentTarget->getPosition(),
-						_tank->getShootingPower()));
+						_tank->getShootingPower())));
 		//shoot
 		_tank->fireBullet();
 	}

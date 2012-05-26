@@ -56,18 +56,6 @@ public:
 	void loadAnimation( const std::string &animationFile );
 
 private:
-
-	/////////////////////////////////////////////////////////////
-	////////////////////// GRAPHICS LAB 05 //////////////////////
-	/////////////////////////////////////////////////////////////
-	// Update the Animation::Frame structure to have necessary members
-	// for your own robot model animation.
-	// Also, you can define members for the Robot class, for example,
-	// to specify the surface materials for different parts of the robot
-	// model, replacing the _material member provided below for 
-	// the sample model.
-	/////////////////////////////////////////////////////////////
-
 	struct Animation
 	{
 		struct Frame

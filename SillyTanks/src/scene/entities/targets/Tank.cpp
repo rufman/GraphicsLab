@@ -10,6 +10,7 @@
 #include "../../../common/GLIncludes.hpp"
 #include "../../../common/Drawable.hpp"
 #include "../../../common/Types.hpp"
+#include "../../../common/SoundEngine.hpp"
 
 //std includes
 #include <math.h>
@@ -26,6 +27,7 @@
 //AI includes
 #include "../../AI/TankAI.hpp"
 #include "../../AI/MessageBus.hpp"
+
 
 //particle engine includes
 
@@ -177,7 +179,7 @@ void Tank::fireBullet() {
 	bullet->setVelocity(velocity);
 
 	_scene._projectiles.push_back(bullet);
-	_scene.getSoundEngine().playMuzzleSound();
+	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y, _position.z);
 }
 
 void Tank::fireMissile(Point targetPosition) {
@@ -190,7 +192,7 @@ void Tank::fireMissile(Point targetPosition) {
 
 
 	_scene._projectiles.push_back(missile);
-	_scene.getSoundEngine().playExplosionSound();
+	_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y, _position.z);
 }
 
 Tank::SelectedWeapon Tank::getSelectedWeapon() {

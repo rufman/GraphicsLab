@@ -38,12 +38,13 @@ SoundEngine::SoundEngine() {
 		//exit(1);
 	}
 
-	SetListenerValues();
+	setListenerValues(ListenerPos[0],ListenerPos[0],ListenerPos[2]);
 
 }
 
-void SoundEngine::SetListenerValues() {
-	alListenerfv(AL_POSITION, ListenerPos);
+void SoundEngine::setListenerValues(float x, float y,float z) {
+	float arr[3] = {x,y,z};
+	alListenerfv(AL_POSITION, arr);
 	alListenerfv(AL_VELOCITY, ListenerVel);
 	alListenerfv(AL_ORIENTATION, ListenerOri);
 }

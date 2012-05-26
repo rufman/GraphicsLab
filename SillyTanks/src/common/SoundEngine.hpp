@@ -44,11 +44,10 @@ public:
 	void playMuzzleSoundAt(float x, float y, float z);
 
 
-
+	void setListenerValues(float x, float y, float z);
 
 private:
 
-	void SetListenerValues();
 
 	ALboolean LoadALData();
 
