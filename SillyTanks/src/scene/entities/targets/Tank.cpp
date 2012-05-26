@@ -35,7 +35,7 @@ namespace game_space {
 
 Tank::Tank(Scene &scene, bool isAIControlled) :
 		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(
-				0), _isAIControlled(isAIControlled) {
+				0), _isAIControlled(isAIControlled),_selectedWeapon(Tank::BULLET) {
 
 	if (isAIControlled) {
 		//the ai must know the tank to be able to control it

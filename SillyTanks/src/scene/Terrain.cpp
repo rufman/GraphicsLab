@@ -356,13 +356,6 @@ Vector3D Terrain::getNormal(const Point &point) const {
 	//std::cout << "triangle number:" << triangleNumber<< std::endl;
 
 	if (triangleNumber != -1) {
-		/*while(true)
-		{
-			if(_vertexNormals.size() >= _triangles[triangleNumber].vertex1 && _vertexNormals.size() >= _triangles[triangleNumber].vertex2 && _vertexNormals.size() >= _triangles[triangleNumber].vertex3)
-			{
-				break;
-			}
-		}*/
 		Vector3D norm1 = _vertexNormals[_triangles[triangleNumber].vertex1];
 		Vector3D norm2 = _vertexNormals[_triangles[triangleNumber].vertex2];
 		Vector3D norm3 = _vertexNormals[_triangles[triangleNumber].vertex3];
