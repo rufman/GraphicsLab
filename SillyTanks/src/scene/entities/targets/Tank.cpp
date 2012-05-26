@@ -39,7 +39,7 @@ Tank::Tank(Scene &scene, bool isAIControlled) :
 
 	if (isAIControlled) {
 		//the ai must know the tank to be able to control it
-		std::vector<Message*>* messageBus =
+		MessageSubBus* messageBus =
 				_scene.getMessageBus()->addNewClient();
 		_controllingAI = new TankAI(scene, messageBus);
 		_controllingAI->_tank = this;

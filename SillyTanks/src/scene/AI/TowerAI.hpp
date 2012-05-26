@@ -13,6 +13,7 @@ class Tower;
 class Message;
 class Scene;
 class Point;
+class MessageSubBus;
 
 class TowerAI {
 public:
@@ -20,7 +21,7 @@ public:
 		EXPLORE, HUNT
 	} _strategy;
 
-	std::vector<Message*>* _aiMessages;
+	MessageSubBus* _aiMessages;
 	Tower* _tower;
 	Target* _currentTarget;
 	std::vector<Point>* _path;
@@ -29,7 +30,7 @@ public:
 	//delay the shooting a bit
 	float reloadTime;
 public:
-	TowerAI(Scene &scene, std::vector<Message*>* aiMessages);
+	TowerAI(Scene &scene, MessageSubBus* aiMessages);
 	virtual ~TowerAI();
 
 	//AI methods

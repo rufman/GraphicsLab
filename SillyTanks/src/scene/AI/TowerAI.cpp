@@ -10,6 +10,7 @@
 #include "../entities/collisiondetection/Target.hpp"
 #include "../entities/targets/Tower.hpp"
 #include "Message.hpp"
+#include "MessageSubBus.hpp"
 #include "DetonationSoundMessage.hpp"
 #include "AttackedByMessage.hpp"
 #include <iostream>
@@ -17,7 +18,7 @@
 
 namespace game_space {
 
-TowerAI::TowerAI(Scene &scene, std::vector<Message*>* aiMessages) :
+TowerAI::TowerAI(Scene &scene, MessageSubBus* aiMessages) :
 		_strategy(TowerAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(
 				NULL), _scene(scene) {
 
@@ -62,8 +63,8 @@ void TowerAI::switchStrategy(enum TOWERAI_STRATEGY newStrategy,
 }
 
 void TowerAI::sense() {
-	for (std::vector<Message*>::iterator messageIterator = _aiMessages->begin();
-			messageIterator != _aiMessages->end(); messageIterator++) {
+	for (std::vector<Message*>::iterator messageIterator = _aiMessages->_messageSubBus.begin();
+			messageIterator != _aiMessages->_messageSubBus.end(); messageIterator++) {
 		Message* message = *messageIterator;
 		switch (message->_messageType) {
 		case Message::ATTACKED_BY: {

@@ -21,13 +21,14 @@
 
 #include "../../AI/TowerAI.hpp"
 #include "../../AI/MessageBus.hpp"
+#include "../../AI/MessageSubBus.hpp"
 
 
 namespace game_space {
 
 Tower::Tower(Scene &scene,bool isAIControlled) :Target( scene,Target::TOWER ),_isAIControlled(isAIControlled) {
 	//the ai must know the tank to be able to control it
-	std::vector<Message*>* messageSubbus = _scene.getMessageBus()->addNewClient();
+	MessageSubBus* messageSubbus = _scene.getMessageBus()->addNewClient();
 	_controllingAI = new TowerAI(scene,messageSubbus);
 	_controllingAI->_tower = this;
 }

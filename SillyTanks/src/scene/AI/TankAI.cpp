@@ -11,10 +11,11 @@
 
 #include "DetonationSoundMessage.hpp"
 #include "AttackedByMessage.hpp"
+#include "MessageSubBus.hpp"
 
 namespace game_space {
 
-TankAI::TankAI(Scene &scene, std::vector<Message*>* aiMessages) :
+TankAI::TankAI(Scene &scene, MessageSubBus* aiMessages) :
 		_scene(scene), _strategy(TankAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(
 				NULL), _path(NULL) {
 
@@ -36,7 +37,7 @@ void TankAI::brainTick(float seconds) {
 	//take a decision
 	if (_currentTarget == NULL && _strategy != EXPLORE) {
 		switchStrategy(EXPLORE, NULL);
-	} else if(_currentTarget != NULL && _strategy != HUNT) {
+	} else if (_currentTarget != NULL && _strategy != HUNT) {
 		switchStrategy(HUNT, _currentTarget);
 		delete _path;
 		_path = NULL;
@@ -68,8 +69,8 @@ void TankAI::switchStrategy(enum TANKAI_STRATEGY newStrategy, Target* target) {
 void TankAI::sense() {
 
 	//listen
-	for (std::vector<Message*>::iterator messageIterator = _aiMessages->begin();
-			messageIterator != _aiMessages->end(); messageIterator++) {
+	for (std::vector<Message*>::iterator messageIterator = _aiMessages->_messageSubBus.begin();
+			messageIterator != _aiMessages->_messageSubBus.end(); messageIterator++) {
 		Message* message = *messageIterator;
 		switch (message->_messageType) {
 		case Message::ATTACKED_BY: {
@@ -92,7 +93,7 @@ void TankAI::sense() {
 						<< dsMessage->_detonationPoint.z;
 
 				//if the tank heard a detonation it goes and checks out who's there
-				if (_path == NULL) {
+				if (_path != NULL) {
 					delete _path;
 					_path = NULL;
 				}
@@ -141,15 +142,16 @@ void TankAI::explore() {
 
 void TankAI::hunt() {
 	//choose some random position on the map and find a way from here to this position
-	if(Utils::distance(_tank->getPosition(),_currentTarget->getPosition()) > SHOOTING_DISTANCE)
-	{
+	if (Utils::distance(_tank->getPosition(),
+			_currentTarget->getPosition()) > SHOOTING_DISTANCE) {
 		while (_path == NULL) {
 			Point randomGoal;
-			do
-			{
+			do {
 				randomGoal = _scene.getTerrain().getRandomPointOnMap();
-			}while(Utils::distance(randomGoal,_currentTarget->getPosition()) < SHOOTING_DISTANCE);
-			_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
+			} while (Utils::distance(randomGoal, _currentTarget->getPosition())
+					< SHOOTING_DISTANCE);
+			_path = _scene.getTerrain().findPath(_tank->getPosition(),
+					randomGoal);
 		}
 
 		followPath();
@@ -230,13 +232,15 @@ void TankAI::aimAndFire() {
 
 		Vector3D muzzleDirection = Vector3D(0, 0, 1);
 		Utils::rotate(-_tank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
-		_tank->setAzimuth(Utils::toDegree(Utils::dot(muzzleDirection, enemyDirection)));
+		_tank->setAzimuth(
+				Utils::toDegree(Utils::dot(muzzleDirection, enemyDirection)));
 
 		//get the elevation
 		_tank->setElevation(
-				Utils::toDegree(Utils::getElevation(_tank->getPosition(),
-						_currentTarget->getPosition(),
-						_tank->getShootingPower())));
+				Utils::toDegree(
+						Utils::getElevation(_tank->getPosition(),
+								_currentTarget->getPosition(),
+								_tank->getShootingPower())));
 		//shoot
 		_tank->fireBullet();
 	}

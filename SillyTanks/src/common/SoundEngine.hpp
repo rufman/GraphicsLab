@@ -46,6 +46,8 @@ public:
 
 	void setListenerValues(float x, float y, float z);
 
+	void setActive(bool active);
+
 private:
 
 
@@ -74,6 +76,8 @@ private:
 
 	// Orientation of the listener. (first 3 elements are "at", second 3 are "up")
 	ALfloat ListenerOri[] ;
+
+	bool _active;
 
 };
 

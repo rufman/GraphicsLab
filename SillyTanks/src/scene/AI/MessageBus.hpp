@@ -9,18 +9,20 @@
 
 namespace game_space {
 
+class MessageSubBus;
 class Message;
+class Target;
 
 class MessageBus {
 public:
-	std::vector<std::vector<Message*>*> messageBus;
+	std::vector<MessageSubBus*> messageBus;
 public:
 	MessageBus();
 	virtual ~MessageBus();
 
-	std::vector<Message*>* addNewClient();
-	std::vector<Message*>* getSubbusOfClient(int clientID);
-	void sendMessageTo(Message message,int reveiverID);
+	MessageSubBus* addNewClient();
+	MessageSubBus* getSubbusOfClient(Target* target);
+	void sendMessageTo(Message message,Target* target);
 };
 
 }
