@@ -374,6 +374,12 @@ void Scene::drawScene() {
 		_currentlyActiveCamera = _overviewCam;
 		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(),
 				Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
+		Vector3D velocity(-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::sin(Utils::toRadian(-_playerTank->getAzimuth())), _playerTank->getShootingPower() * std::sin(Utils::toRadian(_playerTank->getElevation())), -_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::cos(Utils::toRadian(-_playerTank->getAzimuth())));
+
+		Point lookTo;
+		lookTo.x = _playerTank->getPosition().x + velocity.x*50;
+		lookTo.y = _playerTank->getPosition().y + velocity.y*50;
+		lookTo.z = _playerTank->getPosition().z + velocity.z*50;
 		_currentlyActiveCamera->setLookAt(
 				LookAt(
 						Point(
@@ -382,7 +388,7 @@ void Scene::drawScene() {
 								_playerTank->getPosition().y + 50,
 								_playerTank->getPosition().z
 										+ _tankDirection.z * 50),
-						_playerTank->getPosition(), Vector3D(0, 1, 0)));
+						lookTo, Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL camera
@@ -728,14 +734,14 @@ void Scene::onMousePassiveMove(int x, int y) {
 	}
 
 	if (!_chooseTarget) {
-		_playerTank->setElevation(_playerTank->getElevation() - yMove / 5);
-		_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove / 5);
+		_playerTank->setElevation(_playerTank->getElevation() - yMove*MOUSE_SENSITIVITY);
+		_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove*MOUSE_SENSITIVITY);
 	} else {
 		Vector3D _tankDirection = Utils::rotate(-_playerTank->getAzimuth(),
 						Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
 		Vector3D _cross = Utils::cross(_tankDirection,Vector3D(0,1,0));
-		_targetChooser.x = _targetChooser.x -_tankDirection.x*yMove / 4 - _cross.x*xMove/4;
-		_targetChooser.z = _targetChooser.z +_tankDirection.z*yMove / 4 + _cross.z*xMove/4;
+		_targetChooser.x = _targetChooser.x -_tankDirection.x*yMove*MOUSE_SENSITIVITY/2 - _cross.x*xMove*MOUSE_SENSITIVITY/2;
+		_targetChooser.z = _targetChooser.z +_tankDirection.z*yMove*MOUSE_SENSITIVITY/2 + _cross.z*xMove*MOUSE_SENSITIVITY/2;
 	}
 	glutPostRedisplay();
 }

@@ -1,3 +1,0 @@
-$name Kannonwagens DM
-$type 0
-$limit 20
