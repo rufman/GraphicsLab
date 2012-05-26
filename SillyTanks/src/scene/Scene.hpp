@@ -97,7 +97,6 @@ public:
 	MessageBus* getMessageBus();
 	Water* getWater();
 	std::vector<Target*> getTargets();
-	std::vector<Projectile*> getProjectiles();
 	Window& getWindow();
 
 private:
@@ -115,6 +114,8 @@ private:
 
 	void handleKeyboardInput();
 
+public:
+	std::vector<Projectile*> _projectiles;
 private:
 
 	Window &_window;
@@ -186,7 +187,6 @@ private:
 
 	Tank* _playerTank;
 	std::vector<Target*> _targets;
-	std::vector<Projectile*> _projectiles;
 
 	ShadingEngine _shadingEngine;
 

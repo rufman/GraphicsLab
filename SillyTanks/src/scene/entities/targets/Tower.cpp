@@ -124,7 +124,7 @@ void Tower::fireBullet() {
 					* std::cos(Utils::toRadian(-getAzimuth())));
 	bullet->setVelocity(velocity);
 
-	_scene.getProjectiles().push_back(bullet);
+	_scene._projectiles.push_back(bullet);
 	_scene.getSoundEngine().playMuzzleSound();
 }
 
@@ -144,7 +144,7 @@ void Tower::fireMissile() {
 						* std::cos(Utils::toRadian(-getAzimuth())));
 		missile->setVelocity(velocity);
 
-		_scene.getProjectiles().push_back(missile);
+		_scene._projectiles.push_back(missile);
 		_scene.getSoundEngine().playExplosionSound();
 }
 

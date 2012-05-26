@@ -35,7 +35,7 @@ Tank::Tank(Scene &scene, bool isAIControlled) :
 		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(0), _isAIControlled(isAIControlled) {
 
 	if (isAIControlled) {
-		//the ai must know the tank to be able to controll it
+		//the ai must know the tank to be able to control it
 		std::vector<Message*>* messageBus = _scene.getMessageBus()->addNewClient();
 		_controllingAI = new TankAI(scene, messageBus);
 		_controllingAI->_tank = this;
@@ -178,7 +178,7 @@ void Tank::fireBullet() {
 	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	bullet->setVelocity(velocity);
 
-	_scene.getProjectiles().push_back(bullet);
+	_scene._projectiles.push_back(bullet);
 	_scene.getSoundEngine().playMuzzleSound();
 }
 
@@ -190,7 +190,8 @@ void Tank::fireMissile(Point targetPosition) {
 	Vector3D velocity(-getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), getShootingPower() * std::sin(Utils::toRadian(getElevation())), -getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	missile->setVelocity(velocity);
 
-	_scene.getProjectiles().push_back(missile);
+
+	_scene._projectiles.push_back(missile);
 	_scene.getSoundEngine().playExplosionSound();
 }
 

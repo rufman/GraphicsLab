@@ -382,10 +382,7 @@ Vector3D Terrain::getNormal(const Point &point) const {
 }
 
 int Terrain::getNearestTriangleIndexAt(const Point &point) const {
-	/**
-	 I'm doing something wrong here, but I cannot find the problem, I'm calculating somehow the wrong trianglenumber... :S But I don't want to bruteforce
 
-	 **/
 	float widthVertDistance = _width / (_widthResolution - 1);
 	float lengthVertDistance = _length / (_lengthResolution - 1);
 
@@ -407,12 +404,15 @@ int Terrain::getNearestTriangleIndexAt(const Point &point) const {
 		triangleNumber = (int) rowNumber * ((_widthResolution - 1) * 2) + ((int) columnNumber) * 2;
 	}
 
-	//    std::cout << "triangle number:" << triangleNumber<< std::endl;
-	//    std::cout << "column number:" << columnNumber<< std::endl;
-	//    std::cout << "row number:" << rowNumber<< std::endl;
-	//    std::cout << "restRow number:" << restRow<< std::endl;
-	//    std::cout << "restColumn number:" << restColumn<< std::endl;
+	//fix for stuff that is beyond the border of the map
+	if(triangleNumber <= _triangles.size())
+	{
 	return triangleNumber;
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 void Terrain::doDamageAt(const Point &point, float damageStrength) {

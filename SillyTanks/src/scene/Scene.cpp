@@ -243,17 +243,22 @@ void Scene::reset() {
 			projectileIter = _projectiles.erase(projectileIter);
 			delete bullet;
 		}
-		if (projectile->_projectileType == Projectile::MISSILE) {
+		else if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
 
 			projectileIter = _projectiles.erase(projectileIter);
 			delete missile;
+		}
+		else
+		{
+			++projectileIter;
 		}
 	}
 }
 
 void Scene::update(float seconds) {
 
+	//compile shader only when used and only once
 	if (_shaderActive && !_shadersAlreadyCompiled) {
 		_shadingEngine = ShadingEngine();
 		_shadersAlreadyCompiled = true;
@@ -264,6 +269,7 @@ void Scene::update(float seconds) {
 	_skyDome->update(seconds);
 	_water->update(seconds);
 
+	//update target chooser if necessary
 	if (_chooseTarget) {
 		_targetChooser.y = _terrain->getHeight(_targetChooser);
 	}
@@ -308,6 +314,10 @@ void Scene::update(float seconds) {
 			} else {
 				++projectileIter;
 			}
+		}
+		else
+		{
+			++projectileIter;
 		}
 	}
 }
@@ -432,7 +442,7 @@ void Scene::drawScene() {
 	if (_chooseTarget) {
 		glPushMatrix();
 		glTranslatef(_targetChooser.x, _targetChooser.y, _targetChooser.z);
-		glutSolidCube(1);
+		glutSolidCube(2);
 		glPopMatrix();
 	}
 
@@ -644,7 +654,7 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 				}
 				case Tank::MISSILE: {
 					_cameraMode = OVERVIEW_CAM;
-					_targetChooser = Point(0, 0, 0);
+					_targetChooser = _playerTank->getPosition();
 					_chooseTarget = true;
 
 					break;
@@ -687,7 +697,7 @@ void Scene::onMousePassiveMove(int x, int y) {
 	int yMove = y - _mouseY;
 	_mouseX = width / 2;
 	_mouseY = height / 2;
-	if (abs(xMove) > 1 || abs(yMove) > 1) {
+	if (abs(xMove) > 0 || abs(yMove) > 0) {
 		glutWarpPointer(width / 2, height / 2);
 	}
 
@@ -804,9 +814,5 @@ Water* Scene::getWater() {
 
 std::vector<Target*> Scene::getTargets() {
 	return _targets;
-}
-
-std::vector<Projectile*> Scene::getProjectiles() {
-	return _projectiles;
 }
 }
