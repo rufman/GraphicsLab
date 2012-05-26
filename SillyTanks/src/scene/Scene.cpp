@@ -680,8 +680,11 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 					break;
 				}
 				case Tank::MISSILE: {
-					_playerTank->setSelectedWeapon(Tank::BULLET);
+					_playerTank->setSelectedWeapon(Tank::ROBOT);
 					break;
+				}
+				case Tank::ROBOT: {
+					_playerTank->setSelectedWeapon(Tank::BULLET);
 				}
 				}
 				break;

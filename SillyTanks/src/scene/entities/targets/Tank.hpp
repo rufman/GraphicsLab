@@ -31,7 +31,7 @@ class Smoke;
 class Tank: public Target {
 public:
 	enum SelectedWeapon {
-		BULLET, MISSILE
+		BULLET, MISSILE, ROBOT
 	};
 protected:
 	Turret* _turret;

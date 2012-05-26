@@ -46,7 +46,7 @@ public:
 	 *
 	 * @parma[in]	seconds		Seconds to update robot for
 	 */
-	void update( float seconds );
+	void move( float seconds );
 
 	/**
 	 * Load animation from a file.

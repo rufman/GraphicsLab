@@ -1,10 +1,6 @@
 /**
  * robot.cpp
- * 
- * Author   :   Fatih Erol
- * Date     :   19.03.2012
- *
- * All rights reserved.
+*	Author: Benjamin Ellenberger
  */
 
 // Class declaration include
@@ -111,7 +107,7 @@ void Robot::reset()
 	_animation.currentFrame = 0;
 }
 
-void Robot::update( float seconds )
+void Robot::move( float seconds )
 {
 	uint lastFrame = _animation.frames.rbegin()->first;
 	if ( _animation.currentFrame == lastFrame )
