@@ -27,13 +27,6 @@ namespace game_space{
 Robot::Robot( Scene &scene ) :
 	Drawable( scene )
 {
-	/////////////////////////////////////////////////////////////
-	////////////////////// GRAPHICS LAB 05 //////////////////////
-	/////////////////////////////////////////////////////////////
-	// Perform the initializations required for the model, for example,
-	// the surface materials for different parts of the model, replacing
-	// the following.
-	/////////////////////////////////////////////////////////////
 
 	_bodyMaterial.setAmbient( Color( 0.0, 1.0, 0.1 ) );
 	_bodyMaterial.setDiffuse( Color( 0.0, 1.0, 0.1 ) );

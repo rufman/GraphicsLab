@@ -134,14 +134,12 @@ public:
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);// Really nice perspective calculations
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);// Really nice point smoothing
 
-		 float materialAmbient[3] = { 1, 1, 1 };
-		 float materialDiffuse[3] = { 1, 1, 1 };
-		 float materialSpecular[3] = { 0.0, 0.0, 0.0 };
-		 float materialEmission[3] = { 0.0, 0.0, 0.0 };
-		 int shininess = 0;
+		 float materialAmbient[3] = { 0, 0, 0 };
+		 float materialSpecular[3] = { 1.0, 1.0, 1.0 };
+		 float materialEmission[3] = { 1.0, 1.0, 1.0 };
+		 int shininess = 50;
 
 		 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
-		 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
 		 glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
 		 glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
 		 glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);

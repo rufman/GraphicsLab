@@ -43,6 +43,7 @@ public:
 	 * @param[in]	seconds		Seconds to move the bullet object
 	 */
 	void move( float seconds );
+	bool isDetonated();
 
 private:
 	/** Size of the bullet */
@@ -50,6 +51,8 @@ private:
 
 	/** Velocity of the bullet */
 	Vector3D _velocity;
+
+	bool _detonated;
 
 }; // class Bullet
 

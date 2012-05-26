@@ -110,7 +110,6 @@ TowerAI* Tower::getAI() const
 void Tower::fireBullet() {
 	Bullet* bullet = new Bullet(_scene);
 
-	_scene.getSoundEngine().playMuzzleSound();
 	bullet->setPosition(getMuzzlePosition());
 
 	float velocityScale = 30;
@@ -126,6 +125,7 @@ void Tower::fireBullet() {
 	bullet->setVelocity(velocity);
 
 	_scene._projectiles.push_back(bullet);
+	_scene.getSoundEngine().playMuzzleSound();
 }
 
 void Tower::fireMissile() {
@@ -144,16 +144,16 @@ void Tower::fireMissile() {
 						* std::cos(Utils::toRadian(-getAzimuth())));
 		missile->setVelocity(velocity);
 
-		_scene.getSoundEngine().playExplosionSound();
 		_scene._projectiles.push_back(missile);
+		_scene.getSoundEngine().playExplosionSound();
 }
 
-Tower::SELECTEDWEAPON Tower::getSelectedWeapon()
+Tower::SelectedWeapon Tower::getSelectedWeapon()
 {
 	return _selectedWeapon;
 }
 
-void Tower::setSelectedWeapon(SELECTEDWEAPON weapon)
+void Tower::setSelectedWeapon(SelectedWeapon weapon)
 {
 	_selectedWeapon = weapon;
 }

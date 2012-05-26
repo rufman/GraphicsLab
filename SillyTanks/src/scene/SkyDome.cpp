@@ -148,20 +148,6 @@ void SkyDome::draw() const
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
 
-	/////////////////////////////////////////////////////////////
-	////////////////////// GRAPHICS LAB 07 //////////////////////
-	/////////////////////////////////////////////////////////////
-	// Implement code here to draw the sky dome using the quads
-	// which are formed in the constructor. Of course, the sky
-	// texture needs to be applied with _texture->setActive( true )
-	// and disabled afterwards with a setActive( false ), and for
-	// each vertex proper glTexCoord* calls need to be made.
-	// Also, you have to use _textureDisplacement variable to
-	// give the rotation effect
-	/////////////////////////////////////////////////////////////
-
-	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-
 	_texture->setActive( true );
 
 	glRotatef( _textureDisplacement, 0.0, 1.0, 0.0 );

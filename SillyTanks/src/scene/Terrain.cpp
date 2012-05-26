@@ -279,11 +279,6 @@ void Terrain::buildDisplayLists() {
 
 void Terrain::draw() const {
 
-	for (uint i = 0; i < _vertices.size(); i++) {
-		//_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
-		_nodes[i]->draw();
-	}
-
 	glPolygonMode(GL_FRONT_AND_BACK, (_renderingParameters.drawMode == RenderingParameters::WIREFRAME) ? GL_LINE : GL_FILL);
 
 	for (uint i = 0; i < _trees.size(); i++) {
@@ -387,10 +382,7 @@ Vector3D Terrain::getNormal(const Point &point) const {
 }
 
 int Terrain::getNearestTriangleIndexAt(const Point &point) const {
-	/**
-	 I'm doing something wrong here, but I cannot find the problem, I'm calculating somehow the wrong trianglenumber... :S But I don't want to bruteforce
 
-	 **/
 	float widthVertDistance = _width / (_widthResolution - 1);
 	float lengthVertDistance = _length / (_lengthResolution - 1);
 
@@ -412,12 +404,15 @@ int Terrain::getNearestTriangleIndexAt(const Point &point) const {
 		triangleNumber = (int) rowNumber * ((_widthResolution - 1) * 2) + ((int) columnNumber) * 2;
 	}
 
-	//    std::cout << "triangle number:" << triangleNumber<< std::endl;
-	//    std::cout << "column number:" << columnNumber<< std::endl;
-	//    std::cout << "row number:" << rowNumber<< std::endl;
-	//    std::cout << "restRow number:" << restRow<< std::endl;
-	//    std::cout << "restColumn number:" << restColumn<< std::endl;
+	//fix for stuff that is beyond the border of the map
+	if(triangleNumber <= _triangles.size())
+	{
 	return triangleNumber;
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 void Terrain::doDamageAt(const Point &point, float damageStrength) {
@@ -439,6 +434,7 @@ void Terrain::doDamageAt(const Point &point, float damageStrength) {
 }
 
 std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
+
 	for (uint i = 0; i < _nodes.size(); i++) {
 		_nodes.at(i)->_f_score = 0;
 		_nodes.at(i)->_g_score = 0;
@@ -449,9 +445,16 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 		_nodes.at(i)->_nextNode = NULL;
 	}
 
+	//read in all the blocked nodes
+	for (uint i = 0; i < _vertices.size(); i++) {
+		_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
+	}
+
 	//Implemented the a-star algorithm as it is written in pseudo code on wikipedia.org
 	//http://en.wikipedia.org/wiki/A*_search_algorithm
 	//for the open set and closed set I use a vector sorted in-place as a heap
+	// I had to find out that according to the wiki article that my estimate is non-monotonic and that is why
+	// I have to update the nodes of the closed set too.
 
 	Node* start = getNodeFromPoint(startPoint);
 	Node* goal = getNodeFromPoint(goalPoint);

@@ -17,7 +17,7 @@ class TowerAI;
 
 class Tower: public game_space::Target {
 public:
-	enum SELECTEDWEAPON {
+	enum SelectedWeapon {
 		BULLET, MISSILE
 	};
 protected:
@@ -30,7 +30,7 @@ protected:
 	TowerAI* _controllingAI;
 	bool _isAIControlled;
 
-	SELECTEDWEAPON _selectedWeapon;
+	SelectedWeapon _selectedWeapon;
 public:
 	Tower(Scene &scene,bool isAIControlled);
 	virtual ~Tower();
@@ -58,8 +58,8 @@ public:
 	void fireMissile();
 
 	//only used for a human player
-	SELECTEDWEAPON getSelectedWeapon();
-	void setSelectedWeapon(SELECTEDWEAPON weapon);
+	SelectedWeapon getSelectedWeapon();
+	void setSelectedWeapon(SelectedWeapon weapon);
 
 };
 

@@ -17,7 +17,7 @@
 namespace game_space {
 
 Missile::Missile(Scene &scene, float size) :
-		Projectile(scene,Projectile::MISSILE,0), _size(size), _waitBeforeAimingCounter(0), _didDamage(false), _detonated(false) {
+		Projectile(scene,Projectile::MISSILE,0), _size(size), _waitBeforeAimingCounter(0), _didDamage(false), _detonated(false),_targetPosition(Point(0,0,0)) {
 	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getTankCam(), 50);
 	_missileSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_missileSmokeParticleEngine->setActive(true);
@@ -34,6 +34,16 @@ void Missile::draw() const {
 	glShadeModel(_renderingParameters.shadeMode == RenderingParameters::FLAT ? GL_FLAT : GL_SMOOTH);
 	glPolygonMode(GL_FRONT_AND_BACK, _renderingParameters.drawMode == RenderingParameters::WIREFRAME ? GL_LINE : GL_FILL);
 
+	 float materialAmbient[3] = { 0, 0, 0 };
+	 float materialSpecular[3] = { 1.0, 1.0, 1.0 };
+	 float materialEmission[3] = { 1.0, 1.0, 1.0 };
+	 int shininess = 50;
+
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
+	 glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+
 	glMatrixMode(GL_MODELVIEW);
 
 	glPushMatrix();
@@ -47,17 +57,6 @@ void Missile::draw() const {
 	}
 	glRotatef(90, 0, 1, 0);
 
-	float materialAmbient[3] = { 1, 1, 1 };
-	float materialDiffuse[3] = { 0.2, 0.2, 0.2 };
-	float materialSpecular[3] = { 0.2, 0.4, 0.4 };
-	float materialEmission[3] = { 0.1, 0.1, 0.1 };
-	int shininess = 50;
-
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 
 	GLUquadricObj *quadObj = gluNewQuadric();
 	gluCylinder(quadObj, _size / 2.0, _size / 2.0, _size * 4.0, 10, 10);
@@ -79,10 +78,8 @@ void Missile::draw() const {
 	glutSolidSphere(_size / 2.0, 1, 1);
 	glPopMatrix();
 
-	glTranslatef(-_position.x, -_position.y, -_position.z);
-	glRotatef(-90, 0, 1, 0);
-
 	glPopMatrix();
+	//draw the smoke
 	glPushMatrix();
 	_missileSmokeParticleEngine->draw();
 	glPopMatrix();

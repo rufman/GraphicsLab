@@ -34,7 +34,7 @@ void Turret::load(const std::string &modelFile, const std::string &textureFile) 
 
 void Turret::reset() {
 	_elevation = -10;
-	_azimuth = -85;
+	_azimuth = 90;
 	_power = 0.5;
 	_position = Point(0, 0, 0, 1);
 }

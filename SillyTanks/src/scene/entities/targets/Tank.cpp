@@ -35,7 +35,7 @@ Tank::Tank(Scene &scene, bool isAIControlled) :
 		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(0), _isAIControlled(isAIControlled) {
 
 	if (isAIControlled) {
-		//the ai must know the tank to be able to controll it
+		//the ai must know the tank to be able to control it
 		std::vector<Message*>* messageBus = _scene.getMessageBus()->addNewClient();
 		_controllingAI = new TankAI(scene, messageBus);
 		_controllingAI->_tank = this;
@@ -130,15 +130,17 @@ void Tank::update(float seconds) {
 
 	if (_scene.getTerrain().checkBorder(nextPosition)) {
 		_speed = 0;
-		relativeGravity.x = -1*relativeGravity.x;
-		relativeGravity.z = -1*relativeGravity.z;
-		relativeGravity.y = -1*relativeGravity.y;
+		//make the gravity move the tank away, otherwise the tank can get stuck
+		relativeGravity.x = -relativeGravity.x;
+		relativeGravity.z = -relativeGravity.z;
+		relativeGravity.y = -relativeGravity.y;
 	}
 
 	_position.x += _velocity.x * _speed * seconds + relativeGravity.x * seconds;
 	_position.y = averagedHeight;
 	_position.z += _velocity.z * _speed * seconds + relativeGravity.z * seconds;
 
+	//reset speed to make it necessary to keep the button pressed
 	_speed = 0;
 
 	_tankSmokeParticleEngine->setStartPosition(_position);
@@ -169,34 +171,33 @@ TankAI* Tank::getAI() const {
 
 void Tank::fireBullet() {
 	Bullet* bullet = new Bullet(_scene);
-
-	_scene.getSoundEngine().playMuzzleSound();
 	bullet->setPosition(getMuzzlePosition());
-
 	float velocityScale = 30;
 	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	bullet->setVelocity(velocity);
 
 	_scene._projectiles.push_back(bullet);
+	_scene.getSoundEngine().playMuzzleSound();
 }
 
-void Tank::fireMissile() {
+void Tank::fireMissile(Point targetPosition) {
 	Missile* missile = new Missile(_scene);
-
 	missile->setPosition(getMuzzlePosition());
+	missile->setTargetPosition(targetPosition);
 
 	Vector3D velocity(-getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), getShootingPower() * std::sin(Utils::toRadian(getElevation())), -getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	missile->setVelocity(velocity);
 
-	_scene.getSoundEngine().playExplosionSound();
+
 	_scene._projectiles.push_back(missile);
+	_scene.getSoundEngine().playExplosionSound();
 }
 
-Tank::SELECTEDWEAPON Tank::getSelectedWeapon() {
+Tank::SelectedWeapon Tank::getSelectedWeapon() {
 	return _selectedWeapon;
 }
 
-void Tank::setSelectedWeapon(SELECTEDWEAPON weapon) {
+void Tank::setSelectedWeapon(SelectedWeapon weapon) {
 	_selectedWeapon = weapon;
 }
 

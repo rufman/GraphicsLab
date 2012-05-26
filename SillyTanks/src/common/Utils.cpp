@@ -105,4 +105,84 @@ void Utils::applyGLRotation( const Vector3D &v1, const Vector3D &v2 )
 	glRotatef( Utils::toDegree( angle ), rotateAxis.x, rotateAxis.y, rotateAxis.z );
 }
 
+float Utils::arctan2(float x,float y)
+{
+	if(x < 0)
+	{
+		return atan(y/x) + Utils::PI;
+	}
+	else if( x > 0)
+	{
+		return atan(y/x);
+	}
+	else if(y > 0)
+	{
+		return 2.3562;
+	}
+	else
+	{
+		return -0.7854;
+	}
+}
+
+float Utils::getElevation(Point sourcePosition,Point targetPosition, float velocity)
+{
+	float grounddistance = sqrt(pow(sourcePosition.x - targetPosition.x,2) + pow(sourcePosition.z -targetPosition.z,2));
+	float heightdifference = targetPosition.y - sourcePosition.y;
+
+	float a = Utils::arctan2(grounddistance,heightdifference);
+	float a2;
+	if( sourcePosition.x > targetPosition.x)
+	{
+		a2 = 0.3;
+	}
+	else
+	{
+		a2 = -0.3;
+	}
+	float diff = 10^6;
+
+	float grounddistance_v = grounddistance/velocity;
+	float gravity_v = GRAVITATIONAL_ACCELERATION / velocity;
+
+	float y3;
+	float sine, cosine;
+	float lastdiff;
+	bool lastdir,dir;
+	do
+	{
+		sine = sin(a);
+		cosine = cos(a);
+		y3 = (sine/cosine + gravity_v/cosine)*grounddistance + GRAVITATIONAL_ACCELERATION * log(1-grounddistance_v/cosine);
+		if(y3 == 0)
+		{
+			return -a;
+		}
+		lastdiff = diff;
+		diff = abs(y3-heightdifference);
+
+		if(diff < lastdiff)
+		{
+			return a;
+		}
+		else if(diff < 5)
+		{
+			break;
+		}
+		lastdir = dir;
+		dir = y3 > heightdifference;
+		if( dir xor lastdir)
+		{
+			a2 = a2 /-2;
+		}
+		a = a + a2;
+	}while(true);
+
+	return -a;
+
+
+}
+
+
+
 }

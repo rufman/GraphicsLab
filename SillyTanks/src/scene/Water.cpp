@@ -106,7 +106,6 @@ void Water::calculateNormals() {
 	for (int widthPoint = 0; widthPoint < _widthResolution; widthPoint++) {
 		for (int lengthPoint = 0; lengthPoint < _lengthResolution; lengthPoint++) {
 			int v = _widthResolution * lengthPoint + widthPoint;
-			Point &vertex = _vertices[v];
 			Vector3D &normal = _vertexNormals[v];
 			normal = Vector3D(0.0, 0.0, 0.0);
 
