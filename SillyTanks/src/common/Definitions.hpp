@@ -88,6 +88,12 @@ namespace game_space {
 #define SMALLTANK_TEXTURE15 "resources/GFX/textures/slate.tga"
 #define SMALLTANK_TEXTURE16 "resources/GFX/textures/snow.tga"
 
+
+//#######################
+// Robot definitions
+//#######################
+#define ROBOT_TIMETOLIVE 8
+
 //#################
 // Object map definitions
 //#################

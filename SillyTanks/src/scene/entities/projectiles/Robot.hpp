@@ -11,7 +11,7 @@
 #define GRAPHICSLAB_ROBOT_HPP
 
 // Base class include
-#include "../../../common/Drawable.hpp"
+#include "../collisiondetection/Projectile.hpp"
 
 // Includes
 #include "../../../common/Material.hpp"
@@ -22,7 +22,7 @@
 namespace game_space {
 
 /** Robot */
-class Robot : public Drawable
+class Robot : public Projectile
 {
 public:
 	/**
@@ -54,6 +54,10 @@ public:
 	 * @param[in]	animationFile	File to load
 	 */
 	void loadAnimation( const std::string &animationFile );
+
+	bool isDetonated();
+
+	void setVelocity( const Vector3D &velocity );
 
 private:
 	struct Animation
@@ -154,6 +158,14 @@ private:
 	Material _mustacheMaterial;
 	Material _antennaMaterial;
 	Material _spaceMaterial;
+
+	Vector3D _velocity;
+	Vector3D _acceleration;
+
+	float _timeToLive;
+
+	bool _detonated;
+
 
 }; // class Robot
 

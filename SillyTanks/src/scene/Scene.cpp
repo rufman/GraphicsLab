@@ -54,6 +54,7 @@
 //projectile includes
 #include "entities/projectiles/Missile.hpp"
 #include "entities/projectiles/Bullet.hpp"
+#include "entities/projectiles/Robot.hpp"
 
 #include "illumination/shading/ShadingEngine.hpp"
 
@@ -85,7 +86,6 @@ Scene::Scene(Window &window) :
 				false), _fogActive(false), _shaderActive(false), _shadersAlreadyCompiled(
 				false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(
 				NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)) {
-
 
 	_dashBoardActive = false;
 
@@ -215,10 +215,10 @@ void Scene::initialize() {
 
 	//add some  AI towers to the scene
 	for (int i = 0; i < 4; i++) {
-	 Tower* tower = new SmallTower(*this, true);
-	 tower->setPosition(_terrain->getRandomPointOnMap());
-	 _targets.push_back(tower);
-	 }
+		Tower* tower = new SmallTower(*this, true);
+		tower->setPosition(_terrain->getRandomPointOnMap());
+		_targets.push_back(tower);
+	}
 
 	// reset the scene
 	reset();
@@ -245,15 +245,17 @@ void Scene::reset() {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
 			projectileIter = _projectiles.erase(projectileIter);
 			delete bullet;
-		}
-		else if (projectile->_projectileType == Projectile::MISSILE) {
+		} else if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
 
 			projectileIter = _projectiles.erase(projectileIter);
 			delete missile;
-		}
-		else
-		{
+		} else if (projectile->_projectileType == Projectile::ROBOT) {
+			Robot* robot = static_cast<Robot*>(projectile);
+
+			projectileIter = _projectiles.erase(projectileIter);
+			delete robot;
+		} else {
 			++projectileIter;
 		}
 	}
@@ -267,9 +269,9 @@ void Scene::update(float seconds) {
 		_shadersAlreadyCompiled = true;
 	}
 
-
 	//soundengine listener position update
-	_soundEngine.setListenerValues(_playerTank->getPosition().x,_playerTank->getPosition().y,_playerTank->getPosition().z);
+	_soundEngine.setListenerValues(_playerTank->getPosition().x,
+			_playerTank->getPosition().y, _playerTank->getPosition().z);
 
 	handleKeyboardInput();
 
@@ -312,8 +314,7 @@ void Scene::update(float seconds) {
 			} else {
 				++projectileIter;
 			}
-		}
-		else if (projectile->_projectileType == Projectile::MISSILE) {
+		} else if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
 			missile->move(seconds);
 			if (missile->isDetonated()) {
@@ -322,14 +323,21 @@ void Scene::update(float seconds) {
 			} else {
 				++projectileIter;
 			}
-		}
-		else
-		{
+		} else if (projectile->_projectileType == Projectile::ROBOT) {
+			Robot* robot = static_cast<Robot*>(projectile);
+			robot->move(seconds);
+			if (robot->isDetonated()) {
+				projectileIter = _projectiles.erase(projectileIter);
+				delete robot;
+			} else {
+				++projectileIter;
+			}
+		} else {
 			++projectileIter;
 		}
 	}
 
-	if(_dashBoardActive){
+	if (_dashBoardActive) {
 		drawOverlay();
 	}
 }
@@ -374,12 +382,22 @@ void Scene::drawScene() {
 		_currentlyActiveCamera = _overviewCam;
 		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(),
 				Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
-		Vector3D velocity(-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::sin(Utils::toRadian(-_playerTank->getAzimuth())), _playerTank->getShootingPower() * std::sin(Utils::toRadian(_playerTank->getElevation())), -_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::cos(Utils::toRadian(-_playerTank->getAzimuth())));
+		Vector3D velocity(
+				-_playerTank->getShootingPower()
+						* std::cos(Utils::toRadian(_playerTank->getElevation()))
+						* std::sin(Utils::toRadian(-_playerTank->getAzimuth())),
+				_playerTank->getShootingPower()
+						* std::sin(
+								Utils::toRadian(_playerTank->getElevation())),
+				-_playerTank->getShootingPower()
+						* std::cos(Utils::toRadian(_playerTank->getElevation()))
+						* std::cos(
+								Utils::toRadian(-_playerTank->getAzimuth())));
 
 		Point lookTo;
-		lookTo.x = _playerTank->getPosition().x + velocity.x*50;
-		lookTo.y = _playerTank->getPosition().y + velocity.y*50;
-		lookTo.z = _playerTank->getPosition().z + velocity.z*50;
+		lookTo.x = _playerTank->getPosition().x + velocity.x * 50;
+		lookTo.y = _playerTank->getPosition().y + velocity.y * 50;
+		lookTo.z = _playerTank->getPosition().z + velocity.z * 50;
 		_currentlyActiveCamera->setLookAt(
 				LookAt(
 						Point(
@@ -387,8 +405,8 @@ void Scene::drawScene() {
 										+ _tankDirection.x * 50,
 								_playerTank->getPosition().y + 50,
 								_playerTank->getPosition().z
-										+ _tankDirection.z * 50),
-						lookTo, Vector3D(0, 1, 0)));
+										+ _tankDirection.z * 50), lookTo,
+						Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL camera
@@ -484,6 +502,11 @@ void Scene::drawScene() {
 			missile->setRenderingParameters(_renderingParameters);
 			missile->draw();
 		}
+		if (projectile->_projectileType == Projectile::ROBOT) {
+			Robot* robot = static_cast<Robot*>(projectile);
+			robot->setRenderingParameters(_renderingParameters);
+			robot->draw();
+		}
 	}
 
 	//##################################
@@ -527,8 +550,7 @@ void Scene::drawScene() {
 		_fog->remove();
 	}
 
-
-	if(_dashBoardActive){
+	if (_dashBoardActive) {
 		drawOverlay();
 	}
 
@@ -538,15 +560,16 @@ void Scene::drawScene() {
 
 void Scene::drawOverlay() {
 
-	if(_dashBoardActive){
+	if (_dashBoardActive) {
 
 		int width = glutGet(GLUT_WINDOW_WIDTH);
-		int height  = glutGet(GLUT_WINDOW_HEIGHT);
-		height = height / 4 ;
+		int height = glutGet(GLUT_WINDOW_HEIGHT);
+		height = height / 4;
 
 		// Set camera parameters
 		_overlayCam->setViewport(
-				Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
+				Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width,
+						height));
 
 		_overlayCam->applyViewport();
 		_overlayCam->applyProjection();
@@ -570,7 +593,6 @@ void Scene::drawOverlay() {
 		glPopMatrix();
 
 	}
-
 
 }
 
@@ -662,7 +684,7 @@ void Scene::handleKeyboardInput() {
 		_fogActive = !_fogActive;
 	}
 
-	if(_window.keyHit('8')){
+	if (_window.keyHit('8')) {
 		_dashBoardActive = !_dashBoardActive;
 	}
 }
@@ -689,6 +711,10 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 					_targetChooser = _playerTank->getPosition();
 					_chooseTarget = true;
 
+					break;
+				}
+				case Tank::ROBOT: {
+					_playerTank->fireRobot();
 					break;
 				}
 				}
@@ -737,14 +763,20 @@ void Scene::onMousePassiveMove(int x, int y) {
 	}
 
 	if (!_chooseTarget) {
-		_playerTank->setElevation(_playerTank->getElevation() - yMove*MOUSE_SENSITIVITY);
-		_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove*MOUSE_SENSITIVITY);
+		_playerTank->setElevation(
+				_playerTank->getElevation() - yMove * MOUSE_SENSITIVITY);
+		_playerTank->setAzimuth(
+				_playerTank->getAzimuth() + xMove * MOUSE_SENSITIVITY);
 	} else {
 		Vector3D _tankDirection = Utils::rotate(-_playerTank->getAzimuth(),
-						Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
-		Vector3D _cross = Utils::cross(_tankDirection,Vector3D(0,1,0));
-		_targetChooser.x = _targetChooser.x -_tankDirection.x*yMove*MOUSE_SENSITIVITY/2 - _cross.x*xMove*MOUSE_SENSITIVITY/2;
-		_targetChooser.z = _targetChooser.z +_tankDirection.z*yMove*MOUSE_SENSITIVITY/2 + _cross.z*xMove*MOUSE_SENSITIVITY/2;
+				Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
+		Vector3D _cross = Utils::cross(_tankDirection, Vector3D(0, 1, 0));
+		_targetChooser.x = _targetChooser.x
+				- _tankDirection.x * yMove * MOUSE_SENSITIVITY / 2
+				- _cross.x * xMove * MOUSE_SENSITIVITY / 2;
+		_targetChooser.z = _targetChooser.z
+				+ _tankDirection.z * yMove * MOUSE_SENSITIVITY / 2
+				+ _cross.z * xMove * MOUSE_SENSITIVITY / 2;
 	}
 	glutPostRedisplay();
 }
@@ -789,8 +821,7 @@ Window& Scene::getWindow() {
 	return _window;
 }
 
-SoundEngine Scene::getSoundEngine()
-{
+SoundEngine Scene::getSoundEngine() {
 	return _soundEngine;
 }
 ShadingEngine Scene::getShadingEngine() {

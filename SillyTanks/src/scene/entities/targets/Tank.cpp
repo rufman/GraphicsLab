@@ -23,6 +23,7 @@
 //projectile includes
 #include "../projectiles/Bullet.hpp"
 #include "../projectiles/Missile.hpp"
+#include "../projectiles/Robot.hpp"
 
 //AI includes
 #include "../../AI/TankAI.hpp"
@@ -237,6 +238,26 @@ void Tank::fireMissile(Point targetPosition) {
 
 	_scene._projectiles.push_back(missile);
 	_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y,
+			_position.z);
+}
+
+void Tank::fireRobot() {
+	Robot* robot = new Robot(_scene);
+	robot->setPosition(getMuzzlePosition());
+	float velocityScale = 30;
+	Vector3D velocity(
+			-velocityScale * getShootingPower()
+					* std::cos(Utils::toRadian(getElevation()))
+					* std::sin(Utils::toRadian(-getAzimuth())),
+			velocityScale * getShootingPower()
+					* std::sin(Utils::toRadian(getElevation())),
+			-velocityScale * getShootingPower()
+					* std::cos(Utils::toRadian(getElevation()))
+					* std::cos(Utils::toRadian(-getAzimuth())));
+	robot->setVelocity(velocity);
+
+	_scene._projectiles.push_back(robot);
+	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y,
 			_position.z);
 }
 

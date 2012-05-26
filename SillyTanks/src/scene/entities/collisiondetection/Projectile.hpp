@@ -21,7 +21,8 @@ public:
 	enum ProjectileType
 	{
 		BULLET,
-		MISSILE
+		MISSILE,
+		ROBOT
 	}_projectileType;
 	//this is necessary for the AI to know what tank took a shot on it.
 	Target* _projectileOwner;

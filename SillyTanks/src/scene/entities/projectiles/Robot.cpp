@@ -6,10 +6,14 @@
 // Class declaration include
 #include "Robot.hpp"
 
-// Includes
+// common includes
 #include "../../../common/Exception.hpp"
 #include "../../../common/Material.hpp"
 #include "../../../common/Utils.hpp"
+
+//scene includes
+#include "../../Scene.hpp"
+#include "../../Terrain.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -21,7 +25,7 @@ namespace game_space{
 
 
 Robot::Robot( Scene &scene ) :
-	Drawable( scene )
+	Projectile( scene,Projectile::ROBOT,0 ),_timeToLive(0),_velocity(Vector3D(0,0,0)),_acceleration(Vector3D(0,0,0))
 {
 
 	_bodyMaterial.setAmbient( Color( 0.0, 1.0, 0.1 ) );
@@ -109,6 +113,45 @@ void Robot::reset()
 
 void Robot::move( float seconds )
 {
+	_timeToLive += seconds;
+
+	//ballistics of a projectile
+	_position.x += _velocity.x*seconds;
+	_position.y += _velocity.y*seconds + 0.5*GRAVITATIONAL_ACCELERATION*seconds*seconds;
+	_position.z += _velocity.z*seconds;
+
+	_velocity.y += GRAVITATIONAL_ACCELERATION*seconds;
+
+	//if the robot hits the ground and the time to live is over it detonates
+	if ((_position.y < _scene.getTerrain().getHeight(_position))) {
+		if(_timeToLive > ROBOT_TIMETOLIVE)
+		{
+			//do area damage
+			Point left,right,front,back;
+			left = _position;
+			left.x += 3;
+			right = _position;
+			right.x -= 3;
+			front = _position;
+			front.z += 3;
+			back = _position;
+			back.z -= 3;
+
+		//supermassive blackhole
+		_scene.getTerrain().doDamageAt(left, 0.75);
+		_scene.getTerrain().doDamageAt(right, 0.75);
+		_scene.getTerrain().doDamageAt(front, 0.75);
+		_scene.getTerrain().doDamageAt(back, 0.75);
+		_scene.getTerrain().doDamageAt(_position, 0.75);
+		_detonated = true;
+		}
+		else
+		{
+			//time to live not finished, the robot bounces off the ground
+			_velocity.y = -_velocity.y;
+		}
+	}
+
 	uint lastFrame = _animation.frames.rbegin()->first;
 	if ( _animation.currentFrame == lastFrame )
 		_animation.currentFrame = _animation.frames.begin()->first;
@@ -383,7 +426,7 @@ void Robot::draw() const
 	_bodyMaterial.setActive();
 	glPushMatrix();
 		//ANIMATION OF THE WHOLE BODY (jumping,moving,rotation)
-		glTranslatef(mBodyX,mBodyY,mBodyZ);
+		glTranslatef(_position.x+ mBodyX,_position.y+ mBodyY,_position.z+ mBodyZ);
 		glRotatef(rBodyY,0,1.0,0);//to achieve that the mesh can rotate and bow
 		glRotatef(rBodyX,1.0,0,0);
 		glRotatef(rBodyZ,0,0,1.0);
@@ -587,6 +630,16 @@ void Robot::draw() const
 			glPopMatrix();
 		glPopMatrix();
 	glPopMatrix();
+}
+
+bool Robot::isDetonated()
+{
+	return _detonated;
+}
+
+void Robot::setVelocity( const Vector3D &velocity )
+{
+	_velocity = velocity;
 }
 
 }

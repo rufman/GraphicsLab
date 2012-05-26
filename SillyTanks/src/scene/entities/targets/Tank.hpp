@@ -83,6 +83,7 @@ public:
 	TankAI* getAI() const;
 	void fireBullet();
 	void fireMissile(Point targetPosition);
+	void fireRobot();
 
 	//only used for a human player
 	SelectedWeapon getSelectedWeapon();
