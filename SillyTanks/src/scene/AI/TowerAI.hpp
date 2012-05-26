@@ -48,7 +48,7 @@ public:
 	void hunt();
 
 	//helper methods
-	void aimAndFire(int target);
+	void aimAndFire();
 
 };
 

@@ -55,7 +55,7 @@ public:
 	bool isAIControlled() const;
 	TowerAI* getAI() const;
 	void fireBullet();
-	void fireMissile();
+	void fireMissile(Point target);
 
 	//only used for a human player
 	SelectedWeapon getSelectedWeapon();

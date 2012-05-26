@@ -128,24 +128,22 @@ void Tower::fireBullet() {
 	_scene.getSoundEngine().playMuzzleSound();
 }
 
-void Tower::fireMissile() {
-		Missile* missile = new Missile(_scene);
+void Tower::fireMissile(Point targetPosition) {
+	Missile* missile = new Missile(_scene);
+	missile->setPosition(getMuzzlePosition());
+	missile->setTargetPosition(targetPosition);
 
-		missile->setPosition(getMuzzlePosition());
+	Vector3D velocity(
+			-getShootingPower() * std::cos(Utils::toRadian(getElevation()))
+					* std::sin(Utils::toRadian(-getAzimuth())),
+			getShootingPower() * std::sin(Utils::toRadian(getElevation())),
+			-getShootingPower() * std::cos(Utils::toRadian(getElevation()))
+					* std::cos(Utils::toRadian(-getAzimuth())));
+	missile->setVelocity(velocity);
 
-		Vector3D velocity(
-				-getShootingPower()
-						* std::cos(Utils::toRadian(getElevation()))
-						* std::sin(Utils::toRadian(-getAzimuth())),
-				getShootingPower()
-						* std::sin(Utils::toRadian(getElevation())),
-				-getShootingPower()
-						* std::cos(Utils::toRadian(getElevation()))
-						* std::cos(Utils::toRadian(-getAzimuth())));
-		missile->setVelocity(velocity);
-
-		_scene._projectiles.push_back(missile);
-		_scene.getSoundEngine().playExplosionSound();
+	_scene._projectiles.push_back(missile);
+	_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y,
+			_position.z);
 }
 
 Tower::SelectedWeapon Tower::getSelectedWeapon()
