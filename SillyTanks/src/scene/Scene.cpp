@@ -86,6 +86,9 @@ Scene::Scene(Window &window) :
 				false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(
 				NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)) {
 
+
+	_dashBoardActive = false;
+
 	//create the soundengine
 	_soundEngine = SoundEngine();
 
@@ -325,6 +328,10 @@ void Scene::update(float seconds) {
 			++projectileIter;
 		}
 	}
+
+	if(_dashBoardActive){
+		drawOverlay();
+	}
 }
 
 void Scene::onPaint() {
@@ -514,41 +521,51 @@ void Scene::drawScene() {
 		_fog->remove();
 	}
 
+
+	if(_dashBoardActive){
+		drawOverlay();
+	}
+
 	glFlush();
 	glutSwapBuffers();
 }
 
 void Scene::drawOverlay() {
-	int width = glutGet(GLUT_WINDOW_WIDTH);
-	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-	// Set camera parameters
-	_overlayCam->setViewport(
-			Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
+	if(_dashBoardActive){
 
-	_overlayCam->applyViewport();
-	_overlayCam->applyProjection();
-	_overlayCam->applyModelview();
+		int width = glutGet(GLUT_WINDOW_WIDTH);
+		int height  = glutGet(GLUT_WINDOW_HEIGHT);
+		height = height / 4 ;
 
-	// Set overlay parameters
-	glDisable(GL_LIGHTING);
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		// Set camera parameters
+		_overlayCam->setViewport(
+				Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
 
-	// Draw overlay
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
+		_overlayCam->applyViewport();
+		_overlayCam->applyProjection();
+		_overlayCam->applyModelview();
 
-	glColor4f(0.6, 0.6, 0.0, 0.4);
-	glRectd(0, 0, width, height);
+		// Set overlay parameters
+		glDisable(GL_LIGHTING);
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		// Draw overlay
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
 
-	glEnd();
+		glColor4f(0.6, 0.1, 0.0, 0.4);
+		glRectd(0, 0, width, height);
 
-	glPopMatrix();
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glPopMatrix();
+
+	}
+
+
 }
 
 void Scene::onResize(int width, int height) {
@@ -637,6 +654,10 @@ void Scene::handleKeyboardInput() {
 
 	if (_window.keyHit('7')) {
 		_fogActive = !_fogActive;
+	}
+
+	if(_window.keyHit('8')){
+		_dashBoardActive = !_dashBoardActive;
 	}
 }
 
