@@ -69,7 +69,7 @@ Robot::Robot( Scene &scene ) :
 	Animation::Frame frame;
 	frame.id = 0;
 	//body movement/rotation
-	frame.mBodyX = -10; frame.mBodyY = 0.0; frame.mBodyZ = 0.0;frame.generalSize = 1.0;
+	frame.mBodyX = 0; frame.mBodyY = 0.0; frame.mBodyZ = 0.0;frame.generalSize = 1.0;
 	frame.rBodyX = 0; frame.rBodyY = 0; frame.rBodyZ = 0;
 
 	//arm rotation
