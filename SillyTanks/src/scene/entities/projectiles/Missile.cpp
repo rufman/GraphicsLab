@@ -34,6 +34,16 @@ void Missile::draw() const {
 	glShadeModel(_renderingParameters.shadeMode == RenderingParameters::FLAT ? GL_FLAT : GL_SMOOTH);
 	glPolygonMode(GL_FRONT_AND_BACK, _renderingParameters.drawMode == RenderingParameters::WIREFRAME ? GL_LINE : GL_FILL);
 
+	 float materialAmbient[3] = { 0, 0, 0 };
+	 float materialSpecular[3] = { 1.0, 1.0, 1.0 };
+	 float materialEmission[3] = { 1.0, 1.0, 1.0 };
+	 int shininess = 50;
+
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
+	 glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
+	 glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+
 	glMatrixMode(GL_MODELVIEW);
 
 	glPushMatrix();
