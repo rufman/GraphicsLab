@@ -14,6 +14,8 @@
 
 namespace game_space {
 
+class MessageSubBus;
+
 class TankAI {
 public:
 	enum TANKAI_STRATEGY
@@ -27,7 +29,7 @@ public:
 
 	Scene& _scene;
 
-	std::vector<Message*>* _aiMessages;
+	MessageSubBus* _aiMessages;
 	Tank* _tank;
 	Target* _currentTarget;
 	std::vector<Point>* _path;
@@ -35,7 +37,7 @@ public:
 	//delay the shooting a bit
 	float reloadTime;
 public:
-	TankAI(Scene &scene,std::vector<Message*>* aiMessages);
+	TankAI(Scene &scene,MessageSubBus* aiMessages);
 	virtual ~TankAI();
 	//ai methods
 	//main method of the ai, activates all the other ai methods, represents one single reflection

@@ -50,6 +50,21 @@ public:
 
 	void setPosition(Point position);
 	Point getPosition() const;
+
+	void setLife(float life);
+	float getLife();
+	void setShield(float shield);
+	float getShield();
+	void setQtyMissiles(uint qty);
+	uint getQtyMissiles();
+	void setQtyRobots(uint qty);
+	uint getQtyRobots();
+
+	float _shield;
+	float _life;
+	uint _amountOfMissiles;
+	uint _amountOfRobots;
+	float _reloadingTime;
 };
 
 }

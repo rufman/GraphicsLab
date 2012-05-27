@@ -159,7 +159,7 @@ float Utils::getElevation(Point sourcePosition,Point targetPosition, float veloc
 			return -a;
 		}
 		lastdiff = diff;
-		diff = abs(y3-heightdifference);
+		diff = std::abs(y3-heightdifference);
 
 		if(diff < lastdiff)
 		{

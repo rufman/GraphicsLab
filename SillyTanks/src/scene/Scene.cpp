@@ -54,8 +54,11 @@
 //projectile includes
 #include "entities/projectiles/Missile.hpp"
 #include "entities/projectiles/Bullet.hpp"
+#include "entities/projectiles/Robot.hpp"
 
 #include "illumination/shading/ShadingEngine.hpp"
+
+#include "AI/DetonationSoundMessage.hpp"
 
 //std includes
 #include <sstream>
@@ -80,17 +83,13 @@ void VMatMult(GLmatrix16f M, Point v) {
 }
 
 Scene::Scene(Window &window) :
-		_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(
-				NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(
-				false), _fogActive(false), _shaderActive(false), _shadersAlreadyCompiled(
-				false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(
-				NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)) {
-
+		_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(false), _fogActive(false), _shaderActive(false), _shadersAlreadyCompiled(false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)) {
 
 	_dashBoardActive = false;
 
 	//create the soundengine
 	_soundEngine = SoundEngine();
+	_soundEngine.setActive(true);
 
 	//create the messagebus
 	_messageBus = new MessageBus();
@@ -106,8 +105,7 @@ Scene::~Scene() {
 	delete _fog;
 
 	// delete lights
-	for (LightVector::iterator lightIter = _lights.begin();
-			lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		delete light;
 	}
@@ -122,15 +120,13 @@ Scene::~Scene() {
 
 	//delete targets
 	delete _playerTank;
-	for (std::vector<Target*>::iterator targetIter = _targets.begin();
-			targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		delete target;
 	}
 
 	//delete projectiles
-	for (std::vector<Projectile*>::iterator projectileIter =
-			_projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile* projectile = *projectileIter;
 		delete projectile;
 	}
@@ -175,17 +171,13 @@ void Scene::initialize() {
 	glutSetCursor(GLUT_CURSOR_NONE);
 
 	//move the pointer to the middle of the panel
-	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2,
-			glutGet(GLUT_WINDOW_HEIGHT) / 2);
+	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
 
 	Application &application = Application::getInstance();
 	const Application::Parameters &parameters = application.getParameters();
 
-	glClearColor(parameters.fogRed, parameters.fogGreen, parameters.fogBlue,
-			0.0);
-	_fog = new Fog(parameters.fogDensity, parameters.fogStart,
-			parameters.fogEnd, parameters.fogRed, parameters.fogGreen,
-			parameters.fogBlue);
+	glClearColor(parameters.fogRed, parameters.fogGreen, parameters.fogBlue, 0.0);
+	_fog = new Fog(parameters.fogDensity, parameters.fogStart, parameters.fogEnd, parameters.fogRed, parameters.fogGreen, parameters.fogBlue);
 
 	// Initialize cameras
 	_overlayCam = new Camera2D(*this);
@@ -196,8 +188,7 @@ void Scene::initialize() {
 	//##############################
 	//initialize scene components
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
-	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4,
-			100 * 4, 50, 50);
+	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
 	_water = new Water(*this, parameters.waterHeight, 100 * 4, 100 * 4);
 
 	//create human player's tank
@@ -207,18 +198,18 @@ void Scene::initialize() {
 	_targets.push_back(_playerTank);
 
 	//add some AI tanks to the scene
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < EMEMY_TANKS; i++) {
 		Tank* tank = new SmallTank(*this, true);
 		tank->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tank);
 	}
 
 	//add some  AI towers to the scene
-	for (int i = 0; i < 4; i++) {
-	 Tower* tower = new SmallTower(*this, true);
-	 tower->setPosition(_terrain->getRandomPointOnMap());
-	 _targets.push_back(tower);
-	 }
+	for (int i = 0; i < ENEMY_TOWERS; i++) {
+		Tower* tower = new SmallTower(*this, true);
+		tower->setPosition(_terrain->getRandomPointOnMap());
+		_targets.push_back(tower);
+	}
 
 	// reset the scene
 	reset();
@@ -238,22 +229,23 @@ void Scene::reset() {
 	_skyDome->reset();
 	_water->reset();
 
-	for (std::vector<Projectile*>::iterator projectileIter =
-			_projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
 			projectileIter = _projectiles.erase(projectileIter);
 			delete bullet;
-		}
-		else if (projectile->_projectileType == Projectile::MISSILE) {
+		} else if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
 
 			projectileIter = _projectiles.erase(projectileIter);
 			delete missile;
-		}
-		else
-		{
+		} else if (projectile->_projectileType == Projectile::ROBOT) {
+			Robot* robot = static_cast<Robot*>(projectile);
+
+			projectileIter = _projectiles.erase(projectileIter);
+			delete robot;
+		} else {
 			++projectileIter;
 		}
 	}
@@ -267,9 +259,8 @@ void Scene::update(float seconds) {
 		_shadersAlreadyCompiled = true;
 	}
 
-
 	//soundengine listener position update
-	_soundEngine.setListenerValues(_playerTank->getPosition().x,_playerTank->getPosition().y,_playerTank->getPosition().z);
+	_soundEngine.setListenerValues(_playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z);
 
 	handleKeyboardInput();
 
@@ -281,8 +272,7 @@ void Scene::update(float seconds) {
 		_targetChooser.y = _terrain->getHeight(_targetChooser);
 	}
 
-	for (std::vector<Target*>::iterator targetIter = _targets.begin();
-			targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
@@ -299,8 +289,7 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Projectile*>::iterator projectileIter =
-			_projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
@@ -308,28 +297,43 @@ void Scene::update(float seconds) {
 
 			if (bullet->isDetonated()) {
 				projectileIter = _projectiles.erase(projectileIter);
+				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+					_messageBus->sendMessageTo(DetonationSoundMessage(bullet->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+				}
 				delete bullet;
 			} else {
 				++projectileIter;
 			}
-		}
-		else if (projectile->_projectileType == Projectile::MISSILE) {
+		} else if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
 			missile->move(seconds);
 			if (missile->isDetonated()) {
 				projectileIter = _projectiles.erase(projectileIter);
+				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+					_messageBus->sendMessageTo(DetonationSoundMessage(missile->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+				}
 				delete missile;
 			} else {
 				++projectileIter;
 			}
-		}
-		else
-		{
+		} else if (projectile->_projectileType == Projectile::ROBOT) {
+			Robot* robot = static_cast<Robot*>(projectile);
+			robot->move(seconds);
+			if (robot->isDetonated()) {
+				projectileIter = _projectiles.erase(projectileIter);
+				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+					_messageBus->sendMessageTo(DetonationSoundMessage(robot->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+				}
+				delete robot;
+			} else {
+				++projectileIter;
+			}
+		} else {
 			++projectileIter;
 		}
 	}
 
-	if(_dashBoardActive){
+	if (_dashBoardActive) {
 		drawOverlay();
 	}
 }
@@ -372,23 +376,15 @@ void Scene::drawScene() {
 		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_currentlyActiveCamera = _overviewCam;
-		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(),
-				Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
-		Vector3D velocity(-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::sin(Utils::toRadian(-_playerTank->getAzimuth())), _playerTank->getShootingPower() * std::sin(Utils::toRadian(_playerTank->getElevation())), -_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::cos(Utils::toRadian(-_playerTank->getAzimuth())));
+		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(), Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
+		Vector3D velocity(-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::sin(Utils::toRadian(-_playerTank->getAzimuth())), _playerTank->getShootingPower() * std::sin(Utils::toRadian(_playerTank->getElevation())),
+				-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::cos(Utils::toRadian(-_playerTank->getAzimuth())));
 
 		Point lookTo;
-		lookTo.x = _playerTank->getPosition().x + velocity.x*50;
-		lookTo.y = _playerTank->getPosition().y + velocity.y*50;
-		lookTo.z = _playerTank->getPosition().z + velocity.z*50;
-		_currentlyActiveCamera->setLookAt(
-				LookAt(
-						Point(
-								_playerTank->getPosition().x
-										+ _tankDirection.x * 50,
-								_playerTank->getPosition().y + 50,
-								_playerTank->getPosition().z
-										+ _tankDirection.z * 50),
-						lookTo, Vector3D(0, 1, 0)));
+		lookTo.x = _playerTank->getPosition().x + velocity.x * 50;
+		lookTo.y = _playerTank->getPosition().y + velocity.y * 50;
+		lookTo.z = _playerTank->getPosition().z + velocity.z * 50;
+		_currentlyActiveCamera->setLookAt(LookAt(Point(_playerTank->getPosition().x + _tankDirection.x * 50, _playerTank->getPosition().y + 50, _playerTank->getPosition().z + _tankDirection.z * 50), lookTo, Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL camera
@@ -402,8 +398,7 @@ void Scene::drawScene() {
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-	for (LightVector::iterator lightIter = _lights.begin();
-			lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}
@@ -444,8 +439,7 @@ void Scene::drawScene() {
 	//################################
 	// The targets should use toon shading as well
 	//Draw the targets
-	for (std::vector<Target*>::iterator targetIter = _targets.begin();
-			targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
@@ -470,9 +464,7 @@ void Scene::drawScene() {
 	if (_shaderActive) {
 		_shadingEngine.clearShaders();
 	}
-	for (std::vector<Projectile*>::iterator projectileIter =
-			_projectiles.begin(); projectileIter != _projectiles.end();
-			++projectileIter) {
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end(); ++projectileIter) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
@@ -483,6 +475,11 @@ void Scene::drawScene() {
 			Missile* missile = static_cast<Missile*>(projectile);
 			missile->setRenderingParameters(_renderingParameters);
 			missile->draw();
+		}
+		if (projectile->_projectileType == Projectile::ROBOT) {
+			Robot* robot = static_cast<Robot*>(projectile);
+			robot->setRenderingParameters(_renderingParameters);
+			robot->draw();
 		}
 	}
 
@@ -527,8 +524,7 @@ void Scene::drawScene() {
 		_fog->remove();
 	}
 
-
-	if(_dashBoardActive){
+	if (_dashBoardActive) {
 		drawOverlay();
 	}
 
@@ -538,15 +534,14 @@ void Scene::drawScene() {
 
 void Scene::drawOverlay() {
 
-	if(_dashBoardActive){
+	if (_dashBoardActive) {
 
 		int width = glutGet(GLUT_WINDOW_WIDTH);
-		int height  = glutGet(GLUT_WINDOW_HEIGHT);
-		height = height / 4 ;
+		int height = glutGet(GLUT_WINDOW_HEIGHT);
+		height = height / 4;
 
 		// Set camera parameters
-		_overlayCam->setViewport(
-				Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
+		_overlayCam->setViewport(Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
 
 		_overlayCam->applyViewport();
 		_overlayCam->applyProjection();
@@ -570,7 +565,6 @@ void Scene::drawOverlay() {
 		glPopMatrix();
 
 	}
-
 
 }
 
@@ -605,12 +599,12 @@ void Scene::handleKeyboardInput() {
 		glutPostRedisplay();
 	}
 
-	if (_window.keyPressed('+')) {
+	if (_window.keyPressed('q') || _window.keyPressed('Q')) {
 		float power = _playerTank->getShootingPower() + 0.1;
 		_playerTank->setShootingPower((power > 1.0) ? 1.0 : power);
 	}
 
-	if (_window.keyPressed('-')) {
+	if (_window.keyPressed('e') || _window.keyPressed('E')) {
 		float power = _playerTank->getShootingPower() - 0.1;
 		_playerTank->setShootingPower((power < 0.1) ? 0.1 : power);
 	}
@@ -638,8 +632,7 @@ void Scene::handleKeyboardInput() {
 	if (_window.keyHit('4')) {
 		if (_renderingParameters.normalMode == RenderingParameters::OFF) {
 			_renderingParameters.normalMode = RenderingParameters::VERTEX;
-		} else if (_renderingParameters.normalMode
-				== RenderingParameters::VERTEX) {
+		} else if (_renderingParameters.normalMode == RenderingParameters::VERTEX) {
 			_renderingParameters.normalMode = RenderingParameters::TRIANGLE;
 		} else {
 			_renderingParameters.normalMode = RenderingParameters::OFF;
@@ -662,7 +655,7 @@ void Scene::handleKeyboardInput() {
 		_fogActive = !_fogActive;
 	}
 
-	if(_window.keyHit('8')){
+	if (_window.keyHit('8')) {
 		_dashBoardActive = !_dashBoardActive;
 	}
 }
@@ -691,6 +684,14 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 
 					break;
 				}
+				case Tank::ROBOT: {
+					_playerTank->fireRobot();
+					break;
+				}
+				default:{
+					_playerTank->fireBullet();
+					break;
+				}
 				}
 				break;
 			}
@@ -701,8 +702,15 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 					break;
 				}
 				case Tank::MISSILE: {
-					_playerTank->setSelectedWeapon(Tank::BULLET);
+					_playerTank->setSelectedWeapon(Tank::ROBOT);
 					break;
+				}
+				case Tank::ROBOT: {
+					_playerTank->setSelectedWeapon(Tank::BULLET);
+				}
+				default:
+				{
+					_playerTank->setSelectedWeapon(Tank::BULLET);
 				}
 				}
 				break;
@@ -734,14 +742,13 @@ void Scene::onMousePassiveMove(int x, int y) {
 	}
 
 	if (!_chooseTarget) {
-		_playerTank->setElevation(_playerTank->getElevation() - yMove*MOUSE_SENSITIVITY);
-		_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove*MOUSE_SENSITIVITY);
+		_playerTank->setElevation(_playerTank->getElevation() - yMove * MOUSE_SENSITIVITY);
+		_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove * MOUSE_SENSITIVITY);
 	} else {
-		Vector3D _tankDirection = Utils::rotate(-_playerTank->getAzimuth(),
-						Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
-		Vector3D _cross = Utils::cross(_tankDirection,Vector3D(0,1,0));
-		_targetChooser.x = _targetChooser.x -_tankDirection.x*yMove*MOUSE_SENSITIVITY/2 - _cross.x*xMove*MOUSE_SENSITIVITY/2;
-		_targetChooser.z = _targetChooser.z +_tankDirection.z*yMove*MOUSE_SENSITIVITY/2 + _cross.z*xMove*MOUSE_SENSITIVITY/2;
+		Vector3D _tankDirection = Utils::rotate(-_playerTank->getAzimuth(), Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
+		Vector3D _cross = Utils::cross(_tankDirection, Vector3D(0, 1, 0));
+		_targetChooser.x = _targetChooser.x - _tankDirection.x * yMove * MOUSE_SENSITIVITY / 2 - _cross.x * xMove * MOUSE_SENSITIVITY / 2;
+		_targetChooser.z = _targetChooser.z + _tankDirection.z * yMove * MOUSE_SENSITIVITY / 2 + _cross.z * xMove * MOUSE_SENSITIVITY / 2;
 	}
 	glutPostRedisplay();
 }
@@ -759,12 +766,7 @@ void Scene::onIdle() {
 }
 
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
-	Point from(
-			radius * std::cos(Utils::toRadian(elevation))
-					* std::sin(Utils::toRadian(azimuth)) * -1,
-			radius * std::sin(Utils::toRadian(elevation)),
-			radius * std::cos(Utils::toRadian(elevation))
-					* std::cos(Utils::toRadian(azimuth)) * -1);
+	Point from(radius * std::cos(Utils::toRadian(elevation)) * std::sin(Utils::toRadian(azimuth)) * -1, radius * std::sin(Utils::toRadian(elevation)), radius * std::cos(Utils::toRadian(elevation)) * std::cos(Utils::toRadian(azimuth)) * -1);
 
 	Vector3D up(0.0, 1.0, 0.0);
 	Vector3D dir(-from.x, -from.y, -from.z);
@@ -775,8 +777,7 @@ void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Vector3D upMove = up;
 	upMove *= moveY;
 
-	Point newFrom(from.x + normalMove.x + upMove.x,
-			from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
+	Point newFrom(from.x + normalMove.x + upMove.x, from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
 	Point to(newFrom.x - from.x, newFrom.y - from.y, newFrom.z - from.z);
 
 	camera.setLookAt(LookAt(newFrom, to, up));
@@ -786,8 +787,7 @@ Window& Scene::getWindow() {
 	return _window;
 }
 
-SoundEngine Scene::getSoundEngine()
-{
+SoundEngine Scene::getSoundEngine() {
 	return _soundEngine;
 }
 ShadingEngine Scene::getShadingEngine() {
@@ -827,8 +827,7 @@ void Scene::drawWaterImage() {
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-	for (LightVector::iterator lightIter = _lights.begin();
-			lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}

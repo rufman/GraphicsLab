@@ -23,6 +23,7 @@
 //projectile includes
 #include "../projectiles/Bullet.hpp"
 #include "../projectiles/Missile.hpp"
+#include "../projectiles/Robot.hpp"
 
 //AI includes
 #include "../../AI/TankAI.hpp"
@@ -34,11 +35,11 @@ namespace game_space {
 
 Tank::Tank(Scene &scene, bool isAIControlled) :
 		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(
-				0), _isAIControlled(isAIControlled) {
+				0), _isAIControlled(isAIControlled),_selectedWeapon(Tank::BULLET) {
 
 	if (isAIControlled) {
 		//the ai must know the tank to be able to control it
-		std::vector<Message*>* messageBus =
+		MessageSubBus* messageBus =
 				_scene.getMessageBus()->addNewClient();
 		_controllingAI = new TankAI(scene, messageBus);
 		_controllingAI->_tank = this;
@@ -237,6 +238,50 @@ void Tank::fireMissile(Point targetPosition) {
 
 	_scene._projectiles.push_back(missile);
 	_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y,
+			_position.z);
+}
+
+void Tank::fireRobot() {
+	Robot* robot = new Robot(_scene);
+	robot->setPosition(getMuzzlePosition());
+
+	int anim = rand()%3;
+	std::string animFile;
+
+	switch(anim)
+	{
+	case 0:
+	{
+		animFile = ROBOT_ANIMATION1;
+		break;
+	}
+	case 1:
+	{
+		animFile = ROBOT_ANIMATION2;
+		break;
+	}
+	case 2:
+	{
+		animFile = ROBOT_ANIMATION3;
+		break;
+	}
+	}
+
+	robot->loadAnimation(animFile);
+	float velocityScale = 30;
+	Vector3D velocity(
+			-velocityScale * getShootingPower()
+					* std::cos(Utils::toRadian(getElevation()))
+					* std::sin(Utils::toRadian(-getAzimuth())),
+			velocityScale * getShootingPower()
+					* std::sin(Utils::toRadian(getElevation())),
+			-velocityScale * getShootingPower()
+					* std::cos(Utils::toRadian(getElevation()))
+					* std::cos(Utils::toRadian(-getAzimuth())));
+	robot->setVelocity(velocity);
+
+	_scene._projectiles.push_back(robot);
+	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y,
 			_position.z);
 }
 

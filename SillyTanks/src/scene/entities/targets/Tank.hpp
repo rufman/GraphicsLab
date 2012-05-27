@@ -31,7 +31,7 @@ class Smoke;
 class Tank: public Target {
 public:
 	enum SelectedWeapon {
-		BULLET, MISSILE
+		BULLET, MISSILE, ROBOT
 	};
 protected:
 	Turret* _turret;
@@ -83,6 +83,7 @@ public:
 	TankAI* getAI() const;
 	void fireBullet();
 	void fireMissile(Point targetPosition);
+	void fireRobot();
 
 	//only used for a human player
 	SelectedWeapon getSelectedWeapon();

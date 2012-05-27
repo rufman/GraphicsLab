@@ -10,7 +10,8 @@
 #include <math.h>
 #include <iostream>
 
-SoundEngine::SoundEngine() {
+SoundEngine::SoundEngine() :
+		_active(false) {
 
 	ListenerPos[0] = 0.0;
 	ListenerPos[1] = 0.0;
@@ -38,15 +39,17 @@ SoundEngine::SoundEngine() {
 		//exit(1);
 	}
 
-	setListenerValues(ListenerPos[0],ListenerPos[0],ListenerPos[2]);
+	setListenerValues(ListenerPos[0], ListenerPos[0], ListenerPos[2]);
 
 }
 
-void SoundEngine::setListenerValues(float x, float y,float z) {
-	float arr[3] = {x,y,z};
-	alListenerfv(AL_POSITION, arr);
-	alListenerfv(AL_VELOCITY, ListenerVel);
-	alListenerfv(AL_ORIENTATION, ListenerOri);
+void SoundEngine::setListenerValues(float x, float y, float z) {
+	if (_active) {
+		float arr[3] = { x, y, z };
+		alListenerfv(AL_POSITION, arr);
+		alListenerfv(AL_VELOCITY, ListenerVel);
+		alListenerfv(AL_ORIENTATION, ListenerOri);
+	}
 }
 
 void SoundEngine::KillALData() {
@@ -77,7 +80,7 @@ ALboolean SoundEngine::LoadALData() {
 	alutLoadWAVFile((ALbyte*) "resources/sounds/bomb2.wav", &format, &data,
 			&size, &freq);
 #else
-	alutLoadWAVFile((ALbyte*)"resources/sounds/bomb2.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*) "resources/sounds/bomb2.wav", &format, &data, &size, &freq, &loop);
 #endif
 
 	alBufferData(Buffers[EXPLOSION], format, data, size, freq);
@@ -87,7 +90,7 @@ ALboolean SoundEngine::LoadALData() {
 	alutLoadWAVFile((ALbyte*) "resources/sounds/Gun1.wav", &format, &data,
 			&size, &freq);
 #else
-	alutLoadWAVFile((ALbyte*)"resources/sounds/Gun1.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*) "resources/sounds/Gun1.wav", &format, &data, &size, &freq, &loop);
 #endif
 
 	alBufferData(Buffers[GUN], format, data, size, freq);
@@ -97,7 +100,7 @@ ALboolean SoundEngine::LoadALData() {
 	alutLoadWAVFile((ALbyte*) "resources/sounds/muzzleshot.wav", &format, &data,
 			&size, &freq);
 #else
-	alutLoadWAVFile((ALbyte*)"resources/sounds/muzzleshot.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*) "resources/sounds/muzzleshot.wav", &format, &data, &size, &freq, &loop);
 #endif
 	alBufferData(Buffers[MUZZLE], format, data, size, freq);
 	alutUnloadWAV(format, data, size, freq);
@@ -141,49 +144,52 @@ ALboolean SoundEngine::LoadALData() {
 }
 
 void SoundEngine::playGunSound() {
-
-	alSourcefv(Sources[GUN], AL_POSITION, SourcesPos[EXPLOSION]); // reset position of sound
-	alSourcePlay(Sources[GUN]);
-
+	if (_active) {
+		alSourcefv(Sources[GUN], AL_POSITION, SourcesPos[EXPLOSION]); // reset position of sound
+		alSourcePlay(Sources[GUN]);
+	}
 }
 
-void SoundEngine::playGunSoundAt(float x, float y, float z){
-
-
-	ALfloat arr[3] = {x, y, z};
-	alSourcefv(Sources[GUN], AL_POSITION, arr);
-	alSourcePlay(Sources[GUN]);
+void SoundEngine::playGunSoundAt(float x, float y, float z) {
+	if (_active) {
+		ALfloat arr[3] = { x, y, z };
+		alSourcefv(Sources[GUN], AL_POSITION, arr);
+		alSourcePlay(Sources[GUN]);
+	}
 }
 
 void SoundEngine::playExplosionSound() {
-
-	alSourcefv(Sources[EXPLOSION], AL_POSITION, SourcesPos[EXPLOSION]); // reset position of sound
-	alSourcePlay(Sources[EXPLOSION]);
-
+	if (_active) {
+		alSourcefv(Sources[EXPLOSION], AL_POSITION, SourcesPos[EXPLOSION]); // reset position of sound
+		alSourcePlay(Sources[EXPLOSION]);
+	}
 }
 
-void SoundEngine::playExplosionSoundAt(float x, float y, float z){
-
-	ALfloat arr[3] = {x, y, z};
-	alSourcefv(Sources[EXPLOSION], AL_POSITION, arr);
-	alSourcePlay(Sources[EXPLOSION]);
-
+void SoundEngine::playExplosionSoundAt(float x, float y, float z) {
+	if (_active) {
+		ALfloat arr[3] = { x, y, z };
+		alSourcefv(Sources[EXPLOSION], AL_POSITION, arr);
+		alSourcePlay(Sources[EXPLOSION]);
+	}
 }
 
 void SoundEngine::playMuzzleSound() {
-
-	alSourcefv(Sources[MUZZLE], AL_POSITION, SourcesPos[EXPLOSION]); //reset position of sound
-	alSourcePlay(Sources[MUZZLE]);
-
+	if (_active) {
+		alSourcefv(Sources[MUZZLE], AL_POSITION, SourcesPos[EXPLOSION]); //reset position of sound
+		alSourcePlay(Sources[MUZZLE]);
+	}
 }
 
-void SoundEngine::playMuzzleSoundAt(float x, float y, float z){
-
-	ALfloat arr[3] = {x, y, z};
-	alSourcefv(Sources[MUZZLE], AL_POSITION, arr);
-	alSourcePlay(Sources[MUZZLE]);
-
+void SoundEngine::playMuzzleSoundAt(float x, float y, float z) {
+	if (_active) {
+		ALfloat arr[3] = { x, y, z };
+		alSourcefv(Sources[MUZZLE], AL_POSITION, arr);
+		alSourcePlay(Sources[MUZZLE]);
+	}
 }
 
-
+void SoundEngine::setActive(bool active)
+{
+	_active = active;
+}
 

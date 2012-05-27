@@ -49,6 +49,10 @@ namespace game_space {
 // Gravitational acceleration constant in m/s2
 #define GRAVITATIONAL_ACCELERATION (-9.81)
 
+#define EMEMY_TANKS 4
+
+#define ENEMY_TOWERS 4
+
 //#################
 // Tank definitions
 //#################
@@ -57,7 +61,6 @@ namespace game_space {
 #define SMALLTANK_SPEED 8
 #define SMALLTANK_VISION_DISTANCE 120
 #define SMALLTANK_ESPACE_DISTANCE 80
-#define SMALLTANK_RELOADING_TIME 3
 
 #define SHOOTING_DISTANCE 30
 
@@ -66,7 +69,7 @@ namespace game_space {
 //#################
 #define SMALLTOWER_TOWERBASE_MODEL "resources/GFX/models/smalltower_towerbase.ply"
 #define SMALLTOWER_VISION_DISTANCE 200
-#define SMALLTOWER_RELOADING_TIME 3
+
 
 //#################
 //Tank textures definitions
@@ -87,6 +90,27 @@ namespace game_space {
 #define SMALLTANK_TEXTURE14 "resources/GFX/textures/sand.tga"
 #define SMALLTANK_TEXTURE15 "resources/GFX/textures/slate.tga"
 #define SMALLTANK_TEXTURE16 "resources/GFX/textures/snow.tga"
+
+
+//########################
+//Bullet definitions
+//########################
+#define BULLET_DETONATIONSTRENGTH 8
+
+//########################
+//Missile definitions
+//########################
+#define MISSILE_DETONATIONSTRENGTH 15
+
+
+//#######################
+// Robot definitions
+//#######################
+#define ROBOT_TIMETOLIVE 8
+#define ROBOT_ANIMATION1 "resources/GFX/animation/anim.txt"
+#define ROBOT_ANIMATION2 "resources/GFX/animation/anim.txt"
+#define ROBOT_ANIMATION3 "resources/GFX/animation/anim.txt"
+#define ROBOT_DETONATIONSTRENGTH 20
 
 //#################
 // Object map definitions
@@ -110,4 +134,24 @@ namespace game_space {
 
 #define TOON_VERTEX_SHADER "resources/shaders/toonvshader_notex.vert"
 #define TOON_FRAGMENT_SHADER "resources/shaders/toonfshader_notex.frag"
+
+
+//##########################
+// Game Logic
+//##########################
+
+#define SMALLTANK_LIFE 100
+#define SMALLTANK_SHIELD 10
+#define SMALLTANK_QTYMISSILES 5
+#define SMALLTANK_QTYROBOTS 5
+#define SMALLTOWER_RELOADING_TIME 3
+
+
+#define SMALLTOWER_LIFE 200
+#define SMALLTOWER_SHIELD 20
+#define SMALLTOWER_QTYMISSILES 5
+#define SMALLTOWER_QTYROBOTS 5
+#define SMALLTANK_RELOADING_TIME 2
+
+
 #endif // GAME_DEFS_HPP
