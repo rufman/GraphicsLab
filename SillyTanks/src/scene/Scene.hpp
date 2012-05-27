@@ -206,10 +206,11 @@ private:
 	TGATexture* _hudRobot;
 	TGATexture* _hudStatusBars;
 	TGATexture* _hudClockFace;
+	TGATexture* _hudLifebar;
+	TGATexture* _hudShieldbar;
+	TGATexture* _hudEnergybar;
+	TGATexture* _hudReloadbar;
 	ScreenTexture* _hudMap;
-
-	//information
-	Material _infoMaterial;
 
 
 }; // class Scene

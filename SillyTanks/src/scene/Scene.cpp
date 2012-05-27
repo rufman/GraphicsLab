@@ -96,12 +96,6 @@ Scene::Scene(Window &window) :
 	//i can not remove it because the game crashes...strange bug...
 	_endNode = new Node(Point(1, 2, 1), *this);
 
-
-	_infoMaterial.setAmbient( Color( 0.0, 1.0, 0.1 ) );
-	_infoMaterial.setDiffuse( Color( 0.0, 1.0, 0.1 ) );
-	_infoMaterial.setSpecular( Color( 0.5, 0.5, 0.5 ) );
-	_infoMaterial.setEmission( Color( 0.0, 0.0, 0.0 ) );
-	_infoMaterial.setShininess( 15 );
 }
 
 Scene::~Scene() {
@@ -207,6 +201,10 @@ void Scene::initialize() {
 	_hudMissile = new TGATexture(HUD_MISSILE_TEXTURE);
 	_hudRobot = new TGATexture(HUD_ROBOT_TEXTURE);
 	_hudStatusBars = new TGATexture(HUD_STATUSBARS_TEXTURE);
+	_hudLifebar = new TGATexture(HUD_LIFEBAR_TEXTURE);
+	_hudShieldbar = new TGATexture(HUD_SHIELDBAR_TEXTURE);
+	_hudEnergybar = new TGATexture(HUD_ENERGYBAR_TEXTURE);
+	_hudReloadbar = new TGATexture(HUD_RELOADBAR_TEXTURE);
 
 	//create human player's tank
 	_playerTank = new SmallTank(*this, false);
@@ -630,6 +628,101 @@ void Scene::drawOverlay() {
 	glVertex2f(margin, statusBarsBaseSize + margin);
 	glEnd();
 	_hudStatusBars->setActive(false);
+
+
+	//lifebar
+	glPushMatrix();
+	_hudLifebar->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	float statusBarBaseSize = height / 33;
+	ratio = (float) _hudLifebar->getWidth() / (float) _hudLifebar->getHeight();
+
+	glTexCoord2f(0, _hudLifebar->getHeight());
+	glVertex2f(margin*2.3, margin*5.2);
+
+	glTexCoord2f(_hudLifebar->getWidth(), _hudLifebar->getHeight());
+	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, margin*5.2);
+
+	glTexCoord2f(_hudLifebar->getWidth(), 0);
+	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, statusBarBaseSize + margin*5.2);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(margin*2.3, statusBarBaseSize + margin*5.2);
+	glEnd();
+	_hudLifebar->setActive(false);
+	glPopMatrix();
+
+	//shieldbar
+	glPushMatrix();
+	_hudShieldbar->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	ratio = (float) _hudShieldbar->getWidth() / (float) _hudShieldbar->getHeight();
+
+	glTexCoord2f(0, _hudShieldbar->getHeight());
+	glVertex2f(margin*2.3, margin*4);
+
+	glTexCoord2f(_hudShieldbar->getWidth(), _hudShieldbar->getHeight());
+	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, margin*4);
+
+	glTexCoord2f(_hudShieldbar->getWidth(), 0);
+	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, statusBarBaseSize + margin*4);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(margin*2.3, statusBarBaseSize + margin*4);
+	glEnd();
+	_hudShieldbar->setActive(false);
+	glPopMatrix();
+
+
+	//energybar
+	glPushMatrix();
+	_hudEnergybar->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	ratio = (float) _hudEnergybar->getWidth() / (float) _hudEnergybar->getHeight();
+
+	glTexCoord2f(0, _hudEnergybar->getHeight());
+	glVertex2f(margin*2.3, margin*2.4);
+
+	glTexCoord2f(_hudEnergybar->getWidth(), _hudEnergybar->getHeight());
+	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, margin*2.4);
+
+	glTexCoord2f(_hudEnergybar->getWidth(), 0);
+	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, statusBarBaseSize + margin*2.4);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(margin*2.3, statusBarBaseSize + margin*2.4);
+	glEnd();
+	_hudEnergybar->setActive(false);
+	glPopMatrix();
+
+
+	//reloadbar
+	glPushMatrix();
+	_hudReloadbar->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	ratio = (float) _hudReloadbar->getWidth() / (float) _hudReloadbar->getHeight();
+
+	glTexCoord2f(0, _hudReloadbar->getHeight());
+	glVertex2f(margin*2.3, margin*1.2);
+
+	glTexCoord2f(_hudReloadbar->getWidth(), _hudReloadbar->getHeight());
+	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, margin*1.2);
+
+	glTexCoord2f(_hudReloadbar->getWidth(), 0);
+	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, statusBarBaseSize + margin*1.2);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(margin*2.3, statusBarBaseSize + margin*1.2);
+	glEnd();
+	_hudReloadbar->setActive(false);
 	glPopMatrix();
 
 	//currently active weapon
