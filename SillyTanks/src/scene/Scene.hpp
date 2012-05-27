@@ -8,6 +8,7 @@
 #include "../common/SoundEngine.hpp"
 #include "../scene/illumination/shading/ShadingEngine.hpp"
 #include "../common/ScreenTexture.hpp"
+#include "../common/Material.hpp"
 
 #include "Fog.hpp"
 
@@ -206,6 +207,9 @@ private:
 	TGATexture* _hudStatusBars;
 	TGATexture* _hudClockFace;
 	ScreenTexture* _hudMap;
+
+	//information
+	Material _infoMaterial;
 
 
 }; // class Scene

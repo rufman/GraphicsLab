@@ -95,6 +95,13 @@ Scene::Scene(Window &window) :
 
 	//i can not remove it because the game crashes...strange bug...
 	_endNode = new Node(Point(1, 2, 1), *this);
+
+
+	_infoMaterial.setAmbient( Color( 0.0, 1.0, 0.1 ) );
+	_infoMaterial.setDiffuse( Color( 0.0, 1.0, 0.1 ) );
+	_infoMaterial.setSpecular( Color( 0.5, 0.5, 0.5 ) );
+	_infoMaterial.setEmission( Color( 0.0, 0.0, 0.0 ) );
+	_infoMaterial.setShininess( 15 );
 }
 
 Scene::~Scene() {
@@ -601,7 +608,6 @@ void Scene::drawOverlay() {
 
 	glPopMatrix();
 
-
 	// status bars
 	glPushMatrix();
 	_hudStatusBars->setActive(true);
@@ -667,31 +673,38 @@ void Scene::drawOverlay() {
 	selectedWeapon->setActive(false);
 	glPopMatrix();
 
-
 	//map
 	glPushMatrix();
 	/*_hudMap->setActive(true);
-	glBegin(GL_POLYGON);
-	glColor3f(1, 1, 1);
+	 glBegin(GL_POLYGON);
+	 glColor3f(1, 1, 1);
 
-	float mapBaseSize = height / 6;
-	ratio = (float) _hudMap->getWidth() / (float) _hudMap->getHeight();
+	 float mapBaseSize = height / 6;
+	 ratio = (float) _hudMap->getWidth() / (float) _hudMap->getHeight();
 
-	glTexCoord2f(0, selectedWeapon->getHeight());
-	glVertex2f(width - margin - mapBaseSize * ratio, height-margin);
+	 glTexCoord2f(0, selectedWeapon->getHeight());
+	 glVertex2f(width - margin - mapBaseSize * ratio, height-margin);
 
-	glTexCoord2f(_hudMap->getWidth(), _hudMap->getHeight());
-	glVertex2f(width - margin, margin);
+	 glTexCoord2f(_hudMap->getWidth(), _hudMap->getHeight());
+	 glVertex2f(width - margin, margin);
 
-	glTexCoord2f(_hudMap->getWidth(), 0);
-	glVertex2f(width - margin, height - mapBaseSize -margin);
+	 glTexCoord2f(_hudMap->getWidth(), 0);
+	 glVertex2f(width - margin, height - mapBaseSize -margin);
 
-	glTexCoord2f(0, 0);
-	glVertex2f(width - margin - mapBaseSize * ratio, height - mapBaseSize - margin);
-	glEnd();
+	 glTexCoord2f(0, 0);
+	 glVertex2f(width - margin - mapBaseSize * ratio, height - mapBaseSize - margin);
+	 glEnd();
 
-	_hudMap->setActive(false);*/
+	 _hudMap->setActive(false);*/
 	glPopMatrix();
+
+
+	std::stringstream bulletTextStr;	bulletTextStr << "inf.";
+	std::stringstream missileTextStr; missileTextStr <<  _playerTank->_amountOfMissiles;
+	std::stringstream robotTextStr; robotTextStr << _playerTank->_amountOfRobots;
+	TextBox bulletText( *this, bulletTextStr.str().c_str(), 17, 1 );
+	TextBox missileText( *this, missileTextStr.str().c_str(), 17, 1 );
+	TextBox robotText( *this, robotTextStr.str().c_str(), 17, 1 );
 
 	//number of other weapons
 	glPushMatrix();
@@ -717,6 +730,11 @@ void Scene::drawOverlay() {
 	glEnd();
 	_hudBullet->setActive(false);
 
+	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize*1.7 * ratio, selectedWeaponBaseSize - iconBasesize/2 + margin,0);
+	bulletText.draw();
+	glPopMatrix();
+
+	glPushMatrix();
 	//missile
 	_hudMissile->setActive(true);
 	glBegin(GL_POLYGON);
@@ -737,7 +755,11 @@ void Scene::drawOverlay() {
 	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
 	glEnd();
 	_hudMissile->setActive(false);
+	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize*1.7 * ratio, selectedWeaponBaseSize -iconBasesize*3/2 + margin,0);
+	missileText.draw();
+	glPopMatrix();
 
+	glPushMatrix();
 	//robot
 	_hudRobot->setActive(true);
 	glBegin(GL_POLYGON);
@@ -758,15 +780,8 @@ void Scene::drawOverlay() {
 	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
 	glEnd();
 	_hudRobot->setActive(false);
-	glPopMatrix();
-
-
-	//information
-	glPushMatrix();
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-		Target* target = *targetIter;
-
-	}
+	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize*1.7 * ratio, selectedWeaponBaseSize -iconBasesize*5/2 + margin,0);
+	robotText.draw();
 	glPopMatrix();
 
 }
