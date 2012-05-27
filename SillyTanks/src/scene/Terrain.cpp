@@ -66,13 +66,13 @@ Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix, float width
 	int numVertices = _widthResolution * _lengthResolution;
 	for (int i = 0; i < numVertices; i++) {
 		_vertices.push_back(Point());
-		_vertexNormals.push_back(Vector3D());
+		_vertexNormals.push_back(Vector3D(0,1,0));
 	}
 
 	int numTriangles = 2 * (_widthResolution - 1) * (_lengthResolution - 1);
 	for (int i = 0; i < numTriangles; i++) {
 		_triangles.push_back(Triangle(0, 0, 0));
-		_triangleNormals.push_back(Vector3D());
+		_triangleNormals.push_back(Vector3D(0,1,0));
 	}
 
 	// Calculate vertices
@@ -353,9 +353,10 @@ float Terrain::getHeight(const Point &point) const {
 
 Vector3D Terrain::getNormal(const Point &point) const {
 	int triangleNumber = getNearestTriangleIndexAt(point);
-	//std::cout << "triangle number:" << triangleNumber<< std::endl;
-
-	if (triangleNumber != -1) {
+	//std::cout << "normal size:" << _vertexNormals.size()<< std::endl;
+	//std::cout << "normal index:" <<_triangles[triangleNumber].vertex3<< std::endl;
+	//std::cout << "triangle number:" <<triangleNumber<< std::endl;
+	if (triangleNumber >= 0) {
 		Vector3D norm1 = _vertexNormals[_triangles[triangleNumber].vertex1];
 		Vector3D norm2 = _vertexNormals[_triangles[triangleNumber].vertex2];
 		Vector3D norm3 = _vertexNormals[_triangles[triangleNumber].vertex3];
@@ -405,7 +406,7 @@ int Terrain::getNearestTriangleIndexAt(const Point &point) const {
 	}
 
 	//fix for stuff that is beyond the border of the map
-	if(triangleNumber <= _triangles.size())
+	if(triangleNumber < _triangles.size())
 	{
 	return triangleNumber;
 	}

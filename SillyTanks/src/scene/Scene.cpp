@@ -198,11 +198,11 @@ void Scene::initialize() {
 	_targets.push_back(_playerTank);
 
 	//add some AI tanks to the scene
-	/*for (int i = 0; i < EMEMY_TANKS; i++) {
+	for (int i = 0; i < EMEMY_TANKS; i++) {
 		Tank* tank = new SmallTank(*this, true);
 		tank->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tank);
-	}*/
+	}
 
 	//add some  AI towers to the scene
 	for (int i = 0; i < ENEMY_TOWERS; i++) {
