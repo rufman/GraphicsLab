@@ -108,10 +108,10 @@ void Utils::applyGLRotation( const Vector3D &v1, const Vector3D &v2 )
 
 float Utils::getElevation(Point startPosition,Point targetPosition,float velocity,bool mortarAim,float weight)
 {
-	Vector3D posFlat = targetPosition;
+	Point posFlat = targetPosition;
 	posFlat.y = startPosition.y;
 
-	float x = Utils::(startPosition,posFlat);
+	float x = Utils::distance(startPosition,posFlat);
 	float y = targetPosition.y - startPosition.y;
 
 	//g is how much the gravitational acceleration is influencing the object ( g * weight of the object
@@ -138,10 +138,7 @@ float Utils::getElevation(Point startPosition,Point targetPosition,float velocit
 	}
 
 	//multiplying it with x takes the difference between the heights into account
-	return atan(tan(Utils::toRadian(angleOfReach)) * x);
+	return Utils::toDegree(atan(tan(Utils::toRadian(angleOfReach)) * x));
 
 }
-
-
-
 }
