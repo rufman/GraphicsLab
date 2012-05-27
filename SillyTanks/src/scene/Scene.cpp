@@ -643,10 +643,10 @@ void Scene::drawOverlay() {
 	glVertex2f(margin*2.3, margin*5.2);
 
 	glTexCoord2f(_hudLifebar->getWidth(), _hudLifebar->getHeight());
-	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, margin*5.2);
+	glVertex2f(margin*2.3 + (_playerTank->_life/SMALLTANK_LIFE* statusBarBaseSize * ratio), margin*5.2);
 
 	glTexCoord2f(_hudLifebar->getWidth(), 0);
-	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, statusBarBaseSize + margin*5.2);
+	glVertex2f(margin*2.3 + (_playerTank->_life/SMALLTANK_LIFE* statusBarBaseSize * ratio), statusBarBaseSize + margin*5.2);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin*2.3, statusBarBaseSize + margin*5.2);
@@ -666,10 +666,10 @@ void Scene::drawOverlay() {
 	glVertex2f(margin*2.3, margin*4);
 
 	glTexCoord2f(_hudShieldbar->getWidth(), _hudShieldbar->getHeight());
-	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, margin*4);
+	glVertex2f(margin*2.3 + (_playerTank->_shield/SMALLTANK_SHIELD*statusBarBaseSize * ratio), margin*4);
 
 	glTexCoord2f(_hudShieldbar->getWidth(), 0);
-	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, statusBarBaseSize + margin*4);
+	glVertex2f(margin*2.3 + (_playerTank->_shield/SMALLTANK_SHIELD*statusBarBaseSize * ratio), statusBarBaseSize + margin*4);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin*2.3, statusBarBaseSize + margin*4);
@@ -690,10 +690,10 @@ void Scene::drawOverlay() {
 	glVertex2f(margin*2.3, margin*2.4);
 
 	glTexCoord2f(_hudEnergybar->getWidth(), _hudEnergybar->getHeight());
-	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, margin*2.4);
+	glVertex2f(margin*2.3 + (_playerTank->getShootingPower()/SMALLTANK_MAXPOWER*statusBarBaseSize * ratio), margin*2.4);
 
 	glTexCoord2f(_hudEnergybar->getWidth(), 0);
-	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, statusBarBaseSize + margin*2.4);
+	glVertex2f(margin*2.3 + (_playerTank->getShootingPower()/SMALLTANK_MAXPOWER*statusBarBaseSize * ratio), statusBarBaseSize + margin*2.4);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin*2.3, statusBarBaseSize + margin*2.4);
@@ -714,10 +714,10 @@ void Scene::drawOverlay() {
 	glVertex2f(margin*2.3, margin*1.2);
 
 	glTexCoord2f(_hudReloadbar->getWidth(), _hudReloadbar->getHeight());
-	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, margin*1.2);
+	glVertex2f(margin*2.3 + (_playerTank->_reloadingTime/SMALLTANK_RELOADING_TIME*statusBarBaseSize * ratio), margin*1.2);
 
 	glTexCoord2f(_hudReloadbar->getWidth(), 0);
-	glVertex2f(margin*2.3 + statusBarBaseSize * ratio, statusBarBaseSize + margin*1.2);
+	glVertex2f(margin*2.3 + (_playerTank->_reloadingTime/SMALLTANK_RELOADING_TIME*statusBarBaseSize * ratio), statusBarBaseSize + margin*1.2);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin*2.3, statusBarBaseSize + margin*1.2);
