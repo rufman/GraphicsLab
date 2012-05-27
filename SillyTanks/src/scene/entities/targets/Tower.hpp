@@ -56,6 +56,7 @@ public:
 	TowerAI* getAI() const;
 	void fireBullet();
 	void fireMissile(Point target);
+	void fireRobot();
 
 	//only used for a human player
 	SelectedWeapon getSelectedWeapon();

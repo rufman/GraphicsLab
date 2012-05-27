@@ -34,19 +34,16 @@
 namespace game_space {
 
 Tank::Tank(Scene &scene, bool isAIControlled) :
-		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(
-				0), _isAIControlled(isAIControlled),_selectedWeapon(Tank::BULLET) {
+		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(0), _isAIControlled(isAIControlled), _selectedWeapon(Tank::BULLET) {
 
 	if (isAIControlled) {
 		//the ai must know the tank to be able to control it
-		MessageSubBus* messageBus =
-				_scene.getMessageBus()->addNewClient();
+		MessageSubBus* messageBus = _scene.getMessageBus()->addNewClient();
 		_controllingAI = new TankAI(scene, messageBus);
 		_controllingAI->_tank = this;
 	}
 
-	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(
-			_scene.getCurrentlyActiveCamera(), 20);
+	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getCurrentlyActiveCamera(), 20);
 	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_tankSmokeParticleEngine->setActive(true);
 }
@@ -109,46 +106,27 @@ float Tank::getDirection() const {
 }
 
 void Tank::setDirection(float angle) {
-	_velocity = Utils::rotate(angle, Vector3D(0.0, 0.0, 1.0),
-			Vector3D(0.0, 1.0, 0.0));
+	_velocity = Utils::rotate(angle, Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
 	_direction = angle;
 }
 
 void Tank::update(float seconds) {
-	float averagedHeight = _scene.getTerrain().getHeight(
-			Point(_position.x - 1, _position.y, _position.z - 1));
-	averagedHeight += _scene.getTerrain().getHeight(
-			Point(_position.x + 1, _position.y, _position.z - 1));
-	averagedHeight += _scene.getTerrain().getHeight(
-			Point(_position.x, _position.y, _position.z + 1));
+	float averagedHeight = _scene.getTerrain().getHeight(Point(_position.x - 1, _position.y, _position.z - 1));
+	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x + 1, _position.y, _position.z - 1));
+	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x, _position.y, _position.z + 1));
 	averagedHeight = averagedHeight / 3.0;
 
 	Vector3D gravity = Vector3D(0, 1, 0);
 	Vector3D realGravity = Vector3D(0, -1, 0);
-	Vector3D firstNormal = _scene.getTerrain().getNormal(
-			Point(_position.x - 1, _position.y, _position.z - 1));
-	Vector3D secondNormal = _scene.getTerrain().getNormal(
-			Point(_position.x + 1, _position.y, _position.z - 1));
-	Vector3D thirdNormal = _scene.getTerrain().getNormal(
-			Point(_position.x, _position.y, _position.z - 1));
-	Vector3D normal = Vector3D(
-			(firstNormal.x + secondNormal.x + thirdNormal.x) / 3.0,
-			(firstNormal.y + secondNormal.y + thirdNormal.y) / 3.0,
-			(firstNormal.z + secondNormal.z + thirdNormal.z) / 3.0);
+	Vector3D firstNormal = _scene.getTerrain().getNormal(Point(_position.x - 1, _position.y, _position.z - 1));
+	Vector3D secondNormal = _scene.getTerrain().getNormal(Point(_position.x + 1, _position.y, _position.z - 1));
+	Vector3D thirdNormal = _scene.getTerrain().getNormal(Point(_position.x, _position.y, _position.z - 1));
+	Vector3D normal = Vector3D((firstNormal.x + secondNormal.x + thirdNormal.x) / 3.0, (firstNormal.y + secondNormal.y + thirdNormal.y) / 3.0, (firstNormal.z + secondNormal.z + thirdNormal.z) / 3.0);
 
 	float angleGravityNormal = acos(Utils::dot(gravity, normal));
-	Vector3D relativeGravity = Vector3D(
-			angleGravityNormal * 15.0 * (realGravity.x + normal.x),
-			angleGravityNormal * (realGravity.y + normal.y),
-			angleGravityNormal * 15.0 * (realGravity.z + normal.z));
+	Vector3D relativeGravity = Vector3D(angleGravityNormal * 15.0 * (realGravity.x + normal.x), angleGravityNormal * (realGravity.y + normal.y), angleGravityNormal * 15.0 * (realGravity.z + normal.z));
 
-	Point nextPosition(
-			_position.x
-					+ (_velocity.x * _speed * seconds
-							+ relativeGravity.x * seconds), averagedHeight,
-			_position.z
-					+ (_velocity.z * _speed * seconds
-							+ relativeGravity.z * seconds));
+	Point nextPosition(_position.x + (_velocity.x * _speed * seconds + relativeGravity.x * seconds), averagedHeight, _position.z + (_velocity.z * _speed * seconds + relativeGravity.z * seconds));
 
 	if (_scene.getTerrain().checkBorder(nextPosition)) {
 		_speed = 0;
@@ -172,17 +150,11 @@ void Tank::update(float seconds) {
 LookAt Tank::getLookAt() const {
 	Point from, to;
 
-	const Vector3D &velocity = Utils::rotate(_turret->getAzimuth(),
-			Vector3D(0, 0, -1), Vector3D(0, 1, 0));
+	const Vector3D &velocity = Utils::rotate(_turret->getAzimuth(), Vector3D(0, 0, -1), Vector3D(0, 1, 0));
 	Vector3D direction = velocity;
 
 	Utils::normalize(direction);
-	Vector3D tankShootdirection(
-			-getShootingPower() * std::cos(Utils::toRadian(getElevation()))
-					* std::sin(Utils::toRadian(-getAzimuth())),
-			getShootingPower() * std::sin(Utils::toRadian(getElevation())),
-			-getShootingPower() * std::cos(Utils::toRadian(getElevation()))
-					* std::cos(Utils::toRadian(-getAzimuth())));
+	Vector3D tankShootdirection(-getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), getShootingPower() * std::sin(Utils::toRadian(getElevation())), -getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 
 	to.x = _position.x + tankShootdirection.x * 20;
 	to.y = _position.y + tankShootdirection.y * 20;
@@ -207,20 +179,16 @@ void Tank::fireBullet() {
 	Bullet* bullet = new Bullet(_scene);
 	bullet->setPosition(getMuzzlePosition());
 	float velocityScale = 30;
-	Vector3D velocity(
-			-velocityScale * getShootingPower()
-					* std::cos(Utils::toRadian(getElevation()))
-					* std::sin(Utils::toRadian(-getAzimuth())),
-			velocityScale * getShootingPower()
-					* std::sin(Utils::toRadian(getElevation())),
-			-velocityScale * getShootingPower()
-					* std::cos(Utils::toRadian(getElevation()))
-					* std::cos(Utils::toRadian(-getAzimuth())));
+
+	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
+	Vector3D normal = _scene.getTerrain().getNormal(_position);
+	float dot = Utils::dot(Vector3D(0,1,0),normal);
+	Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
+	velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
 	bullet->setVelocity(velocity);
 
 	_scene._projectiles.push_back(bullet);
-	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y,
-			_position.z);
+	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y, _position.z);
 }
 
 void Tank::fireMissile(Point targetPosition) {
@@ -228,40 +196,34 @@ void Tank::fireMissile(Point targetPosition) {
 	missile->setPosition(getMuzzlePosition());
 	missile->setTargetPosition(targetPosition);
 
-	Vector3D velocity(
-			-getShootingPower() * std::cos(Utils::toRadian(getElevation()))
-					* std::sin(Utils::toRadian(-getAzimuth())),
-			getShootingPower() * std::sin(Utils::toRadian(getElevation())),
-			-getShootingPower() * std::cos(Utils::toRadian(getElevation()))
-					* std::cos(Utils::toRadian(-getAzimuth())));
+	Vector3D velocity(-getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), getShootingPower() * std::sin(Utils::toRadian(getElevation())), -getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
+	Vector3D normal = _scene.getTerrain().getNormal(_position);
+	float dot = Utils::dot(Vector3D(0,1,0),normal);
+	Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
+	velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
 	missile->setVelocity(velocity);
 
 	_scene._projectiles.push_back(missile);
-	_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y,
-			_position.z);
+	_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y, _position.z);
 }
 
 void Tank::fireRobot() {
 	Robot* robot = new Robot(_scene);
 	robot->setPosition(getMuzzlePosition());
 
-	int anim = rand()%3;
+	int anim = rand() % 3;
 	std::string animFile;
 
-	switch(anim)
-	{
-	case 0:
-	{
+	switch (anim) {
+	case 0: {
 		animFile = ROBOT_ANIMATION1;
 		break;
 	}
-	case 1:
-	{
+	case 1: {
 		animFile = ROBOT_ANIMATION2;
 		break;
 	}
-	case 2:
-	{
+	case 2: {
 		animFile = ROBOT_ANIMATION3;
 		break;
 	}
@@ -269,20 +231,15 @@ void Tank::fireRobot() {
 
 	robot->loadAnimation(animFile);
 	float velocityScale = 30;
-	Vector3D velocity(
-			-velocityScale * getShootingPower()
-					* std::cos(Utils::toRadian(getElevation()))
-					* std::sin(Utils::toRadian(-getAzimuth())),
-			velocityScale * getShootingPower()
-					* std::sin(Utils::toRadian(getElevation())),
-			-velocityScale * getShootingPower()
-					* std::cos(Utils::toRadian(getElevation()))
-					* std::cos(Utils::toRadian(-getAzimuth())));
+	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
+	Vector3D normal = _scene.getTerrain().getNormal(_position);
+	float dot = Utils::dot(Vector3D(0,1,0),normal);
+	Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
+	velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
 	robot->setVelocity(velocity);
 
 	_scene._projectiles.push_back(robot);
-	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y,
-			_position.z);
+	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y, _position.z);
 }
 
 Tank::SelectedWeapon Tank::getSelectedWeapon() {

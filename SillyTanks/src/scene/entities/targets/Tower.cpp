@@ -18,6 +18,7 @@
 
 #include "../projectiles/Bullet.hpp"
 #include "../projectiles/Missile.hpp"
+#include "../projectiles/Robot.hpp"
 
 #include "../../AI/TowerAI.hpp"
 #include "../../AI/MessageBus.hpp"
@@ -123,6 +124,11 @@ void Tower::fireBullet() {
 			-velocityScale * getShootingPower()
 					* std::cos(Utils::toRadian(getElevation()))
 					* std::cos(Utils::toRadian(-getAzimuth())));
+
+	Vector3D normal = _scene.getTerrain().getNormal(_position);
+	float dot = Utils::dot(Vector3D(0,1,0),normal);
+	Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
+	velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
 	bullet->setVelocity(velocity);
 
 	_scene._projectiles.push_back(bullet);
@@ -140,11 +146,51 @@ void Tower::fireMissile(Point targetPosition) {
 			getShootingPower() * std::sin(Utils::toRadian(getElevation())),
 			-getShootingPower() * std::cos(Utils::toRadian(getElevation()))
 					* std::cos(Utils::toRadian(-getAzimuth())));
+
+	Vector3D normal = _scene.getTerrain().getNormal(_position);
+	float dot = Utils::dot(Vector3D(0,1,0),normal);
+	Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
+	velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
 	missile->setVelocity(velocity);
 
 	_scene._projectiles.push_back(missile);
 	_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y,
 			_position.z);
+}
+
+void Tower::fireRobot() {
+	Robot* robot = new Robot(_scene);
+	robot->setPosition(getMuzzlePosition());
+
+	int anim = rand() % 3;
+	std::string animFile;
+
+	switch (anim) {
+	case 0: {
+		animFile = ROBOT_ANIMATION1;
+		break;
+	}
+	case 1: {
+		animFile = ROBOT_ANIMATION2;
+		break;
+	}
+	case 2: {
+		animFile = ROBOT_ANIMATION3;
+		break;
+	}
+	}
+
+	robot->loadAnimation(animFile);
+	float velocityScale = 30;
+	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
+	Vector3D normal = _scene.getTerrain().getNormal(_position);
+	float dot = Utils::dot(Vector3D(0,1,0),normal);
+	Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
+	velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
+	robot->setVelocity(velocity);
+
+	_scene._projectiles.push_back(robot);
+	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y, _position.z);
 }
 
 Tower::SelectedWeapon Tower::getSelectedWeapon()
