@@ -22,8 +22,6 @@ public:
 	{
 		EXPLORE,
 		HUNT,
-		//RAMPAGE,
-		//REINFORCEMENT,
 		ESCAPE
 	}_strategy;
 

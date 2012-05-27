@@ -168,7 +168,7 @@ namespace game_space {
 #define HUD_LIFEBAR_TEXTURE "resources/GFX/textures/HUD/lifebar.tga"
 #define HUD_SHIELDBAR_TEXTURE "resources/GFX/textures/HUD/shieldbar.tga"
 #define HUD_ENERGYBAR_TEXTURE "resources/GFX/textures/HUD/energybar.tga"
-#define HUD_RELOADBAR_TEXTURE"resources/GFX/textures/HUD/reloadbar.tga"
+#define HUD_RELOADBAR_TEXTURE "resources/GFX/textures/HUD/reloadbar.tga"
 #define HUD_CLOCK_TEXTURE "resources/GFX/textures/HUD/clockface.tga"
 
 
