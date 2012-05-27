@@ -119,10 +119,8 @@ public:
 	 * @param[in]	v2	Rotated vector
 	 */
 	static void applyGLRotation( const Vector3D &v1, const Vector3D &v2 );
-	
-	static float arctan2(float x,float y);
 
-	static float getElevation(Point sourcePosition,Point targetPosition, float velocity);
+	static float getElevation(Point startPosition,Point targetPosition,float velocity,bool mortarAim,float weight);
 
 }; // class Utils
 

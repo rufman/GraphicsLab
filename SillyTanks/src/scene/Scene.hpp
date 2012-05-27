@@ -164,7 +164,7 @@ private:
 	bool _shadowsActive;
 	bool _fogActive;
 	bool _shaderActive;
-	bool _dashBoardActive;
+	bool _soundActive;
 
 	bool _shadersAlreadyCompiled;
 

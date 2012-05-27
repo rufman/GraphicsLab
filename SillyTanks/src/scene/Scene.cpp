@@ -83,9 +83,7 @@ void VMatMult(GLmatrix16f M, Point v) {
 }
 
 Scene::Scene(Window &window) :
-		_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(false), _fogActive(false), _shaderActive(false), _shadersAlreadyCompiled(false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)) {
-
-	_dashBoardActive = false;
+		_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(false), _fogActive(false), _shaderActive(false),_soundActive(false), _shadersAlreadyCompiled(false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)) {
 
 	//create the soundengine
 	_soundEngine = SoundEngine();
@@ -332,10 +330,6 @@ void Scene::update(float seconds) {
 			++projectileIter;
 		}
 	}
-
-	if (_dashBoardActive) {
-		drawOverlay();
-	}
 }
 
 void Scene::onPaint() {
@@ -524,18 +518,16 @@ void Scene::drawScene() {
 		_fog->remove();
 	}
 
-	if (_dashBoardActive) {
-		drawOverlay();
-	}
+
+	//TODO:add this as soon as you create the overlay
+	//drawOverlay();
+
 
 	glFlush();
 	glutSwapBuffers();
 }
 
 void Scene::drawOverlay() {
-
-	if (_dashBoardActive) {
-
 		int width = glutGet(GLUT_WINDOW_WIDTH);
 		int height = glutGet(GLUT_WINDOW_HEIGHT);
 		height = height / 4;
@@ -563,8 +555,6 @@ void Scene::drawOverlay() {
 
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glPopMatrix();
-
-	}
 
 }
 
@@ -656,7 +646,7 @@ void Scene::handleKeyboardInput() {
 	}
 
 	if (_window.keyHit('8')) {
-		_dashBoardActive = !_dashBoardActive;
+		_soundActive = !_soundActive;
 	}
 }
 
