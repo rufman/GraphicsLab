@@ -362,6 +362,15 @@ void Scene::onPaint() {
 	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+	//capture a picture for the map
+	// Draw mirror image
+	//drawMap();
+	int width = glutGet(GLUT_WINDOW_WIDTH);
+	int height = glutGet(GLUT_WINDOW_HEIGHT);
+	//_hudMap->capture(0, 0, width, height);
+	// Clear the screen
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 	// Draw screen
 	drawScene();
 
@@ -592,9 +601,6 @@ void Scene::drawOverlay() {
 
 	glPopMatrix();
 
-	//map
-	glPushMatrix();
-	glPopMatrix();
 
 	// status bars
 	glPushMatrix();
@@ -661,6 +667,32 @@ void Scene::drawOverlay() {
 	selectedWeapon->setActive(false);
 	glPopMatrix();
 
+
+	//map
+	glPushMatrix();
+	/*_hudMap->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	float mapBaseSize = height / 6;
+	ratio = (float) _hudMap->getWidth() / (float) _hudMap->getHeight();
+
+	glTexCoord2f(0, selectedWeapon->getHeight());
+	glVertex2f(width - margin - mapBaseSize * ratio, height-margin);
+
+	glTexCoord2f(_hudMap->getWidth(), _hudMap->getHeight());
+	glVertex2f(width - margin, margin);
+
+	glTexCoord2f(_hudMap->getWidth(), 0);
+	glVertex2f(width - margin, height - mapBaseSize -margin);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(width - margin - mapBaseSize * ratio, height - mapBaseSize - margin);
+	glEnd();
+
+	_hudMap->setActive(false);*/
+	glPopMatrix();
+
 	//number of other weapons
 	glPushMatrix();
 	//bullet
@@ -693,16 +725,16 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudMissile->getWidth() / (float) _hudMissile->getHeight();
 
 	glTexCoord2f(0, _hudMissile->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize*2 + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
 
 	glTexCoord2f(_hudMissile->getWidth(), _hudMissile->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize*2 + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
 
 	glTexCoord2f(_hudMissile->getWidth(), 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize -iconBasesize + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize -iconBasesize + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
 	glEnd();
 	_hudMissile->setActive(false);
 
@@ -714,18 +746,27 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudRobot->getWidth() / (float) _hudRobot->getHeight();
 
 	glTexCoord2f(0, _hudRobot->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize*3 + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize * 3 + margin);
 
 	glTexCoord2f(_hudRobot->getWidth(), _hudRobot->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize*3 + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize * 3 + margin);
 
 	glTexCoord2f(_hudRobot->getWidth(), 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize -iconBasesize*2 + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize -iconBasesize*2 + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
 	glEnd();
 	_hudRobot->setActive(false);
+	glPopMatrix();
+
+
+	//information
+	glPushMatrix();
+	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+		Target* target = *targetIter;
+
+	}
 	glPopMatrix();
 
 }
@@ -981,10 +1022,10 @@ MessageBus* Scene::getMessageBus() {
 
 void Scene::drawWaterImage() {
 
-// Set camera parameters
+	// Set camera parameters
 	_water->applyCamera();
 
-// Set scene parameters
+	// Set scene parameters
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
@@ -994,11 +1035,53 @@ void Scene::drawWaterImage() {
 		light->apply();
 	}
 
-// Draw scene
+	// Draw scene
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	_skyDome->draw();
 	glPopMatrix();
+}
+
+/**
+ * Water mirroring part
+ */
+
+void Scene::drawMap() {
+
+	// Set camera parameters
+	int width = glutGet(GLUT_WINDOW_WIDTH);
+	int height = glutGet(GLUT_WINDOW_HEIGHT);
+
+	glViewport(0, 0, width, height);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(90.0, 1.0 / 1.0, 0.1, 2000.0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	int mapZoom = 30;
+	Vector3D muzzleDirection = Vector3D(0, 0, 1);
+	Utils::rotate(-_playerTank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
+	gluLookAt(_playerTank->getPosition().x, _playerTank->getPosition().y + mapZoom, _playerTank->getPosition().z, _playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z, muzzleDirection.x, muzzleDirection.y, muzzleDirection.z);
+
+	// Set scene parameters
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_BLEND);
+
+	// Draw scene
+	glMatrixMode(GL_MODELVIEW);
+
+	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+		Target* target = *targetIter;
+		glPushMatrix();
+		glColor3f(0, 1, 0);
+		glTranslatef(target->getPosition().x, target->getPosition().y, target->getPosition().z);
+		glutSolidSphere(1, 2, 2);
+		glutSolidTorus(1.5, 3, 5, 5);
+		glPopMatrix();
+	}
 }
 
 Water* Scene::getWater() {

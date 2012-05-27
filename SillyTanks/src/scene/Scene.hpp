@@ -7,6 +7,7 @@
 #include "../common/Time.hpp"
 #include "../common/SoundEngine.hpp"
 #include "../scene/illumination/shading/ShadingEngine.hpp"
+#include "../common/ScreenTexture.hpp"
 
 #include "Fog.hpp"
 
@@ -110,6 +111,7 @@ private:
 
 	// Draw parts of the scene
 	void drawWaterImage();
+	void drawMap();
 	void drawScene();
 	void drawOverlay();
 
@@ -203,6 +205,7 @@ private:
 	TGATexture* _hudRobot;
 	TGATexture* _hudStatusBars;
 	TGATexture* _hudClockFace;
+	ScreenTexture* _hudMap;
 
 
 }; // class Scene
