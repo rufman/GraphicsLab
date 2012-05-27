@@ -182,9 +182,9 @@ void Tank::fireBullet() {
 
 	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	Vector3D normal = _scene.getTerrain().getNormal(_position);
-	float dot = Utils::dot(Vector3D(0,1,0),normal);
-	Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
-	velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
+	float dot = Utils::dot(Vector3D(0, 1, 0), normal);
+	Vector3D cross = Utils::cross(Vector3D(0, 1, 0), normal);
+	velocity = Utils::rotate(-Utils::toDegree(acos(dot)), velocity, cross);
 	bullet->setVelocity(velocity);
 
 	_scene._projectiles.push_back(bullet);
@@ -192,22 +192,27 @@ void Tank::fireBullet() {
 }
 
 void Tank::fireMissile(Point targetPosition) {
-	Missile* missile = new Missile(_scene);
-	missile->setPosition(getMuzzlePosition());
-	missile->setTargetPosition(targetPosition);
+	if (_amountOfMissiles > 0) {
+		Missile* missile = new Missile(_scene);
+		missile->setPosition(getMuzzlePosition());
+		missile->setTargetPosition(targetPosition);
 
-	Vector3D velocity(-getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), getShootingPower() * std::sin(Utils::toRadian(getElevation())), -getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
-	Vector3D normal = _scene.getTerrain().getNormal(_position);
-	float dot = Utils::dot(Vector3D(0,1,0),normal);
-	Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
-	velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
-	missile->setVelocity(velocity);
+		Vector3D velocity(-getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), getShootingPower() * std::sin(Utils::toRadian(getElevation())), -getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
+		Vector3D normal = _scene.getTerrain().getNormal(_position);
+		float dot = Utils::dot(Vector3D(0, 1, 0), normal);
+		Vector3D cross = Utils::cross(Vector3D(0, 1, 0), normal);
+		velocity = Utils::rotate(-Utils::toDegree(acos(dot)), velocity, cross);
+		missile->setVelocity(velocity);
 
-	_scene._projectiles.push_back(missile);
-	_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y, _position.z);
+		_scene._projectiles.push_back(missile);
+		_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y, _position.z);
+		_amountOfMissiles--;
+	}
 }
 
 void Tank::fireRobot() {
+	if(_amountOfRobots > 0)
+	{
 	Robot* robot = new Robot(_scene);
 	robot->setPosition(getMuzzlePosition());
 
@@ -233,13 +238,15 @@ void Tank::fireRobot() {
 	float velocityScale = 30;
 	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
 	Vector3D normal = _scene.getTerrain().getNormal(_position);
-	float dot = Utils::dot(Vector3D(0,1,0),normal);
-	Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
-	velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
+	float dot = Utils::dot(Vector3D(0, 1, 0), normal);
+	Vector3D cross = Utils::cross(Vector3D(0, 1, 0), normal);
+	velocity = Utils::rotate(-Utils::toDegree(acos(dot)), velocity, cross);
 	robot->setVelocity(velocity);
 
 	_scene._projectiles.push_back(robot);
 	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y, _position.z);
+	_amountOfRobots--;
+	}
 }
 
 Tank::SelectedWeapon Tank::getSelectedWeapon() {
