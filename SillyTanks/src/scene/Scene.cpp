@@ -83,7 +83,8 @@ void VMatMult(GLmatrix16f M, Point v) {
 }
 
 Scene::Scene(Window &window) :
-		_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(false), _fogActive(false), _shaderActive(false),_soundActive(false), _shadersAlreadyCompiled(false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)) {
+		_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(false), _fogActive(false), _shaderActive(false), _soundActive(false), _shadersAlreadyCompiled(false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)), _hudClockFace(NULL), _hudBullet(
+				NULL), _hudMissile(NULL), _hudRobot(NULL), _hudStatusBars(NULL) {
 
 	//create the soundengine
 	_soundEngine = SoundEngine();
@@ -128,6 +129,11 @@ Scene::~Scene() {
 		Projectile* projectile = *projectileIter;
 		delete projectile;
 	}
+
+	delete _hudBullet;
+	delete _hudMissile;
+	delete _hudRobot;
+	delete _hudStatusBars;
 }
 
 void Scene::initialize() {
@@ -188,6 +194,12 @@ void Scene::initialize() {
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
 	_water = new Water(*this, parameters.waterHeight, 100 * 4, 100 * 4);
+
+	_hudClockFace = new TGATexture(HUD_CLOCK_TEXTURE);
+	_hudBullet = new TGATexture(HUD_BULLET_TEXTURE);
+	_hudMissile = new TGATexture(HUD_MISSILE_TEXTURE);
+	_hudRobot = new TGATexture(HUD_ROBOT_TEXTURE);
+	_hudStatusBars = new TGATexture(HUD_STATUSBARS_TEXTURE);
 
 	//create human player's tank
 	_playerTank = new SmallTank(*this, false);
@@ -354,7 +366,7 @@ void Scene::onPaint() {
 	drawScene();
 
 	// Draw overlay
-	//drawOverlay();
+	drawOverlay();
 
 	// Swap buffers
 	glutSwapBuffers();
@@ -518,43 +530,203 @@ void Scene::drawScene() {
 		_fog->remove();
 	}
 
-
-	//TODO:add this as soon as you create the overlay
-	//drawOverlay();
-
-
 	glFlush();
 	glutSwapBuffers();
 }
 
 void Scene::drawOverlay() {
-		int width = glutGet(GLUT_WINDOW_WIDTH);
-		int height = glutGet(GLUT_WINDOW_HEIGHT);
-		height = height / 4;
+	int width = glutGet(GLUT_WINDOW_WIDTH);
+	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-		// Set camera parameters
-		_overlayCam->setViewport(Viewport(0, glutGet(GLUT_WINDOW_HEIGHT) - height, width, height));
+	int margin = height / 30;
 
-		_overlayCam->applyViewport();
-		_overlayCam->applyProjection();
-		_overlayCam->applyModelview();
+	// Set camera parameters
+	_overlayCam->setViewport(Viewport(0, 0, width, height));
 
-		// Set overlay parameters
-		glDisable(GL_LIGHTING);
-		glDisable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	_overlayCam->applyViewport();
+	_overlayCam->applyProjection();
+	_overlayCam->applyModelview();
 
-		// Draw overlay
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
+	// Set overlay parameters
+	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
-		glColor4f(0.6, 0.1, 0.0, 0.4);
-		glRectd(0, 0, width, height);
+	// Draw overlay
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		glPopMatrix();
+	//clock
+	_hudClockFace->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	float clocksize = height / 6;
+
+	glTexCoord2f(0, _hudClockFace->getHeight());
+	glVertex2f(margin, height - clocksize - margin);
+
+	glTexCoord2f(_hudClockFace->getWidth(), _hudClockFace->getHeight());
+	glVertex2f(margin + clocksize, height - clocksize - margin);
+
+	glTexCoord2f(_hudClockFace->getWidth(), 0);
+	glVertex2f(margin + clocksize, height - margin);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(margin, height - margin);
+	glEnd();
+	_hudClockFace->setActive(false);
+
+	glTranslatef(margin + clocksize / 2, height - clocksize / 2 - margin, 0);
+	glRotatef(-_skyDome->getDisplacement(), 0, 0, 1);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 0, 0);
+	glVertex2f(0, 0);
+	glVertex2f(clocksize / 30, 0);
+	glVertex2f(0, clocksize / 2.66);
+	glVertex2f(-clocksize / 30, 0);
+	glEnd();
+
+	glPopMatrix();
+
+	//map
+	glPushMatrix();
+	glPopMatrix();
+
+	// status bars
+	glPushMatrix();
+	_hudStatusBars->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	float statusBarsBaseSize = height / 6;
+	float ratio = (float) _hudStatusBars->getWidth() / (float) _hudStatusBars->getHeight();
+
+	glTexCoord2f(0, _hudStatusBars->getHeight());
+	glVertex2f(margin, margin);
+
+	glTexCoord2f(_hudStatusBars->getWidth(), _hudStatusBars->getHeight());
+	glVertex2f(margin + statusBarsBaseSize * ratio, margin);
+
+	glTexCoord2f(_hudStatusBars->getWidth(), 0);
+	glVertex2f(margin + statusBarsBaseSize * ratio, statusBarsBaseSize + margin);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(margin, statusBarsBaseSize + margin);
+	glEnd();
+	_hudStatusBars->setActive(false);
+	glPopMatrix();
+
+	//currently active weapon
+	TGATexture* selectedWeapon;
+	switch (_playerTank->getSelectedWeapon()) {
+	case Tank::BULLET: {
+		selectedWeapon = _hudBullet;
+		break;
+	}
+	case Tank::MISSILE: {
+		selectedWeapon = _hudMissile;
+		break;
+	}
+	case Tank::ROBOT: {
+		selectedWeapon = _hudRobot;
+		break;
+	}
+
+	}
+	glPushMatrix();
+	selectedWeapon->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	float selectedWeaponBaseSize = height / 6;
+	ratio = (float) selectedWeapon->getWidth() / (float) selectedWeapon->getHeight();
+
+	glTexCoord2f(0, selectedWeapon->getHeight());
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, margin);
+
+	glTexCoord2f(selectedWeapon->getWidth(), selectedWeapon->getHeight());
+	glVertex2f(width - margin, margin);
+
+	glTexCoord2f(selectedWeapon->getWidth(), 0);
+	glVertex2f(width - margin, selectedWeaponBaseSize + margin);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize + margin);
+	glEnd();
+
+	selectedWeapon->setActive(false);
+	glPopMatrix();
+
+	//number of other weapons
+	glPushMatrix();
+	//bullet
+	_hudBullet->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	float iconBasesize = selectedWeaponBaseSize / 3;
+	ratio = (float) _hudBullet->getWidth() / (float) _hudBullet->getHeight();
+
+	glTexCoord2f(0, _hudBullet->getHeight());
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
+
+	glTexCoord2f(_hudBullet->getWidth(), _hudBullet->getHeight());
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
+
+	glTexCoord2f(_hudBullet->getWidth(), 0);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize + margin);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize + margin);
+	glEnd();
+	_hudBullet->setActive(false);
+
+	//missile
+	_hudMissile->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	ratio = (float) _hudMissile->getWidth() / (float) _hudMissile->getHeight();
+
+	glTexCoord2f(0, _hudMissile->getHeight());
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize*2 + margin);
+
+	glTexCoord2f(_hudMissile->getWidth(), _hudMissile->getHeight());
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize*2 + margin);
+
+	glTexCoord2f(_hudMissile->getWidth(), 0);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize -iconBasesize + margin);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize -iconBasesize + margin);
+	glEnd();
+	_hudMissile->setActive(false);
+
+	//robot
+	_hudRobot->setActive(true);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
+
+	ratio = (float) _hudRobot->getWidth() / (float) _hudRobot->getHeight();
+
+	glTexCoord2f(0, _hudRobot->getHeight());
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize*3 + margin);
+
+	glTexCoord2f(_hudRobot->getWidth(), _hudRobot->getHeight());
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize*3 + margin);
+
+	glTexCoord2f(_hudRobot->getWidth(), 0);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize -iconBasesize*2 + margin);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize -iconBasesize*2 + margin);
+	glEnd();
+	_hudRobot->setActive(false);
+	glPopMatrix();
 
 }
 
@@ -679,7 +851,7 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 					_playerTank->fireRobot();
 					break;
 				}
-				default:{
+				default: {
 					_playerTank->fireBullet();
 					break;
 				}
@@ -699,8 +871,7 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 				case Tank::ROBOT: {
 					_playerTank->setSelectedWeapon(Tank::BULLET);
 				}
-				default:
-				{
+				default: {
 					_playerTank->setSelectedWeapon(Tank::BULLET);
 				}
 				}

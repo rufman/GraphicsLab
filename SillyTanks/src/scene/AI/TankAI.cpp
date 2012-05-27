@@ -214,6 +214,18 @@ void TankAI::aimAndFire() {
 
 		//get the elevation
 		_tank->setElevation(Utils::getElevation(_tank->getPosition(), _currentTarget->getPosition(), _tank->getShootingPower(),false,1));
+
+
+		for(int i = 0; i < 1000;i++)
+		{
+			if(Utils::getElevation(_tank->getPosition(), _currentTarget->getPosition(),i ,false,1) != -1)
+			{
+				_tank->setShootingPower(i);
+				break;
+			}
+		}
+		std::cout << "Tank elevation "<< _tank->getElevation() << "\n";
+
 		//shoot
 		_tank->fireBullet();
 	}

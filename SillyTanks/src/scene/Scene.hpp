@@ -40,6 +40,7 @@ class SkyDome;
 class Terrain;
 class Water;
 class Fog;
+class TGATexture;
 
 //projectile forward declarations
 class Bullet;
@@ -194,6 +195,15 @@ private:
 	MessageBus* _messageBus;
 
 	SoundEngine _soundEngine;
+
+
+	//overlay stuff
+	TGATexture* _hudBullet;
+	TGATexture* _hudMissile;
+	TGATexture* _hudRobot;
+	TGATexture* _hudStatusBars;
+	TGATexture* _hudClockFace;
+
 
 }; // class Scene
 

@@ -154,4 +154,16 @@ namespace game_space {
 #define SMALLTANK_RELOADING_TIME 2
 
 
+//############################
+// Overlay textures
+//############################
+
+#define HUD_BULLET_TEXTURE "resources/GFX/textures/HUD/hud_bullet.tga"
+#define HUD_MISSILE_TEXTURE "resources/GFX/textures/HUD/hud_missile.tga"
+#define HUD_ROBOT_TEXTURE "resources/GFX/textures/HUD/hud_robot.tga"
+
+#define HUD_STATUSBARS_TEXTURE "resources/GFX/textures/HUD/hud_statusbars.tga"
+#define HUD_CLOCK_TEXTURE "resources/GFX/textures/HUD/clockface.tga"
+
+
 #endif // GAME_DEFS_HPP
