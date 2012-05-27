@@ -87,7 +87,7 @@ Scene::Scene(Window &window) :
 
 	//create the soundengine
 	_soundEngine = SoundEngine();
-	_soundEngine.setActive(true);
+	_soundEngine.setActive(false);
 
 	//create the messagebus
 	_messageBus = new MessageBus();
@@ -647,6 +647,7 @@ void Scene::handleKeyboardInput() {
 
 	if (_window.keyHit('8')) {
 		_soundActive = !_soundActive;
+		_soundEngine.setActive(_soundActive);
 	}
 }
 
