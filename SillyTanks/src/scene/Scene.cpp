@@ -221,10 +221,10 @@ void Scene::initialize() {
 
 	//add some  AI towers to the scene
 	for (int i = 0; i < 10; i++) {
-	 Tower* tower = new SmallTower(*this, true);
-	 tower->setPosition(_terrain->getRandomPointOnMap());
-	 _targets.push_back(tower);
-	 }
+		Tower* tower = new SmallTower(*this, true);
+		tower->setPosition(_terrain->getRandomPointOnMap());
+		_targets.push_back(tower);
+	}
 
 	// reset the scene
 	reset();
@@ -345,8 +345,7 @@ void Scene::update(float seconds) {
 
 			Projectile* currentProjectile = (*projectileIter);
 
-			if(currentTarget->_targetType == Target::TOWER)
-			{
+			if (currentTarget->_targetType == Target::TOWER) {
 				continue;
 			}
 
@@ -457,6 +456,7 @@ void Scene::onPaint() {
 }
 
 void Scene::drawScene() {
+
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
@@ -466,6 +466,7 @@ void Scene::drawScene() {
 		_currentlyActiveCamera->setLookAt(_playerTank->getLookAt());
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_currentlyActiveCamera = _overviewCam;
+
 		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(), Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
 		Vector3D velocity(-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::sin(Utils::toRadian(-_playerTank->getAzimuth())), _playerTank->getShootingPower() * std::sin(Utils::toRadian(_playerTank->getElevation())),
 				-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::cos(Utils::toRadian(-_playerTank->getAzimuth())));
@@ -500,36 +501,37 @@ void Scene::drawScene() {
 	// Draw scene
 	glMatrixMode(GL_MODELVIEW);
 
-	//draw water
-	_water->setRenderingParameters(_renderingParameters);
-	_water->draw();
-
-	//###############################
-	// Terrain
-	//the terrain should use toon shading
-	if (_shaderActive) {
-		_shadingEngine.applyToonShader();
-	}
-
-	// Draw the terrain
-	_terrain->setRenderingParameters(_renderingParameters);
-	_terrain->draw();
-
 	//#############################
 	// Sky dome and water
 	//The Sky dome and water should not use toon shading
 	if (_shaderActive) {
 		_shadingEngine.clearShaders();
 	}
-
 	// Draw the sky
 	glTranslatef(0, -80, 0);
 	_skyDome->setRenderingParameters(_renderingParameters);
 	_skyDome->draw();
 	glTranslatef(0, 80, 0);
 
+	//###############################
+	// Terrain
+	if (_shaderActive) {
+		_shadingEngine.clearShaders();
+	}
+	// Draw the terrain
+	_terrain->setRenderingParameters(_renderingParameters);
+	_terrain->draw();
+
+	//draw water
+	_water->setRenderingParameters(_renderingParameters);
+	_water->draw();
+
 	//################################
 	// The targets should use toon shading as well
+	if (_shaderActive) {
+		_shadingEngine.applyToonShader();
+	}
+
 	//Draw the targets
 	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
@@ -1251,12 +1253,25 @@ void Scene::drawMap() {
 
 	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
+		if(target->_targetType == Target::TANK)
+		{
 		glPushMatrix();
 		glColor3f(0, 1, 0);
 		glTranslatef(target->getPosition().x, target->getPosition().y, target->getPosition().z);
-		glutSolidSphere(1, 2, 2);
-		glutSolidTorus(1.5, 3, 5, 5);
+		glutSolidSphere(0.5, 12, 12);
+		glRotatef(90,1,0,0);
+		glutSolidTorus(2, 3.5, 12, 12);
+		glRotatef(-90,1,0,0);
 		glPopMatrix();
+		}
+		else
+		{
+			glPushMatrix();
+			glColor3f(0, 1, 0);
+			glTranslatef(target->getPosition().x, target->getPosition().y, target->getPosition().z);
+			glutSolidCube(3);
+			glPopMatrix();
+		}
 	}
 }
 

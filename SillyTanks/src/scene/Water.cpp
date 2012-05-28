@@ -223,7 +223,7 @@ void Water::draw() const {
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	glEnable(GL_BLEND);
-	glColor4f(0.0f,0.0f,0.0f,0.5f);         // Full Brightness, 50% Alpha ( NEW )
+	glColor4f(1.0f,1.0f,1.0f,0.5f);         // Full Brightness, 50% Alpha ( NEW )
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);       // Blending Function For Translucency Based On Source Alpha
 
 	glMatrixMode(GL_MODELVIEW);
