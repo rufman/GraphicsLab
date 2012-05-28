@@ -154,6 +154,8 @@ ALboolean SoundEngine::LoadALData() {
 	alSourcefv(Sources[RAYGUN], AL_VELOCITY, SourcesVel[RAYGUN]);
 	alSourcei(Sources[RAYGUN], AL_LOOPING, AL_FALSE);
 
+
+
 	// Do another error check and return.
 
 	if (alGetError() != AL_NO_ERROR) {
