@@ -20,7 +20,7 @@ namespace game_space {
 
 TowerAI::TowerAI(Scene &scene, MessageSubBus* aiMessages) :
 		_strategy(TowerAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(
-				NULL), _scene(scene),reloadTime(SMALLTOWER_RELOADING_TIME) {
+				NULL), _scene(scene),reloadTime(10) {
 
 }
 
