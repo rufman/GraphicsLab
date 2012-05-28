@@ -30,14 +30,14 @@ SmallTank::SmallTank(Scene & scene,bool isAIControlled):Tank(scene,isAIControlle
 	// maybe exchange x and y axis (width and length of the tank) for the boundingBox only..
 
 	Point frontRightUnder = Point(0,0,0);
-	Point frontLeftUnder = Point(-tankWidth,0,0);
+	Point frontLeftUnder = Point(0,-tankWidth,0);
 	Point frontRightUpper = Point(0,0,tankHeight);
-	Point frontLeftUpper = Point(-tankWidth,0,tankHeight);
+	Point frontLeftUpper = Point(0,-tankWidth,tankHeight);
 
-	Point rearRightUnder = Point(0,tankLength,0);
-	Point rearLeftUnder = Point(-tankWidth, tankLength,0);
-	Point rearRightUpper = Point(0, tankLength, tankHeight);
-	Point rearLeftUpper = Point(-tankWidth, tankLength, tankHeight);
+	Point rearRightUnder = Point(tankLength,0,0);
+	Point rearLeftUnder = Point(tankLength, -tankWidth,0);
+	Point rearRightUpper = Point(tankLength, 0, tankHeight);
+	Point rearLeftUpper = Point(tankLength, -tankWidth, tankHeight);
 
 	Point* pointArray = new Point[8];
 
