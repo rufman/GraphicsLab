@@ -207,24 +207,25 @@ void TankAI::aim() {
 		enemyDirection.x = _currentTarget->getPosition().x - _tank->getPosition().x;
 		enemyDirection.y = _currentTarget->getPosition().y - _tank->getPosition().y;
 		enemyDirection.z = _currentTarget->getPosition().z - _tank->getPosition().z;
+		Utils::normalize(enemyDirection);
 
 		Vector3D muzzleDirection = Vector3D(0, 0, 1);
-		Utils::rotate(-_tank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
 		_tank->setAzimuth(Utils::toDegree(acos(Utils::dot(muzzleDirection, enemyDirection))));
-
-		//get the elevation
-		_tank->setElevation(Utils::getElevation(_tank->getPosition(), _currentTarget->getPosition(), _tank->getShootingPower(),false,1));
+		//_tank->setAzimuth(_tank->getAzimuth()+1);
 
 
-		for(int i = 0; i < 1000;i++)
+		for(int i = 1; i < 30;i++)
 		{
-			if(Utils::getElevation(_tank->getPosition(), _currentTarget->getPosition(),i ,false,1) != -1)
+			float angle = Utils::getElevation(_tank->getPosition(), _currentTarget->getPosition(),i ,false,1);
+			if(angle != -1)
 			{
+				_tank->setElevation(angle);
 				_tank->setShootingPower(i);
 				break;
 			}
 		}
-		std::cout << "Tank elevation "<< _tank->getElevation() << "\n";
+		_tank->setElevation(45);
+		//std::cout << "Tank elevation "<< _tank->getElevation() << "\n";
 	}
 }
 }

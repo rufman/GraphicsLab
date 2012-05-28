@@ -213,18 +213,18 @@ void Scene::initialize() {
 	_targets.push_back(_playerTank);
 
 	//add some AI tanks to the scene
-	for (int i = 0; i < EMEMY_TANKS; i++) {
+	for (int i = 0; i < 10; i++) {
 		Tank* tank = new SmallTank(*this, true);
 		tank->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tank);
 	}
 
 	//add some  AI towers to the scene
-	for (int i = 0; i < ENEMY_TOWERS; i++) {
+	/*for (int i = 0; i < 32; i++) {
 		Tower* tower = new SmallTower(*this, true);
 		tower->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tower);
-	}
+	}*/
 
 	// reset the scene
 	reset();
@@ -348,27 +348,30 @@ void Scene::update(float seconds) {
 		}
 	}
 
-
 	//detect collisions
-	for(std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end();
-			++targetIter){
+	std::vector<Target*> targets = _targets;
+	for (std::vector<Target*>::iterator targetIter = targets.begin(); targetIter != targets.end(); ++targetIter) {
 
 		Target* currentTarget = (*targetIter);
 
-		for(std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();
-				++projectileIter){
+
+
+		std::vector<Projectile*> projectiles = _projectiles;
+		if(_projectiles.size() != 0)
+		{
+			//std::cout << "A projectile!";
+		}
+		for (std::vector<Projectile*>::iterator projectileIter = projectiles.begin(); projectileIter != projectiles.end(); ++projectileIter) {
 
 			Projectile* currentProjectile = (*projectileIter);
 
-
 			//FIXME: Program crashes after several iterations if this code piece is active
-			/*
-			if(currentTarget->checkHit(currentProjectile)){
+
+			/*if (currentTarget->checkHit(currentProjectile)) {
 				std::cout << "HIT" << std::endl;
-			}else{
+			} else {
 				std::cout << "NO HIT" << std::endl;
-			}
-			*/
+			}*/
 
 		}
 
@@ -397,13 +400,11 @@ void Scene::onPaint() {
 	// Draw mirror image
 	drawMap();
 
-
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 	_hudMap.capture(0, 0, width, height);
 	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
 
 	// Draw screen
 	drawScene();
@@ -656,7 +657,6 @@ void Scene::drawOverlay() {
 	glEnd();
 	_hudStatusBars->setActive(false);
 
-
 	//lifebar
 	glPushMatrix();
 	_hudLifebar->setActive(true);
@@ -667,16 +667,16 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudLifebar->getWidth() / (float) _hudLifebar->getHeight();
 
 	glTexCoord2f(0, _hudLifebar->getHeight());
-	glVertex2f(margin*2.3, margin*5.2);
+	glVertex2f(margin * 2.3, margin * 5.2);
 
 	glTexCoord2f(_hudLifebar->getWidth(), _hudLifebar->getHeight());
-	glVertex2f(margin*2.3 + (_playerTank->_life/SMALLTANK_LIFE* statusBarBaseSize * ratio), margin*5.2);
+	glVertex2f(margin * 2.3 + (_playerTank->_life / SMALLTANK_LIFE * statusBarBaseSize * ratio), margin * 5.2);
 
 	glTexCoord2f(_hudLifebar->getWidth(), 0);
-	glVertex2f(margin*2.3 + (_playerTank->_life/SMALLTANK_LIFE* statusBarBaseSize * ratio), statusBarBaseSize + margin*5.2);
+	glVertex2f(margin * 2.3 + (_playerTank->_life / SMALLTANK_LIFE * statusBarBaseSize * ratio), statusBarBaseSize + margin * 5.2);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(margin*2.3, statusBarBaseSize + margin*5.2);
+	glVertex2f(margin * 2.3, statusBarBaseSize + margin * 5.2);
 	glEnd();
 	_hudLifebar->setActive(false);
 	glPopMatrix();
@@ -690,20 +690,19 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudShieldbar->getWidth() / (float) _hudShieldbar->getHeight();
 
 	glTexCoord2f(0, _hudShieldbar->getHeight());
-	glVertex2f(margin*2.3, margin*4);
+	glVertex2f(margin * 2.3, margin * 4);
 
 	glTexCoord2f(_hudShieldbar->getWidth(), _hudShieldbar->getHeight());
-	glVertex2f(margin*2.3 + (_playerTank->_shield/SMALLTANK_SHIELD*statusBarBaseSize * ratio), margin*4);
+	glVertex2f(margin * 2.3 + (_playerTank->_shield / SMALLTANK_SHIELD * statusBarBaseSize * ratio), margin * 4);
 
 	glTexCoord2f(_hudShieldbar->getWidth(), 0);
-	glVertex2f(margin*2.3 + (_playerTank->_shield/SMALLTANK_SHIELD*statusBarBaseSize * ratio), statusBarBaseSize + margin*4);
+	glVertex2f(margin * 2.3 + (_playerTank->_shield / SMALLTANK_SHIELD * statusBarBaseSize * ratio), statusBarBaseSize + margin * 4);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(margin*2.3, statusBarBaseSize + margin*4);
+	glVertex2f(margin * 2.3, statusBarBaseSize + margin * 4);
 	glEnd();
 	_hudShieldbar->setActive(false);
 	glPopMatrix();
-
 
 	//energybar
 	glPushMatrix();
@@ -714,20 +713,19 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudEnergybar->getWidth() / (float) _hudEnergybar->getHeight();
 
 	glTexCoord2f(0, _hudEnergybar->getHeight());
-	glVertex2f(margin*2.3, margin*2.4);
+	glVertex2f(margin * 2.3, margin * 2.4);
 
 	glTexCoord2f(_hudEnergybar->getWidth(), _hudEnergybar->getHeight());
-	glVertex2f(margin*2.3 + (_playerTank->getShootingPower()/SMALLTANK_MAXPOWER*statusBarBaseSize * ratio), margin*2.4);
+	glVertex2f(margin * 2.3 + (_playerTank->getShootingPower() / SMALLTANK_MAXPOWER * statusBarBaseSize * ratio), margin * 2.4);
 
 	glTexCoord2f(_hudEnergybar->getWidth(), 0);
-	glVertex2f(margin*2.3 + (_playerTank->getShootingPower()/SMALLTANK_MAXPOWER*statusBarBaseSize * ratio), statusBarBaseSize + margin*2.4);
+	glVertex2f(margin * 2.3 + (_playerTank->getShootingPower() / SMALLTANK_MAXPOWER * statusBarBaseSize * ratio), statusBarBaseSize + margin * 2.4);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(margin*2.3, statusBarBaseSize + margin*2.4);
+	glVertex2f(margin * 2.3, statusBarBaseSize + margin * 2.4);
 	glEnd();
 	_hudEnergybar->setActive(false);
 	glPopMatrix();
-
 
 	//reloadbar
 	glPushMatrix();
@@ -738,16 +736,16 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudReloadbar->getWidth() / (float) _hudReloadbar->getHeight();
 
 	glTexCoord2f(0, _hudReloadbar->getHeight());
-	glVertex2f(margin*2.3, margin*1.2);
+	glVertex2f(margin * 2.3, margin * 1.2);
 
 	glTexCoord2f(_hudReloadbar->getWidth(), _hudReloadbar->getHeight());
-	glVertex2f(margin*2.3 + ((SMALLTANK_RELOADING_TIME-_playerTank->_reloadingTime)/SMALLTANK_RELOADING_TIME*statusBarBaseSize * ratio), margin*1.2);
+	glVertex2f(margin * 2.3 + ((SMALLTANK_RELOADING_TIME - _playerTank->_reloadingTime) / SMALLTANK_RELOADING_TIME * statusBarBaseSize * ratio), margin * 1.2);
 
 	glTexCoord2f(_hudReloadbar->getWidth(), 0);
-	glVertex2f(margin*2.3 + ((SMALLTANK_RELOADING_TIME-_playerTank->_reloadingTime)/SMALLTANK_RELOADING_TIME*statusBarBaseSize * ratio), statusBarBaseSize + margin*1.2);
+	glVertex2f(margin * 2.3 + ((SMALLTANK_RELOADING_TIME - _playerTank->_reloadingTime) / SMALLTANK_RELOADING_TIME * statusBarBaseSize * ratio), statusBarBaseSize + margin * 1.2);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(margin*2.3, statusBarBaseSize + margin*1.2);
+	glVertex2f(margin * 2.3, statusBarBaseSize + margin * 1.2);
 	glEnd();
 	_hudReloadbar->setActive(false);
 	glPopMatrix();
@@ -796,35 +794,37 @@ void Scene::drawOverlay() {
 	//map
 	glPushMatrix();
 	_hudMap.setActive(true);
-	 glBegin(GL_POLYGON);
-	 glColor3f(1, 1, 1);
+	glBegin(GL_POLYGON);
+	glColor3f(1, 1, 1);
 
-	 float mapBaseSize = height / 6;
-	 ratio = (float) _hudMap.getWidth() / (float) _hudMap.getHeight();
+	float mapBaseSize = height / 6;
+	ratio = (float) _hudMap.getWidth() / (float) _hudMap.getHeight();
 
-	 glTexCoord2f(0, _hudMap.getHeight());
-	 glVertex2f(width - margin - mapBaseSize * ratio, height-margin);
+	glTexCoord2f(0, _hudMap.getHeight());
+	glVertex2f(width - margin - mapBaseSize * ratio, height - margin);
 
-	 glTexCoord2f(_hudMap.getWidth(), _hudMap.getHeight());
-	 glVertex2f(width - margin, height-margin);
+	glTexCoord2f(_hudMap.getWidth(), _hudMap.getHeight());
+	glVertex2f(width - margin, height - margin);
 
-	 glTexCoord2f(_hudMap.getWidth(), 0);
-	 glVertex2f(width - margin, height-mapBaseSize-margin);
+	glTexCoord2f(_hudMap.getWidth(), 0);
+	glVertex2f(width - margin, height - mapBaseSize - margin);
 
-	 glTexCoord2f(0, 0);
-	 glVertex2f(width - margin - mapBaseSize * ratio, height - mapBaseSize - margin);
-	 glEnd();
+	glTexCoord2f(0, 0);
+	glVertex2f(width - margin - mapBaseSize * ratio, height - mapBaseSize - margin);
+	glEnd();
 
-	 _hudMap.setActive(false);
+	_hudMap.setActive(false);
 	glPopMatrix();
 
-
-	std::stringstream bulletTextStr;	bulletTextStr << "inf.";
-	std::stringstream missileTextStr; missileTextStr <<  _playerTank->_amountOfMissiles;
-	std::stringstream robotTextStr; robotTextStr << _playerTank->_amountOfRobots;
-	TextBox bulletText( *this, bulletTextStr.str().c_str(), 17, 1 );
-	TextBox missileText( *this, missileTextStr.str().c_str(), 17, 1 );
-	TextBox robotText( *this, robotTextStr.str().c_str(), 17, 1 );
+	std::stringstream bulletTextStr;
+	bulletTextStr << "inf.";
+	std::stringstream missileTextStr;
+	missileTextStr << _playerTank->_amountOfMissiles;
+	std::stringstream robotTextStr;
+	robotTextStr << _playerTank->_amountOfRobots;
+	TextBox bulletText(*this, bulletTextStr.str().c_str(), 17, 1);
+	TextBox missileText(*this, missileTextStr.str().c_str(), 17, 1);
+	TextBox robotText(*this, robotTextStr.str().c_str(), 17, 1);
 
 	//number of other weapons
 	glPushMatrix();
@@ -850,7 +850,7 @@ void Scene::drawOverlay() {
 	glEnd();
 	_hudBullet->setActive(false);
 
-	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize*1.7 * ratio, selectedWeaponBaseSize - iconBasesize/2 + margin,0);
+	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * 1.7 * ratio, selectedWeaponBaseSize - iconBasesize / 2 + margin, 0);
 	bulletText.draw();
 	glPopMatrix();
 
@@ -875,7 +875,7 @@ void Scene::drawOverlay() {
 	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
 	glEnd();
 	_hudMissile->setActive(false);
-	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize*1.7 * ratio, selectedWeaponBaseSize -iconBasesize*3/2 + margin,0);
+	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * 1.7 * ratio, selectedWeaponBaseSize - iconBasesize * 3 / 2 + margin, 0);
 	missileText.draw();
 	glPopMatrix();
 
@@ -900,7 +900,7 @@ void Scene::drawOverlay() {
 	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
 	glEnd();
 	_hudRobot->setActive(false);
-	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize*1.7 * ratio, selectedWeaponBaseSize -iconBasesize*5/2 + margin,0);
+	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * 1.7 * ratio, selectedWeaponBaseSize - iconBasesize * 5 / 2 + margin, 0);
 	robotText.draw();
 	glPopMatrix();
 
@@ -1198,7 +1198,7 @@ void Scene::drawMap() {
 	int mapZoom = 50;
 	Vector3D muzzleDirection = Vector3D(0, 0, 1);
 	Vector3D tankDirection = Utils::rotate(_playerTank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
-	gluLookAt(_playerTank->getPosition().x, _playerTank->getPosition().y + mapZoom, _playerTank->getPosition().z, _playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z, tankDirection.x,tankDirection.y,tankDirection.z);//muzzleDirection.x, muzzleDirection.y, muzzleDirection.z);
+	gluLookAt(_playerTank->getPosition().x, _playerTank->getPosition().y + mapZoom, _playerTank->getPosition().z, _playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z, tankDirection.x, tankDirection.y, tankDirection.z); //muzzleDirection.x, muzzleDirection.y, muzzleDirection.z);
 
 	// Set scene parameters
 	glEnable(GL_DEPTH_TEST);

@@ -210,15 +210,23 @@ void Tank::fireMissile(Point targetPosition) {
 		missile->setPosition(getMuzzlePosition());
 		missile->setTargetPosition(targetPosition);
 
-		Vector3D velocity(-getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), getShootingPower() * std::sin(Utils::toRadian(getElevation())), -getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
+		Vector3D velocity(
+				-getShootingPower() * std::cos(Utils::toRadian(getElevation()))
+						* std::sin(Utils::toRadian(-getAzimuth())),
+				getShootingPower() * std::sin(Utils::toRadian(getElevation())),
+				-getShootingPower() * std::cos(Utils::toRadian(getElevation()))
+						* std::cos(Utils::toRadian(-getAzimuth())));
+
 		Vector3D normal = _scene.getTerrain().getNormal(_position);
-		float dot = Utils::dot(Vector3D(0, 1, 0), normal);
-		Vector3D cross = Utils::cross(Vector3D(0, 1, 0), normal);
-		velocity = Utils::rotate(-Utils::toDegree(acos(dot)), velocity, cross);
+		float dot = Utils::dot(Vector3D(0,1,0),normal);
+		Vector3D cross = Utils::cross(Vector3D(0,1,0),normal);
+		velocity = Utils::rotate(-Utils::toDegree(acos(dot)),velocity,cross);
 		missile->setVelocity(velocity);
 
 		_scene._projectiles.push_back(missile);
-		_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y, _position.z);
+		_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y,
+				_position.z);
+
 		_amountOfMissiles--;
 		_reloadingTime = SMALLTANK_RELOADING_TIME;
 	}

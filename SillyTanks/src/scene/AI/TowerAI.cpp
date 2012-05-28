@@ -20,7 +20,7 @@ namespace game_space {
 
 TowerAI::TowerAI(Scene &scene, MessageSubBus* aiMessages) :
 		_strategy(TowerAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(
-				NULL), _scene(scene),reloadTime(10) {
+				NULL), _scene(scene),reloadTime(SMALLTOWER_RELOADING_TIME) {
 
 }
 
@@ -147,12 +147,12 @@ void TowerAI::aimAndFire() {
 				- _tower->getPosition().y;
 		enemyDirection.z = _currentTarget->getPosition().z
 				- _tower->getPosition().z;
+		Utils::normalize(enemyDirection);
 
 		Vector3D muzzleDirection = Vector3D(1, 1, 0);
 		Utils::rotate(-_tower->getAzimuth(), muzzleDirection,
 				Vector3D(0, 0, 1));
-		_tower->setAzimuth(
-				Utils::toDegree(Utils::dot(muzzleDirection, enemyDirection)));
+		_tower->setAzimuth(Utils::toDegree(Utils::dot(muzzleDirection, enemyDirection)));
 		/*
 		 //get the elevation
 		 _tower->setElevation(
