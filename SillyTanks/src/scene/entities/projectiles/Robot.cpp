@@ -497,32 +497,32 @@ void Robot::draw() const
 			_mustacheMaterial.setActive();
 			//draw the mustache
 			glPushMatrix();
-			//ANIMATION OF THE LEFT MOUSTACHE (move up/down)
-			glTranslatef(mLeftMustacheX,-mLeftMustacheY,mLeftMustacheZ);
-			glRotatef(rLeftMustacheY,0,1.0,0);
+				//ANIMATION OF THE LEFT MOUSTACHE (move up/down)
+				glTranslatef(mLeftMustacheX,-mLeftMustacheY,mLeftMustacheZ);
+				glRotatef(rLeftMustacheY,0,1.0,0);
 
-			glTranslatef(-mustacheSize,bodyWidth*sin(mustacheHeightRad),bodyWidth*cos(mustacheHeightRad));
-			glRotatef(90,0.0,1.0,0.0);
-			glutSolidCone(mustacheSize,mustacheSize*2,10,10);
-			glPushMatrix();
-				glRotatef(-180,0.0,1.0,0.0);
-				glutSolidCone(mustacheSize,mustacheSize*4,10,10);
+				glTranslatef(-mustacheSize,bodyWidth*sin(mustacheHeightRad),bodyWidth*cos(mustacheHeightRad));
+				glRotatef(90,0.0,1.0,0.0);
+				glutSolidCone(mustacheSize,mustacheSize*2,10,10);
+				glPushMatrix();
+					glRotatef(-180,0.0,1.0,0.0);
+					glutSolidCone(mustacheSize,mustacheSize*4,10,10);
+				glPopMatrix();
 			glPopMatrix();
-			glPopMatrix();
 
 
 			glPushMatrix();
-			//ANIMATION OF THE RIGHT MOUSTACHE (move up/down)
-			glTranslatef(mRightMustacheX,-mRightMustacheY,mRightMustacheZ);
-			glRotatef(rRightMustacheY,0,1.0,0);
+				//ANIMATION OF THE RIGHT MOUSTACHE (move up/down)
+				glTranslatef(mRightMustacheX,-mRightMustacheY,mRightMustacheZ);
+				glRotatef(rRightMustacheY,0,1.0,0);
 
-			glTranslatef(mustacheSize,bodyWidth*sin(mustacheHeightRad),bodyWidth*cos(mustacheHeightRad));
-			glRotatef(-90,0.0,1.0,0.0);
-			glutSolidCone(mustacheSize,mustacheSize*2,10,10);
-			glPushMatrix();
-				glRotatef(180,0.0,1.0,0.0);
-				glutSolidCone(mustacheSize,mustacheSize*4,10,10);
-			glPopMatrix();
+				glTranslatef(mustacheSize,bodyWidth*sin(mustacheHeightRad),bodyWidth*cos(mustacheHeightRad));
+				glRotatef(-90,0.0,1.0,0.0);
+				glutSolidCone(mustacheSize,mustacheSize*2,10,10);
+				glPushMatrix();
+					glRotatef(180,0.0,1.0,0.0);
+					glutSolidCone(mustacheSize,mustacheSize*4,10,10);
+				glPopMatrix();
 			glPopMatrix();
 
 			_topHatMaterial.setActive();
