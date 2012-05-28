@@ -67,7 +67,6 @@ private:
 	ParticleEngine<Smoke> *_missileSmokeParticleEngine;
 	ParticleEngine<Explosion>* _missileExplosionParticleEngine;
 	bool _didDamage;
-	bool _detonated;
 
 }; // class Bullet
 

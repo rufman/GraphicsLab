@@ -71,7 +71,7 @@ void TankAI::sense() {
 		switch (message->_messageType) {
 		case Message::ATTACKED_BY: {
 			AttackedByMessage* abMessage = static_cast<AttackedByMessage*>(message);
-			std::cout << "Tank " << " is attacked by Tank " << abMessage->_attackingEnemyID;
+			std::cout << "Tank " << " is attacked by Target " << abMessage->_attackingEnemyID;
 			switchStrategy(ESCAPE, _currentTarget);
 			break;
 		}
@@ -211,7 +211,6 @@ void TankAI::aim() {
 
 		Vector3D muzzleDirection = Vector3D(0, 0, 1);
 		_tank->setAzimuth(Utils::toDegree(acos(Utils::dot(muzzleDirection, enemyDirection))));
-		//_tank->setAzimuth(_tank->getAzimuth()+1);
 
 
 		for(int i = 1; i < 30;i++)
@@ -220,7 +219,7 @@ void TankAI::aim() {
 			if(angle != -1)
 			{
 				_tank->setElevation(angle);
-				_tank->setShootingPower(i);
+				_tank->setShootingPower(i/10);
 				break;
 			}
 		}

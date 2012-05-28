@@ -164,8 +164,6 @@ private:
 
 	float _timeToLive;
 
-	bool _detonated;
-
 
 }; // class Robot
 

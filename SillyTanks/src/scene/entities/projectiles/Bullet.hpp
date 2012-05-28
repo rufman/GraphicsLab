@@ -52,7 +52,6 @@ private:
 	/** Velocity of the bullet */
 	Vector3D _velocity;
 
-	bool _detonated;
 
 }; // class Bullet
 

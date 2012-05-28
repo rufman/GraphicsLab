@@ -34,7 +34,7 @@
 namespace game_space {
 
 Terrain::Terrain(Scene &scene, const std::string &textureFilePrefix, float width, float length, uint widthResolution, uint lengthResolution) :
-		Drawable(scene), _numDisplayLists(2), _width(width), _length(length), _widthResolution(widthResolution), _lengthResolution(lengthResolution) {
+		Drawable(scene), _numDisplayLists(2), _width(width), _length(length), _widthResolution(widthResolution), _lengthResolution(lengthResolution),_firstRun(true) {
 	_displayLists = glGenLists(_numDisplayLists);
 
 	_material.setAmbient(Color(0.2, 0.2, 0.2));
@@ -447,8 +447,12 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 	}
 
 	//read in all the blocked nodes
+	if(_firstRun)
+	{
 	for (uint i = 0; i < _vertices.size(); i++) {
 		_nodes[i]->setNodeState(checkBorder(_nodes[i]->_position) ? Node::BLOCKED : Node::FREE);
+	}
+	_firstRun = false;
 	}
 
 	//Implemented the a-star algorithm as it is written in pseudo code on wikipedia.org

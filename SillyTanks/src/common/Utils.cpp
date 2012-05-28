@@ -107,7 +107,7 @@ float Utils::getElevation(Point startPosition, Point targetPosition, float veloc
 	//g is how much the gravitational acceleration is influencing the object ( g * weight of the object
 	float g = GRAVITATIONAL_ACCELERATION * weight;
 
-	float r1 = pow(velocity, 4) - g * (g * (flatDistance * flatDistance) + ((2 * heightDifference) * (velocity * velocity)));
+	float r1 = pow(velocity, 4) - g * (g * flatDistance * flatDistance + 2 * heightDifference * velocity * velocity);
 
 	//if r1 is negative, the object is out of reach
 	if (r1 < 0) {
@@ -116,13 +116,18 @@ float Utils::getElevation(Point startPosition, Point targetPosition, float veloc
 		r1 = sqrt(r1);
 	}
 
-	float a1 = ((velocity * velocity) - r1) / (g * flatDistance);
-	float angleOfReach = Utils::toDegree(asin(a1 / sqrt(a1 * a1) + 1));
-	if (mortarAim) {
-		angleOfReach = 90 - angleOfReach;
+	float a1;
+	if(mortarAim)
+	{
+		a1 = ((velocity * velocity) + r1) / (g * flatDistance);
+	}
+	else
+	{
+		a1 = ((velocity * velocity) - r1) / (g * flatDistance);
 	}
 
-	return Utils::toDegree(atan(tan(Utils::toRadian(angleOfReach)) * flatDistance));
+
+	return Utils::toDegree(atan(tan(Utils::toRadian(a1)) * heightDifference));
 
 }
 }

@@ -88,8 +88,9 @@ private:
 	TGAImage *_objectData;
 	TGATexture *_texture;
 	
-	//pathfinding debugging
+	//pathfinding
 	std::vector<Node*> _nodes;
+	bool _firstRun;
 
 }; // class Terrain
 

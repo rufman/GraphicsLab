@@ -17,7 +17,7 @@ namespace game_space {
 
 Bullet::Bullet( Scene &scene, float size ) :
 Projectile( scene,Projectile::BULLET,0 ),
-_size( size ),_detonated(false) {}
+_size( size ) {}
 
 Bullet::~Bullet() {}
 

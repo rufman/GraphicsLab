@@ -17,7 +17,7 @@
 namespace game_space {
 
 Missile::Missile(Scene &scene, float size) :
-		Projectile(scene,Projectile::MISSILE,0), _size(size), _waitBeforeAimingCounter(0), _didDamage(false), _detonated(false),_targetPosition(Point(0,0,0)) {
+		Projectile(scene,Projectile::MISSILE,0), _size(size), _waitBeforeAimingCounter(0), _didDamage(false),_targetPosition(Point(0,0,0)) {
 	_missileSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getTankCam(), 30);
 	_missileSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_missileSmokeParticleEngine->setActive(true);

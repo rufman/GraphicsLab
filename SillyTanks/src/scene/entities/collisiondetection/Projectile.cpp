@@ -7,7 +7,7 @@
 
 namespace game_space {
 Projectile::Projectile(Scene& scene,ProjectileType projectileType,Target* projectileOwner) :
-		Drawable(scene), _projectileType(projectileType), _projectileOwner(projectileOwner),_position(Point(0,0,0)) {}
+		Drawable(scene), _projectileType(projectileType), _projectileOwner(projectileOwner),_position(Point(0,0,0)),_detonated(false) {}
 
 Projectile::~Projectile(){}
 
