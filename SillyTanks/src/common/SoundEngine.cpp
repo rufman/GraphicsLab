@@ -105,6 +105,19 @@ ALboolean SoundEngine::LoadALData() {
 	alBufferData(Buffers[MUZZLE], format, data, size, freq);
 	alutUnloadWAV(format, data, size, freq);
 
+
+#ifdef __APPLE__
+	alutLoadWAVFile((ALbyte*) "resources/sounds/raygun.wav", &format, &data,
+			&size, &freq);
+#else
+	alutLoadWAVFile((ALbyte*) "resources/sounds/raygun.wav", &format, &data, &size, &freq, &loop);
+#endif
+	alBufferData(Buffers[RAYGUN], format, data, size, freq);
+	alutUnloadWAV(format, data, size, freq);
+
+
+
+
 	// Bind buffers into audio sources.
 
 	alGenSources(NUM_SOURCES, Sources);
@@ -133,6 +146,13 @@ ALboolean SoundEngine::LoadALData() {
 	alSourcefv(Sources[MUZZLE], AL_POSITION, SourcesPos[MUZZLE]);
 	alSourcefv(Sources[MUZZLE], AL_VELOCITY, SourcesVel[MUZZLE]);
 	alSourcei(Sources[MUZZLE], AL_LOOPING, AL_FALSE);
+
+	alSourcei(Sources[RAYGUN], AL_BUFFER, Buffers[RAYGUN]);
+	alSourcef(Sources[RAYGUN], AL_PITCH, 1.0f);
+	alSourcef(Sources[RAYGUN], AL_GAIN, 1.0f);
+	alSourcefv(Sources[RAYGUN], AL_POSITION, SourcesPos[RAYGUN]);
+	alSourcefv(Sources[RAYGUN], AL_VELOCITY, SourcesVel[RAYGUN]);
+	alSourcei(Sources[RAYGUN], AL_LOOPING, AL_FALSE);
 
 	// Do another error check and return.
 
@@ -185,6 +205,22 @@ void SoundEngine::playMuzzleSoundAt(float x, float y, float z) {
 		ALfloat arr[3] = { x, y, z };
 		alSourcefv(Sources[MUZZLE], AL_POSITION, arr);
 		alSourcePlay(Sources[MUZZLE]);
+	}
+}
+
+void SoundEngine::playRayGunSound(){
+	if (_active) {
+		alSourcefv(Sources[RAYGUN], AL_POSITION, SourcesPos[RAYGUN]); //reset position of sound
+		alSourcePlay(Sources[RAYGUN]);
+	}
+}
+
+
+void SoundEngine::playRayGunSoundAt(float x, float y, float z){
+	if (_active) {
+		ALfloat arr[3] = { x, y, z };
+		alSourcefv(Sources[RAYGUN], AL_POSITION, arr);
+		alSourcePlay(Sources[RAYGUN]);
 	}
 }
 

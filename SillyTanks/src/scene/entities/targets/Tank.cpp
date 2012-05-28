@@ -266,7 +266,7 @@ void Tank::fireRobot() {
 	robot->setVelocity(velocity);
 
 	_scene._projectiles.push_back(robot);
-	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y, _position.z);
+	_scene.getSoundEngine().playRayGunSoundAt(_position.x, _position.y, _position.z);
 	_amountOfRobots--;
 	_reloadingTime = SMALLTANK_RELOADING_TIME;
 	}
