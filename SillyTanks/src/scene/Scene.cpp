@@ -378,6 +378,7 @@ void Scene::onPaint() {
 	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+
 	// Draw screen
 	drawScene();
 
@@ -385,6 +386,7 @@ void Scene::onPaint() {
 	drawOverlay();
 
 	// Swap buffers
+	glFlush();
 	glutSwapBuffers();
 }
 
@@ -545,9 +547,6 @@ void Scene::drawScene() {
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_fog->remove();
 	}
-
-	glFlush();
-	glutSwapBuffers();
 }
 
 void Scene::drawOverlay() {
