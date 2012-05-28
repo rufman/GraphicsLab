@@ -367,11 +367,9 @@ void Scene::update(float seconds) {
 
 			//FIXME: Program crashes after several iterations if this code piece is active
 
-			/*if (currentTarget->checkHit(currentProjectile)) {
+			if (currentTarget->checkHit(currentProjectile)) {
 				std::cout << "HIT" << std::endl;
-			} else {
-				std::cout << "NO HIT" << std::endl;
-			}*/
+			}
 
 		}
 
