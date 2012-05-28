@@ -365,7 +365,7 @@ void Scene::update(float seconds) {
 
 			Projectile* currentProjectile = (*projectileIter);
 
-			//FIXME: Program crashes after several iterations if this code piece is active
+			//TODO: react on a hit
 
 			if (currentTarget->checkHit(currentProjectile)) {
 				std::cout << "HIT" << std::endl;
