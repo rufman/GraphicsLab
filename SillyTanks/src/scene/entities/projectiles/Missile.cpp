@@ -118,9 +118,9 @@ void Missile::move(float seconds) {
 			_position.y += _velocity.y * seconds + _toTarget.y;
 			_position.z += _velocity.z * seconds + _toTarget.z;
 		} else {
-			_position.x += _velocity.x * seconds * 50;
-			_position.y += _velocity.y * seconds * 50;
-			_position.z += _velocity.z * seconds * 50;
+			_position.x += _velocity.x * seconds*50;
+			_position.y += _velocity.y * seconds*50;
+			_position.z += _velocity.z * seconds*50;
 		}
 	}
 
