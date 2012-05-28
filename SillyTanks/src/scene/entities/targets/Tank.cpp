@@ -130,6 +130,19 @@ void Tank::update(float seconds) {
 		_reloadingTime = 0;
 	}
 
+
+	if(_secToShieldReload < 0)
+	{
+		if(_shield < SMALLTANK_SHIELD)
+		{
+			_shield+= seconds;
+		}
+	}
+	else
+	{
+		_secToShieldReload -= seconds;
+	}
+
 	float averagedHeight = _scene.getTerrain().getHeight(Point(_position.x - 1, _position.y, _position.z - 1));
 	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x + 1, _position.y, _position.z - 1));
 	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x, _position.y, _position.z + 1));

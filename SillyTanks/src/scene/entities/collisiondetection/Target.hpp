@@ -59,9 +59,11 @@ public:
 	uint getQtyMissiles();
 	void setQtyRobots(uint qty);
 	uint getQtyRobots();
+	void doDamage(float damage);
 
 	float _shield;
 	float _life;
+	float _oldLife;
 	uint _amountOfMissiles;
 	uint _amountOfRobots;
 	float _reloadingTime;

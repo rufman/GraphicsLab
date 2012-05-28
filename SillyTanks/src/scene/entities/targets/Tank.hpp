@@ -59,6 +59,8 @@ protected:
 
 	ParticleEngine<Smoke> *_tankSmokeParticleEngine;
 
+	float _secToShieldReload;
+
 public:
 	Tank(Scene &scene,bool isAIControlled);
 	virtual ~Tank();

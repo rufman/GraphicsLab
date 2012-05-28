@@ -220,11 +220,11 @@ void Scene::initialize() {
 	}
 
 	//add some  AI towers to the scene
-	/*for (int i = 0; i < 32; i++) {
-		Tower* tower = new SmallTower(*this, true);
-		tower->setPosition(_terrain->getRandomPointOnMap());
-		_targets.push_back(tower);
-	}*/
+	for (int i = 0; i < 10; i++) {
+	 Tower* tower = new SmallTower(*this, true);
+	 tower->setPosition(_terrain->getRandomPointOnMap());
+	 _targets.push_back(tower);
+	 }
 
 	// reset the scene
 	reset();
@@ -287,12 +287,18 @@ void Scene::update(float seconds) {
 		_targetChooser.y = _terrain->getHeight(_targetChooser);
 	}
 
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end();) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
 			if (tank->isAIControlled()) {
 				tank->getAI()->brainTick(seconds);
+			}
+			if (tank->_life < 0) {
+				targetIter = _targets.erase(targetIter);
+				delete tank;
+			} else {
+				++targetIter;
 			}
 			tank->update(seconds);
 		} else if (target->_targetType == Target::TOWER) {
@@ -300,11 +306,17 @@ void Scene::update(float seconds) {
 			if (tower->isAIControlled()) {
 				tower->getAI()->brainTick(seconds);
 			}
+			if (tower->_life < 0) {
+				targetIter = _targets.erase(targetIter);
+				delete tower;
+			} else {
+				++targetIter;
+			}
 			tower->update(seconds);
 		}
 	}
 
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();++projectileIter) {
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end(); ++projectileIter) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
@@ -319,76 +331,89 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	//detect collisions
+//detect collisions
 	std::vector<Target*> targets = _targets;
 	for (std::vector<Target*>::iterator targetIter = targets.begin(); targetIter != targets.end(); ++targetIter) {
 
 		Target* currentTarget = (*targetIter);
 
-
-
 		std::vector<Projectile*> projectiles = _projectiles;
-		if(_projectiles.size() != 0)
-		{
+		if (_projectiles.size() != 0) {
 			//std::cout << "A projectile!";
 		}
 		for (std::vector<Projectile*>::iterator projectileIter = projectiles.begin(); projectileIter != projectiles.end(); ++projectileIter) {
 
 			Projectile* currentProjectile = (*projectileIter);
 
-			//TODO: react on a hit
+			if(currentTarget->_targetType == Target::TOWER)
+			{
+				continue;
+			}
 
 			if (currentTarget->checkHit(currentProjectile)) {
 				std::cout << "HIT" << std::endl;
+				switch (currentProjectile->_projectileType) {
+				case Projectile::BULLET: {
+					currentTarget->doDamage(BULLET_DAMAGE);
+					break;
+				}
+				case Projectile::MISSILE: {
+					currentTarget->doDamage(MISSILE_DAMAGE);
+					break;
+				}
+				case Projectile::ROBOT: {
+					currentTarget->doDamage(ROBOT_DAMAGE);
+					break;
+				}
+				}
+
 			}
 
 		}
 
 	}
 
-
 	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
-			Projectile *projectile = *projectileIter;
-			if (projectile->_projectileType == Projectile::BULLET) {
-				Bullet* bullet = static_cast<Bullet*>(projectile);
+		Projectile *projectile = *projectileIter;
+		if (projectile->_projectileType == Projectile::BULLET) {
+			Bullet* bullet = static_cast<Bullet*>(projectile);
 
-				if (bullet->isDetonated()) {
-					projectileIter = _projectiles.erase(projectileIter);
-					for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-						_messageBus->sendMessageTo(DetonationSoundMessage(bullet->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
-					}
-					delete bullet;
-				} else {
-					++projectileIter;
+			if (bullet->isDetonated()) {
+				projectileIter = _projectiles.erase(projectileIter);
+				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+					_messageBus->sendMessageTo(DetonationSoundMessage(bullet->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
 				}
-			} else if (projectile->_projectileType == Projectile::MISSILE) {
-				Missile* missile = static_cast<Missile*>(projectile);
-				if (missile->isDetonated()) {
-					projectileIter = _projectiles.erase(projectileIter);
-					for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-						_messageBus->sendMessageTo(DetonationSoundMessage(missile->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
-					}
-					delete missile;
-				} else {
-					++projectileIter;
-				}
-			} else if (projectile->_projectileType == Projectile::ROBOT) {
-				Robot* robot = static_cast<Robot*>(projectile);
-
-				if (robot->isDetonated()) {
-					projectileIter = _projectiles.erase(projectileIter);
-					for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-						_messageBus->sendMessageTo(DetonationSoundMessage(robot->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
-					}
-					delete robot;
-				} else {
-					++projectileIter;
-				}
+				delete bullet;
 			} else {
 				++projectileIter;
 			}
-		}
+		} else if (projectile->_projectileType == Projectile::MISSILE) {
+			Missile* missile = static_cast<Missile*>(projectile);
+			if (missile->isDetonated()) {
+				projectileIter = _projectiles.erase(projectileIter);
+				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+					_messageBus->sendMessageTo(DetonationSoundMessage(missile->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+				}
+				delete missile;
+			} else {
+				++projectileIter;
+			}
+		} else if (projectile->_projectileType == Projectile::ROBOT) {
+			Robot* robot = static_cast<Robot*>(projectile);
 
+			if (robot->isDetonated()) {
+				projectileIter = _projectiles.erase(projectileIter);
+				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+					_messageBus->sendMessageTo(DetonationSoundMessage(robot->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+				}
+				delete robot;
+			} else {
+				++projectileIter;
+			}
+		} else {
+			++projectileIter;
+		}
+	}
 
 }
 
@@ -475,8 +500,6 @@ void Scene::drawScene() {
 	// Draw scene
 	glMatrixMode(GL_MODELVIEW);
 
-
-
 	//draw water
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
@@ -492,7 +515,6 @@ void Scene::drawScene() {
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
 
-
 	//#############################
 	// Sky dome and water
 	//The Sky dome and water should not use toon shading
@@ -501,10 +523,10 @@ void Scene::drawScene() {
 	}
 
 	// Draw the sky
-	glTranslatef(0,-80,0);
+	glTranslatef(0, -80, 0);
 	_skyDome->setRenderingParameters(_renderingParameters);
 	_skyDome->draw();
-	glTranslatef(0,80,0);
+	glTranslatef(0, 80, 0);
 
 	//################################
 	// The targets should use toon shading as well
@@ -1216,7 +1238,7 @@ void Scene::drawMap() {
 	glLoadIdentity();
 	int mapZoom = 50;
 	Vector3D muzzleDirection = Vector3D(0, 0, 1);
-	Vector3D tankDirection = Utils::rotate(_playerTank->getAzimuth()+180, muzzleDirection, Vector3D(0, 1, 0));
+	Vector3D tankDirection = Utils::rotate(_playerTank->getAzimuth() + 180, muzzleDirection, Vector3D(0, 1, 0));
 	gluLookAt(_playerTank->getPosition().x, _playerTank->getPosition().y + mapZoom, _playerTank->getPosition().z, _playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z, tankDirection.x, tankDirection.y, tankDirection.z); //muzzleDirection.x, muzzleDirection.y, muzzleDirection.z);
 
 	// Set scene parameters

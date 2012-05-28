@@ -82,5 +82,36 @@ uint Target::getQtyRobots() {
 	return _amountOfRobots;
 }
 
+void Target::doDamage(float damage)
+{
+	if(_shield > 0)
+	{
+		if(_shield-damage > 0)
+		{
+		_shield -= damage;
+		}
+		else
+		{
+			damage -= _shield;
+			_shield = 0;
+			_life -= damage;
+
+
+		}
+	}
+	else
+	{
+		if(_life - damage > 0)
+		{
+		_life -= damage;
+		}
+		else
+		{
+			_life = 0;
+		}
+	}
+
+}
+
 }
 

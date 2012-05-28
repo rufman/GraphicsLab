@@ -140,8 +140,8 @@ namespace game_space {
 // Game Logic
 //##########################
 
-#define SMALLTANK_LIFE 100
-#define SMALLTANK_SHIELD 10
+#define SMALLTANK_LIFE 90
+#define SMALLTANK_SHIELD 60
 #define SMALLTANK_MAXPOWER 1
 #define SMALLTANK_QTYMISSILES 5
 #define SMALLTANK_QTYROBOTS 5
@@ -154,6 +154,10 @@ namespace game_space {
 #define SMALLTOWER_QTYMISSILES 5
 #define SMALLTOWER_QTYROBOTS 5
 #define SMALLTOWER_RELOADING_TIME 3
+
+#define BULLET_DAMAGE 30
+#define MISSILE_DAMAGE 50
+#define ROBOT_DAMAGE 150
 
 
 
