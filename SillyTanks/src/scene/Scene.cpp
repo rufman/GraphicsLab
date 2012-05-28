@@ -304,47 +304,18 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();++projectileIter) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
 			bullet->move(seconds);
-
-			if (bullet->isDetonated()) {
-				projectileIter = _projectiles.erase(projectileIter);
-				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-					_messageBus->sendMessageTo(DetonationSoundMessage(bullet->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
-				}
-				delete bullet;
-			} else {
-				++projectileIter;
-			}
 		} else if (projectile->_projectileType == Projectile::MISSILE) {
 			Missile* missile = static_cast<Missile*>(projectile);
 			missile->move(seconds);
-			if (missile->isDetonated()) {
-				projectileIter = _projectiles.erase(projectileIter);
-				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-					_messageBus->sendMessageTo(DetonationSoundMessage(missile->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
-				}
-				delete missile;
-			} else {
-				++projectileIter;
-			}
+
 		} else if (projectile->_projectileType == Projectile::ROBOT) {
 			Robot* robot = static_cast<Robot*>(projectile);
 			robot->move(seconds);
-			if (robot->isDetonated()) {
-				projectileIter = _projectiles.erase(projectileIter);
-				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-					_messageBus->sendMessageTo(DetonationSoundMessage(robot->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
-				}
-				delete robot;
-			} else {
-				++projectileIter;
-			}
-		} else {
-			++projectileIter;
 		}
 	}
 
@@ -374,6 +345,51 @@ void Scene::update(float seconds) {
 		}
 
 	}
+
+
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+			Projectile *projectile = *projectileIter;
+			if (projectile->_projectileType == Projectile::BULLET) {
+				Bullet* bullet = static_cast<Bullet*>(projectile);
+
+				if (bullet->isDetonated()) {
+					projectileIter = _projectiles.erase(projectileIter);
+					for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+						_messageBus->sendMessageTo(DetonationSoundMessage(bullet->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+					}
+					delete bullet;
+				} else {
+					++projectileIter;
+				}
+			} else if (projectile->_projectileType == Projectile::MISSILE) {
+				Missile* missile = static_cast<Missile*>(projectile);
+				if (missile->isDetonated()) {
+					projectileIter = _projectiles.erase(projectileIter);
+					for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+						_messageBus->sendMessageTo(DetonationSoundMessage(missile->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+					}
+					delete missile;
+				} else {
+					++projectileIter;
+				}
+			} else if (projectile->_projectileType == Projectile::ROBOT) {
+				Robot* robot = static_cast<Robot*>(projectile);
+
+				if (robot->isDetonated()) {
+					projectileIter = _projectiles.erase(projectileIter);
+					for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+						_messageBus->sendMessageTo(DetonationSoundMessage(robot->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+					}
+					delete robot;
+				} else {
+					++projectileIter;
+				}
+			} else {
+				++projectileIter;
+			}
+		}
+
+
 }
 
 void Scene::onPaint() {
