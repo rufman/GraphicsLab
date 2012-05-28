@@ -213,7 +213,7 @@ void Scene::initialize() {
 	_targets.push_back(_playerTank);
 
 	//add some AI tanks to the scene
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 1; i++) {
 		Tank* tank = new SmallTank(*this, true);
 		tank->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tank);
