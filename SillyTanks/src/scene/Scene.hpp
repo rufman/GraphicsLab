@@ -210,7 +210,7 @@ private:
 	TGATexture* _hudShieldbar;
 	TGATexture* _hudEnergybar;
 	TGATexture* _hudReloadbar;
-	ScreenTexture* _hudMap;
+	ScreenTexture _hudMap;
 
 
 }; // class Scene
