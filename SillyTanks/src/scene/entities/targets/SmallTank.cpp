@@ -225,11 +225,15 @@ bool Target::checkHit(Projectile* projectile_){
 	min = std::min(frontMin, rearMin) + _position.z;
 
 
+
+
 	//check if projectile is in the right height to hit the target
 	if(projectilePosition.z > max || projectilePosition.z < min){
 
 		return false;
 	}
+
+	std::cout << "HERE  1" << std::endl;
 
 	//##########################################################
 	//the projectile has an appropriate height to hit the target
@@ -256,6 +260,8 @@ bool Target::checkHit(Projectile* projectile_){
 		return false;
 	}
 
+	std::cout << "HERE   2" << std::endl;
+
 
 	//compute max y point
 	frontMin = std::max(_boundingBox->frontLeftUpper.y, _boundingBox->rearLeftUpper.y);
@@ -271,6 +277,9 @@ bool Target::checkHit(Projectile* projectile_){
 
 	min = std::min(frontMin,rearMin) + _position.y;
 
+
+	std::cout << "MIN Y: " << min << "  MAX Y:" << max << std::endl;
+	std::cout << "POSITION: " << projectilePosition.y << std::endl;
 
 
 	//last check: check if projectile is between y coordinates of the target
