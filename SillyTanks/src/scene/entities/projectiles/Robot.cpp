@@ -325,178 +325,178 @@ void Robot::loadAnimation( const std::string &animationFile )
 void Robot::draw() const
 {
 	glShadeModel( ( _renderingParameters.shadeMode == RenderingParameters::FLAT ) ? GL_FLAT : GL_SMOOTH );
-	glPolygonMode( GL_FRONT_AND_BACK, ( _renderingParameters.drawMode == RenderingParameters::WIREFRAME ) ? GL_LINE : GL_FILL );
+		glPolygonMode( GL_FRONT_AND_BACK, ( _renderingParameters.drawMode == RenderingParameters::WIREFRAME ) ? GL_LINE : GL_FILL );
 
-	const Animation::Frame &frame = ( _animation.frames.find( _animation.currentFrame ) )->second;
+		const Animation::Frame &frame = ( _animation.frames.find( _animation.currentFrame ) )->second;
 
-	//this is the overall size to resize the whole android
-	float generalSize = frame.generalSize;
+		//this is the overall size to resize the whole android
+		float generalSize = frame.generalSize;
 
-	float armLength = 0.6*generalSize;
-	float armWidth = 0.1*generalSize;
+		float armLength = 0.6*generalSize;
+		float armWidth = 0.1*generalSize;
 
-	float legLength = 0.4*generalSize;
-	float legWidth = 0.1*generalSize;
+		float legLength = 0.4*generalSize;
+		float legWidth = 0.1*generalSize;
 
-	float bodyWidth = 0.6*generalSize;
-	float bodyHeight = 0.75*generalSize;
+		float bodyWidth = 0.6*generalSize;
+		float bodyHeight = 0.75*generalSize;
 
-	float antennaLength = 0.4*generalSize;
-	float antennaAngle = 20;
+		float antennaLength = 0.4*generalSize;
+		float antennaAngle = 20;
 
-	float eyeSize = 0.04*generalSize;
-	float eyeHeightRad = Utils::PI/10;
-	float eyeDistanceDeg = 40;
+		float eyeSize = 0.04*generalSize;
+		float eyeHeightRad = Utils::PI/10;
+		float eyeDistanceDeg = 40;
 
-	float mustacheHeightRad = Utils::PI/30;
-	float mustacheSize = 0.07*generalSize;
+		float mustacheHeightRad = Utils::PI/30;
+		float mustacheSize = 0.07*generalSize;
 
-	float topHatHeight = 0.7*generalSize;
-	float topHatWidth  = 0.6*generalSize;
-	float topHatBrimHeight = 0.05*generalSize;
+		float topHatHeight = 0.7*generalSize;
+		float topHatWidth  = 0.6*generalSize;
+		float topHatBrimHeight = 0.05*generalSize;
 
-	//movement variables
-	//move body
-	float mBodyX = frame.mBodyX;
-	float mBodyY = frame.mBodyY;
-	float mBodyZ = frame.mBodyZ;
+		//movement variables
+		//move body
+		float mBodyX = frame.mBodyX;
+		float mBodyY = frame.mBodyY;
+		float mBodyZ = frame.mBodyZ;
 
-	//rotate body
-	float rBodyX = frame.rBodyX;
-	float rBodyY = frame.rBodyY;
-	float rBodyZ = frame.rBodyZ;
+		//rotate body
+		float rBodyX = frame.rBodyX;
+		float rBodyY = frame.rBodyY;
+		float rBodyZ = frame.rBodyZ;
 
-	//move head
-	float mHeadX = frame.mHeadX;
-	float mHeadY = frame.mHeadY;
-	float mHeadZ = frame.mHeadZ;
+		//move head
+		float mHeadX = frame.mHeadX;
+		float mHeadY = frame.mHeadY;
+		float mHeadZ = frame.mHeadZ;
 
-	//rotate head
-	float rHeadX = frame.rHeadX;
-	float rHeadY = frame.rHeadY;
-	float rHeadZ = frame.rHeadZ;
+		//rotate head
+		float rHeadX = frame.rHeadX;
+		float rHeadY = frame.rHeadY;
+		float rHeadZ = frame.rHeadZ;
 
-	//move left eye
-	float mLeftEyeZ = frame.mLeftEyeZ;
+		//move left eye
+		float mLeftEyeZ = frame.mLeftEyeZ;
 
-	//move right eye
-	float mRightEyeZ = frame.mRightEyeZ;
+		//move right eye
+		float mRightEyeZ = frame.mRightEyeZ;
 
-	//move left mustache
-	float mLeftMustacheX = frame.mLeftMustacheX;
-	float mLeftMustacheY = frame.mLeftMustacheY;
-	float mLeftMustacheZ = frame.mLeftMustacheZ;
+		//move left mustache
+		float mLeftMustacheX = frame.mLeftMustacheX;
+		float mLeftMustacheY = frame.mLeftMustacheY;
+		float mLeftMustacheZ = frame.mLeftMustacheZ;
 
-	//rotate left mustache
-	float rLeftMustacheY  = frame.rLeftMustacheY;
+		//rotate left mustache
+		float rLeftMustacheY  = frame.rLeftMustacheY;
 
-	//move left mustache
-	float mRightMustacheX = frame.mRightMustacheX;
-	float mRightMustacheY = frame.mRightMustacheY;
-	float mRightMustacheZ = frame.mRightMustacheZ;
+		//move left mustache
+		float mRightMustacheX = frame.mRightMustacheX;
+		float mRightMustacheY = frame.mRightMustacheY;
+		float mRightMustacheZ = frame.mRightMustacheZ;
 
-	//rotate left mustache
-	float rRightMustacheY = frame.rRightMustacheY;
+		//rotate left mustache
+		float rRightMustacheY = frame.rRightMustacheY;
 
-	//move top hat
-	float mTopHatY = frame.mTopHatY;
+		//move top hat
+		float mTopHatY = frame.mTopHatY;
 
-	//rotate top hat
-	float rTopHatX = frame.rTopHatX;
+		//rotate top hat
+		float rTopHatX = frame.rTopHatX;
 
-	//rotate the left arm
-	float rLeftArmX = frame.rLeftArmX;
-	float rLeftArmY = frame.rLeftArmY;
-	float rLeftArmZ = frame.rLeftArmZ;
+		//rotate the left arm
+		float rLeftArmX = frame.rLeftArmX;
+		float rLeftArmY = frame.rLeftArmY;
+		float rLeftArmZ = frame.rLeftArmZ;
 
-	//rotate the right arm
-	float rRightArmX = frame.rRightArmX;
-	float rRightArmY = frame.rRightArmY;
-	float rRightArmZ = frame.rRightArmZ;
+		//rotate the right arm
+		float rRightArmX = frame.rRightArmX;
+		float rRightArmY = frame.rRightArmY;
+		float rRightArmZ = frame.rRightArmZ;
 
-	//rotate the left leg
-	float rLeftLegX = frame.rLeftLegX;
-	float rLeftLegY = frame.rLeftLegY;
-	float rLeftLegZ = frame.rLeftLegZ;
+		//rotate the left leg
+		float rLeftLegX = frame.rLeftLegX;
+		float rLeftLegY = frame.rLeftLegY;
+		float rLeftLegZ = frame.rLeftLegZ;
 
-	//rotate the right leg
-	float rRightLegX = frame.rRightLegX;
-	float rRightLegY = frame.rRightLegY;
-	float rRightLegZ = frame.rRightLegZ;
+		//rotate the right leg
+		float rRightLegX = frame.rRightLegX;
+		float rRightLegY = frame.rRightLegY;
+		float rRightLegZ = frame.rRightLegZ;
 
-	GLUquadric* quadric = gluNewQuadric();
+		GLUquadric* quadric = gluNewQuadric();
 
-	glMatrixMode( GL_MODELVIEW );
+		glMatrixMode( GL_MODELVIEW );
 
-	//the body is the highest in the hierarchy
-	_bodyMaterial.setActive();
-	glPushMatrix();
-		//ANIMATION OF THE WHOLE BODY (jumping,moving,rotation)
-		glTranslatef(_position.x+ mBodyX,_position.y+ mBodyY,_position.z+ mBodyZ);
-		glRotatef(rBodyY,0,1.0,0);//to achieve that the mesh can rotate and bow
-		glRotatef(rBodyX,1.0,0,0);
-		glRotatef(rBodyZ,0,0,1.0);
-
-		//draw the body
-		glTranslatef(0.0,legLength,0.0);
-
-		//translate to the ground first
-		glTranslatef(0.0,bodyWidth*1.4,0.0);
-		glRotatef(90,1.0,0.0,0.0);
-		gluCylinder(quadric,bodyWidth,bodyWidth,bodyHeight,50,30);
-
-
+		//the body is the highest in the hierarchy
+		_bodyMaterial.setActive();
 		glPushMatrix();
-			//ANIMATION OF THE HEAD (Tilt,rotate, look at, move up/down)
-			glRotatef(rHeadX,1.0,0,0);
-			glRotatef(rHeadY,0,0,1.0);
-			glRotatef(rHeadZ,0,0,1.0);
-			glTranslatef(mHeadX,mHeadZ,-mHeadY);
+			//ANIMATION OF THE WHOLE BODY (jumping,moving,rotation)
+			glTranslatef(_position.x+mBodyX,_position.y+mBodyY,_position.z+mBodyZ);
+			glRotatef(rBodyY,0,1.0,0);//to achieve that the mesh can rotate and bow
+			glRotatef(rBodyX,1.0,0,0);
+			glRotatef(rBodyZ,0,0,1.0);
 
-			//draw the head
-			glRotatef(-90,1.0,0.0,0.0);
-			glutSolidSphere(bodyWidth,30,30);
+			//draw the body
+			glTranslatef(0.0,legLength,0.0);
 
-			_eyeMaterial.setActive();
-			//draw the eyes
-			glPushMatrix();
-				//ANIMATION OF THE LEFT EYE (move in/out)
-				glTranslatef(0,0,-mLeftEyeZ);
+			//translate to the ground first
+			glTranslatef(0.0,bodyWidth*1.4,0.0);
+			glRotatef(90,1.0,0.0,0.0);
+			gluCylinder(quadric,bodyWidth,bodyWidth,bodyHeight,50,30);
 
-				glRotatef(eyeDistanceDeg/2,0.0,1.0,0.0);
-				glTranslatef(0.0,bodyWidth*sin(eyeHeightRad),bodyWidth*cos(eyeHeightRad));
-				glutSolidSphere(eyeSize,30,30);
-			glPopMatrix();
 
 			glPushMatrix();
-				//ANIMATION OF THE RIGHT EYE (move in/out)
-				glTranslatef(0,0,-mRightEyeZ);
+				//ANIMATION OF THE HEAD (Tilt,rotate, look at, move up/down)
+				glRotatef(rHeadX,1.0,0,0);
+				glRotatef(rHeadY,0,0,1.0);
+				glRotatef(rHeadZ,0,0,1.0);
+				glTranslatef(mHeadX,mHeadZ,-mHeadY);
 
-				glRotatef(-eyeDistanceDeg/2,0.0,1.0,0.0);
-				glTranslatef(0.0,bodyWidth*sin(eyeHeightRad),bodyWidth*cos(eyeHeightRad));
-				glutSolidSphere(eyeSize,30,30);
-			glPopMatrix();
-
-			_antennaMaterial.setActive();
-			//draw the first antenna
-			glPushMatrix();
-				glTranslatef(-antennaLength*1.5*sin(Utils::toRadian(antennaAngle)),antennaLength*1.5*cos(Utils::toRadian(antennaAngle)),0.0);
-				glRotatef(antennaAngle,0.0,0.0,1.0);
+				//draw the head
 				glRotatef(-90,1.0,0.0,0.0);
-				gluCylinder(quadric,bodyWidth/15,bodyWidth/15,antennaLength,12,12);
-			glPopMatrix();
+				glutSolidSphere(bodyWidth,30,30);
 
-			//draw the second antenna
-			glPushMatrix();
-				glTranslatef(antennaLength*1.5*sin(Utils::toRadian(antennaAngle)),antennaLength*1.5*cos(Utils::toRadian(antennaAngle)),0.0);
-				glRotatef(-antennaAngle,0.0,0.0,1.0);
-				glRotatef(-90,1.0,0.0,0.0);
-				gluCylinder(quadric,bodyWidth/15,bodyWidth/15,antennaLength,12,12);
-			glPopMatrix();
+				_eyeMaterial.setActive();
+				//draw the eyes
+				glPushMatrix();
+					//ANIMATION OF THE LEFT EYE (move in/out)
+					glTranslatef(0,0,-mLeftEyeZ);
 
-			_mustacheMaterial.setActive();
-			//draw the mustache
-			glPushMatrix();
+					glRotatef(eyeDistanceDeg/2,0.0,1.0,0.0);
+					glTranslatef(0.0,bodyWidth*sin(eyeHeightRad),bodyWidth*cos(eyeHeightRad));
+					glutSolidSphere(eyeSize,30,30);
+				glPopMatrix();
+
+				glPushMatrix();
+					//ANIMATION OF THE RIGHT EYE (move in/out)
+					glTranslatef(0,0,-mRightEyeZ);
+
+					glRotatef(-eyeDistanceDeg/2,0.0,1.0,0.0);
+					glTranslatef(0.0,bodyWidth*sin(eyeHeightRad),bodyWidth*cos(eyeHeightRad));
+					glutSolidSphere(eyeSize,30,30);
+				glPopMatrix();
+
+				_antennaMaterial.setActive();
+				//draw the first antenna
+				glPushMatrix();
+					glTranslatef(-antennaLength*1.5*sin(Utils::toRadian(antennaAngle)),antennaLength*1.5*cos(Utils::toRadian(antennaAngle)),0.0);
+					glRotatef(antennaAngle,0.0,0.0,1.0);
+					glRotatef(-90,1.0,0.0,0.0);
+					gluCylinder(quadric,bodyWidth/15,bodyWidth/15,antennaLength,12,12);
+				glPopMatrix();
+
+				//draw the second antenna
+				glPushMatrix();
+					glTranslatef(antennaLength*1.5*sin(Utils::toRadian(antennaAngle)),antennaLength*1.5*cos(Utils::toRadian(antennaAngle)),0.0);
+					glRotatef(-antennaAngle,0.0,0.0,1.0);
+					glRotatef(-90,1.0,0.0,0.0);
+					gluCylinder(quadric,bodyWidth/15,bodyWidth/15,antennaLength,12,12);
+				glPopMatrix();
+
+				_mustacheMaterial.setActive();
+				//draw the mustache
+				glPushMatrix();
 				//ANIMATION OF THE LEFT MOUSTACHE (move up/down)
 				glTranslatef(mLeftMustacheX,-mLeftMustacheY,mLeftMustacheZ);
 				glRotatef(rLeftMustacheY,0,1.0,0);
@@ -508,10 +508,10 @@ void Robot::draw() const
 					glRotatef(-180,0.0,1.0,0.0);
 					glutSolidCone(mustacheSize,mustacheSize*4,10,10);
 				glPopMatrix();
-			glPopMatrix();
+				glPopMatrix();
 
 
-			glPushMatrix();
+				glPushMatrix();
 				//ANIMATION OF THE RIGHT MOUSTACHE (move up/down)
 				glTranslatef(mRightMustacheX,-mRightMustacheY,mRightMustacheZ);
 				glRotatef(rRightMustacheY,0,1.0,0);
@@ -523,119 +523,120 @@ void Robot::draw() const
 					glRotatef(180,0.0,1.0,0.0);
 					glutSolidCone(mustacheSize,mustacheSize*4,10,10);
 				glPopMatrix();
+				glPopMatrix();
+
+				_topHatMaterial.setActive();
+				//draw the tophat
+				glPushMatrix();
+					//ANIMATION OF THE TOP Hat (move up/down)
+					glRotatef(rTopHatX,0,0,1.0);
+					glRotatef(-90,1.0,0.0,0.0);
+					glTranslatef(0,mTopHatY,0);
+
+
+					//brim
+					glTranslatef(0,bodyWidth*7/8,0);
+					glRotatef(90,1.0,0.0,0.0);
+					gluCylinder(quadric,topHatWidth,topHatWidth,topHatBrimHeight,30,1);
+
+					//close the brim on the upper side
+					glPushMatrix();
+						glTranslatef(0,topHatBrimHeight,0);
+						glRotatef(90,0.0,0,1.0);
+						glutSolidCone(topHatWidth,0.01,30,1);
+					glPopMatrix();
+
+					//close the hat on the lower side
+					glPushMatrix();
+						glRotatef(90,0,0,1.0);
+						glutSolidCone(topHatWidth,0.01,30,1);
+					glPopMatrix();
+
+					//top part
+					glPushMatrix();
+						glTranslatef(0,0,-topHatHeight);
+						glRotatef(90,0,0,1.0);
+						gluCylinder(quadric,topHatWidth/2,topHatWidth/2,topHatHeight,30,30);
+					glPopMatrix();
+
+					//close the top
+					glPushMatrix();
+						glTranslatef(0,0,-topHatHeight);
+						glRotatef(90,0,0,1.0);
+						glutSolidCone(topHatWidth/2,0.01,30,1);
+					glPopMatrix();
+				glPopMatrix();
 			glPopMatrix();
 
-			_topHatMaterial.setActive();
-			//draw the tophat
+			_bodyMaterial.setActive();
+			//draw the left arm
 			glPushMatrix();
-				//ANIMATION OF THE TOP Hat (move up/down)
-				glRotatef(rTopHatX,0,0,1.0);
-				glTranslatef(0,mTopHatY,0);
-
-
-				//brim
-				glTranslatef(0,bodyWidth*7/8,0);
-				glRotatef(90,1.0,0.0,0.0);
-				gluCylinder(quadric,topHatWidth,topHatWidth,topHatBrimHeight,30,1);
-
-				//close the brim on the upper side
+				glTranslatef(1.3*bodyWidth,0,0);
+				glutSolidSphere(armWidth,30,30);
 				glPushMatrix();
-					glTranslatef(0,topHatBrimHeight,0);
-					glRotatef(90,0.0,0,1.0);
-					glutSolidCone(topHatWidth,0.01,30,1);
+					//ANIMATION OF THE LEFT ARM (rotate in all directions)
+					glRotatef(rLeftArmX,1.0,0,0);
+					glRotatef(rLeftArmZ,0,1.0,0);
+					glRotatef(rLeftArmY,0,0,1.0);
+					gluCylinder(quadric,armWidth,armWidth,armLength,30,30);
+					glPushMatrix();
+						glTranslatef(0,0,armLength);
+						glutSolidSphere(armWidth,30,30);
+					glPopMatrix();
 				glPopMatrix();
+			glPopMatrix();
 
-				//close the hat on the lower side
+			//draw the right arm
+			glPushMatrix();
+				glTranslatef(1.3*-bodyWidth,0,0);
+				glutSolidSphere(armWidth,30,30);
 				glPushMatrix();
-					glRotatef(90,0,0,1.0);
-					glutSolidCone(topHatWidth,0.01,30,1);
+					//ANIMATION OF THE RIGHT ARM (rotate in all directions)
+					glRotatef(rRightArmX,1.0,0,0);
+					glRotatef(rRightArmZ,0,1.0,0);
+					glRotatef(rRightArmY,0,0,1.0);
+					gluCylinder(quadric,armWidth,armWidth,armLength,30,30);
+					glPushMatrix();
+						glTranslatef(0,0,armLength);
+						glutSolidSphere(armWidth,30,30);
+					glPopMatrix();
 				glPopMatrix();
+			glPopMatrix();
 
-				//top part
+			//draw the left leg
+			glPushMatrix();
+				glTranslatef(bodyWidth*2/3,0,bodyHeight);
+				glutSolidSphere(legWidth,30,30);
 				glPushMatrix();
-					glTranslatef(0,0,-topHatHeight);
-					glRotatef(90,0,0,1.0);
-					gluCylinder(quadric,topHatWidth/2,topHatWidth/2,topHatHeight,30,30);
+					//ANIMATION OF THE LEFT LEG (rotate in all directions)
+					glRotatef(rLeftLegX,1.0,0,0);
+					glRotatef(rLeftLegZ,0,1.0,0);
+					glRotatef(rLeftLegY,0,0,1.0);
+					gluCylinder(quadric,legWidth,legWidth,legLength,30,30);
+					glPushMatrix();
+						glTranslatef(0,0,legLength);
+						glutSolidSphere(legWidth,30,30);
+					glPopMatrix();
 				glPopMatrix();
+			glPopMatrix();
 
-				//close the top
+			//draw the right leg
+			glPushMatrix();
+				glTranslatef(-bodyWidth*2/3,0,bodyHeight);
+				glutSolidSphere(legWidth,30,30);
 				glPushMatrix();
-					glTranslatef(0,0,-topHatHeight);
-					glRotatef(90,0,0,1.0);
-					glutSolidCone(topHatWidth/2,0.01,30,1);
+				//ANIMATION OF THE RIGHT LEG (rotate in all directions)
+					glRotatef(rRightLegX,1.0,0,0);
+					glRotatef(rRightLegZ,0,1.0,0);
+					glRotatef(rRightLegY,0,0,1.0);
+					gluCylinder(quadric,legWidth,legWidth,legLength,30,30);
+					glPushMatrix();
+						glTranslatef(0,0,legLength);
+						glutSolidSphere(legWidth,30,30);
+					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
 		glPopMatrix();
-
-		_bodyMaterial.setActive();
-		//draw the left arm
-		glPushMatrix();
-			glTranslatef(1.3*bodyWidth,0,0);
-			glutSolidSphere(armWidth,30,30);
-			glPushMatrix();
-				//ANIMATION OF THE LEFT ARM (rotate in all directions)
-				glRotatef(rLeftArmX,1.0,0,0);
-				glRotatef(rLeftArmZ,0,1.0,0);
-				glRotatef(rLeftArmY,0,0,1.0);
-				gluCylinder(quadric,armWidth,armWidth,armLength,30,30);
-				glPushMatrix();
-					glTranslatef(0,0,armLength);
-					glutSolidSphere(armWidth,30,30);
-				glPopMatrix();
-			glPopMatrix();
-		glPopMatrix();
-
-		//draw the right arm
-		glPushMatrix();
-			glTranslatef(1.3*-bodyWidth,0,0);
-			glutSolidSphere(armWidth,30,30);
-			glPushMatrix();
-				//ANIMATION OF THE RIGHT ARM (rotate in all directions)
-				glRotatef(rRightArmX,1.0,0,0);
-				glRotatef(rRightArmZ,0,1.0,0);
-				glRotatef(rRightArmY,0,0,1.0);
-				gluCylinder(quadric,armWidth,armWidth,armLength,30,30);
-				glPushMatrix();
-					glTranslatef(0,0,armLength);
-					glutSolidSphere(armWidth,30,30);
-				glPopMatrix();
-			glPopMatrix();
-		glPopMatrix();
-
-		//draw the left leg
-		glPushMatrix();
-			glTranslatef(bodyWidth*2/3,0,bodyHeight);
-			glutSolidSphere(legWidth,30,30);
-			glPushMatrix();
-				//ANIMATION OF THE LEFT LEG (rotate in all directions)
-				glRotatef(rLeftLegX,1.0,0,0);
-				glRotatef(rLeftLegZ,0,1.0,0);
-				glRotatef(rLeftLegY,0,0,1.0);
-				gluCylinder(quadric,legWidth,legWidth,legLength,30,30);
-				glPushMatrix();
-					glTranslatef(0,0,legLength);
-					glutSolidSphere(legWidth,30,30);
-				glPopMatrix();
-			glPopMatrix();
-		glPopMatrix();
-
-		//draw the right leg
-		glPushMatrix();
-			glTranslatef(-bodyWidth*2/3,0,bodyHeight);
-			glutSolidSphere(legWidth,30,30);
-			glPushMatrix();
-			//ANIMATION OF THE RIGHT LEG (rotate in all directions)
-				glRotatef(rRightLegX,1.0,0,0);
-				glRotatef(rRightLegZ,0,1.0,0);
-				glRotatef(rRightLegY,0,0,1.0);
-				gluCylinder(quadric,legWidth,legWidth,legLength,30,30);
-				glPushMatrix();
-					glTranslatef(0,0,legLength);
-					glutSolidSphere(legWidth,30,30);
-				glPopMatrix();
-			glPopMatrix();
-		glPopMatrix();
-	glPopMatrix();
 }
 
 bool Robot::isDetonated()
