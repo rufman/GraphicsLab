@@ -120,6 +120,8 @@ private:
 
 public:
 	std::vector<Projectile*> _projectiles;
+
+	Tank* _playerTank;
 private:
 
 	Window &_window;
@@ -190,7 +192,7 @@ private:
 
 	Point _targetChooser;
 
-	Tank* _playerTank;
+
 	std::vector<Target*> _targets;
 
 	ShadingEngine _shadingEngine;

@@ -30,6 +30,7 @@
 #include "../../AI/MessageBus.hpp"
 
 //particle engine includes
+#define MAP_SIZE 200;
 
 namespace game_space {
 
@@ -103,9 +104,16 @@ void Tank::move(float speed) {
 	_speed = speed;
 
 	if(_scene.getSoundEngine().isEngineSoundFinished()){
+
+		float distance = Utils::distance(_scene._playerTank->getPosition(), _position);
+		float tmp = distance / MAP_SIZE;
+		float distanceVolume = 1 - tmp;
+		_scene.getSoundEngine().changeVolumeEngine(distanceVolume*0.5);
 		_scene.getSoundEngine().playEngineSoundAt(_position.x, _position.y, _position.z);
 	}
-
+	else if(!_isAIControlled){
+		_scene.getSoundEngine().setEngineSoundPosition(_position.x,_position.y,_position.z);
+	}
 
 }
 
@@ -218,7 +226,15 @@ void Tank::fireBullet() {
 	bullet->setVelocity(velocity);
 
 	_scene._projectiles.push_back(bullet);
+
+
+	float distance = Utils::distance(_scene._playerTank->getPosition(), _position);
+
+	float tmp = distance / MAP_SIZE;
+	float distanceVolume = 1 - tmp;
+	_scene.getSoundEngine().changeVolumeMuzzle(distanceVolume*0.5);
 	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y, _position.z);
+
 	_reloadingTime = SMALLTANK_RELOADING_TIME;
 	}
 }
@@ -244,6 +260,12 @@ void Tank::fireMissile(Point targetPosition) {
 		missile->setVelocity(velocity);
 
 		_scene._projectiles.push_back(missile);
+
+		float distance = Utils::distance(_scene._playerTank->getPosition(), _position);
+		float tmp = distance / MAP_SIZE;
+		float distanceVolume = 1 - tmp;
+
+		_scene.getSoundEngine().changeVolumeExplosion(distanceVolume*0.5);
 		_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y,
 				_position.z);
 

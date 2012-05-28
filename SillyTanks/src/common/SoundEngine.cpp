@@ -10,8 +10,9 @@
 #include <math.h>
 #include <iostream>
 
-SoundEngine::SoundEngine() :
-		_active(false) {
+SoundEngine::SoundEngine() {
+
+	_isActive = false;
 
 	ListenerPos[0] = 0.0;
 	ListenerPos[1] = 0.0;
@@ -39,17 +40,19 @@ SoundEngine::SoundEngine() :
 		//exit(1);
 	}
 
-	setListenerValues(ListenerPos[0], ListenerPos[0], ListenerPos[2]);
+	setListenerValues(ListenerPos[0],ListenerPos[0],ListenerPos[2]);
 
 }
 
-void SoundEngine::setListenerValues(float x, float y, float z) {
-	if (_active) {
-		float arr[3] = { x, y, z };
-		alListenerfv(AL_POSITION, arr);
-		alListenerfv(AL_VELOCITY, ListenerVel);
-		alListenerfv(AL_ORIENTATION, ListenerOri);
-	}
+void SoundEngine::setActive(bool value){
+	_isActive = value;
+}
+
+void SoundEngine::setListenerValues(float x, float y,float z) {
+	float arr[3] = {x,y,z};
+	alListenerfv(AL_POSITION, arr);
+	alListenerfv(AL_VELOCITY, ListenerVel);
+	alListenerfv(AL_ORIENTATION, ListenerOri);
 }
 
 void SoundEngine::KillALData() {
@@ -80,7 +83,7 @@ ALboolean SoundEngine::LoadALData() {
 	alutLoadWAVFile((ALbyte*) "resources/sounds/bomb2.wav", &format, &data,
 			&size, &freq);
 #else
-	alutLoadWAVFile((ALbyte*) "resources/sounds/bomb2.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*)"resources/sounds/bomb2.wav", &format, &data, &size, &freq, &loop);
 #endif
 
 	alBufferData(Buffers[EXPLOSION], format, data, size, freq);
@@ -90,7 +93,7 @@ ALboolean SoundEngine::LoadALData() {
 	alutLoadWAVFile((ALbyte*) "resources/sounds/Gun1.wav", &format, &data,
 			&size, &freq);
 #else
-	alutLoadWAVFile((ALbyte*) "resources/sounds/Gun1.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*)"resources/sounds/Gun1.wav", &format, &data, &size, &freq, &loop);
 #endif
 
 	alBufferData(Buffers[GUN], format, data, size, freq);
@@ -100,30 +103,39 @@ ALboolean SoundEngine::LoadALData() {
 	alutLoadWAVFile((ALbyte*) "resources/sounds/muzzleshot.wav", &format, &data,
 			&size, &freq);
 #else
-	alutLoadWAVFile((ALbyte*) "resources/sounds/muzzleshot.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*)"resources/sounds/muzzleshot.wav", &format, &data, &size, &freq, &loop);
 #endif
 	alBufferData(Buffers[MUZZLE], format, data, size, freq);
 	alutUnloadWAV(format, data, size, freq);
-
 
 #ifdef __APPLE__
 	alutLoadWAVFile((ALbyte*) "resources/sounds/raygun.wav", &format, &data,
 			&size, &freq);
 #else
-	alutLoadWAVFile((ALbyte*) "resources/sounds/raygun.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*)"resources/sounds/raygun.wav", &format, &data, &size, &freq, &loop);
 #endif
 	alBufferData(Buffers[RAYGUN], format, data, size, freq);
 	alutUnloadWAV(format, data, size, freq);
+
 
 #ifdef __APPLE__
 	alutLoadWAVFile((ALbyte*) "resources/sounds/enginerun.wav", &format, &data,
 			&size, &freq);
 #else
-	alutLoadWAVFile((ALbyte*) "resources/sounds/enginerun.wav", &format, &data, &size, &freq, &loop);
+	alutLoadWAVFile((ALbyte*)"resources/sounds/enginerun.wav", &format, &data, &size, &freq, &loop);
 #endif
 	alBufferData(Buffers[ENGINE], format, data, size, freq);
 	alutUnloadWAV(format, data, size, freq);
 
+
+#ifdef __APPLE__
+	alutLoadWAVFile((ALbyte*) "resources/sounds/enginerun.wav", &format, &data,
+			&size, &freq);
+#else
+	alutLoadWAVFile((ALbyte*)"resources/sounds/enginerun.wav", &format, &data, &size, &freq, &loop);
+#endif
+	alBufferData(Buffers[ENGINE2], format, data, size, freq);
+	alutUnloadWAV(format, data, size, freq);
 
 	// Bind buffers into audio sources.
 
@@ -154,13 +166,14 @@ ALboolean SoundEngine::LoadALData() {
 	alSourcefv(Sources[MUZZLE], AL_VELOCITY, SourcesVel[MUZZLE]);
 	alSourcei(Sources[MUZZLE], AL_LOOPING, AL_FALSE);
 
+
+
 	alSourcei(Sources[RAYGUN], AL_BUFFER, Buffers[RAYGUN]);
 	alSourcef(Sources[RAYGUN], AL_PITCH, 1.0f);
 	alSourcef(Sources[RAYGUN], AL_GAIN, 1.0f);
 	alSourcefv(Sources[RAYGUN], AL_POSITION, SourcesPos[RAYGUN]);
 	alSourcefv(Sources[RAYGUN], AL_VELOCITY, SourcesVel[RAYGUN]);
 	alSourcei(Sources[RAYGUN], AL_LOOPING, AL_FALSE);
-
 
 	alSourcei(Sources[ENGINE], AL_BUFFER, Buffers[ENGINE]);
 	alSourcef(Sources[ENGINE], AL_PITCH, 1.0f);
@@ -169,6 +182,14 @@ ALboolean SoundEngine::LoadALData() {
 	alSourcefv(Sources[ENGINE], AL_VELOCITY, SourcesVel[ENGINE]);
 	alSourcei(Sources[ENGINE], AL_LOOPING, AL_FALSE);
 
+	alSourcei(Sources[ENGINE2], AL_BUFFER, Buffers[ENGINE2]);
+	alSourcef(Sources[ENGINE2], AL_PITCH, 1.0f);
+	alSourcef(Sources[ENGINE2], AL_GAIN, 1.0f);
+	alSourcefv(Sources[ENGINE2], AL_POSITION, SourcesPos[ENGINE2]);
+	alSourcefv(Sources[ENGINE2], AL_VELOCITY, SourcesVel[ENGINE2]);
+	alSourcei(Sources[ENGINE2], AL_LOOPING, AL_FALSE);
+	float newVolume = 0.8f;
+	alSourcef(Sources[ENGINE2], AL_GAIN, newVolume);
 
 	// Do another error check and return.
 
@@ -180,89 +201,134 @@ ALboolean SoundEngine::LoadALData() {
 }
 
 void SoundEngine::playGunSound() {
-	if (_active) {
+
+	if(_isActive){
 		alSourcefv(Sources[GUN], AL_POSITION, SourcesPos[EXPLOSION]); // reset position of sound
 		alSourcePlay(Sources[GUN]);
 	}
+
+
 }
 
-void SoundEngine::playGunSoundAt(float x, float y, float z) {
-	if (_active) {
-		ALfloat arr[3] = { x, y, z };
+void SoundEngine::playGunSoundAt(float x, float y, float z){
+
+	if(_isActive){
+		ALfloat arr[3] = {x, y, z};
 		alSourcefv(Sources[GUN], AL_POSITION, arr);
 		alSourcePlay(Sources[GUN]);
 	}
+
 }
 
 void SoundEngine::playExplosionSound() {
-	if (_active) {
+
+	if(_isActive){
 		alSourcefv(Sources[EXPLOSION], AL_POSITION, SourcesPos[EXPLOSION]); // reset position of sound
 		alSourcePlay(Sources[EXPLOSION]);
 	}
 }
 
-void SoundEngine::playExplosionSoundAt(float x, float y, float z) {
-	if (_active) {
-		ALfloat arr[3] = { x, y, z };
+void SoundEngine::playExplosionSoundAt(float x, float y, float z){
+
+	if(_isActive){
+		ALfloat arr[3] = {x, y, z};
 		alSourcefv(Sources[EXPLOSION], AL_POSITION, arr);
 		alSourcePlay(Sources[EXPLOSION]);
 	}
 }
 
 void SoundEngine::playMuzzleSound() {
-	if (_active) {
+
+	if(_isActive){
 		alSourcefv(Sources[MUZZLE], AL_POSITION, SourcesPos[EXPLOSION]); //reset position of sound
 		alSourcePlay(Sources[MUZZLE]);
 	}
 }
 
-void SoundEngine::playMuzzleSoundAt(float x, float y, float z) {
-	if (_active) {
-		ALfloat arr[3] = { x, y, z };
+void SoundEngine::playMuzzleSoundAt(float x, float y, float z){
+
+	if(_isActive){
+		ALfloat arr[3] = {x, y, z};
 		alSourcefv(Sources[MUZZLE], AL_POSITION, arr);
 		alSourcePlay(Sources[MUZZLE]);
 	}
 }
 
-void SoundEngine::playRayGunSound(){
-	if (_active) {
-		alSourcefv(Sources[RAYGUN], AL_POSITION, SourcesPos[RAYGUN]); //reset position of sound
-		alSourcePlay(Sources[RAYGUN]);
-	}
-}
-
-
 void SoundEngine::playRayGunSoundAt(float x, float y, float z){
-	if (_active) {
-		ALfloat arr[3] = { x, y, z };
+
+	if(_isActive){
+		ALfloat arr[3] = {x, y, z};
 		alSourcefv(Sources[RAYGUN], AL_POSITION, arr);
 		alSourcePlay(Sources[RAYGUN]);
 	}
 }
 
-void SoundEngine::playEngineSoundAt(float x, float y , float z){
-	if(_active){
-		ALfloat arr[3] = {x,y,z};
+void SoundEngine::playEngineSoundAt(float x, float y, float z){
+
+	if(_isActive){
+		ALfloat arr[3] = {x, y, z};
 		alSourcefv(Sources[ENGINE], AL_POSITION, arr);
 		alSourcePlay(Sources[ENGINE]);
 	}
-
 }
 
-void SoundEngine::setActive(bool active)
-{
-	_active = active;
+void SoundEngine::playEngineSound() {
+
+	if(_isActive){
+		alSourcefv(Sources[ENGINE], AL_POSITION, SourcesPos[ENGINE]); //reset position of sound
+		alSourcePlay(Sources[ENGINE]);
+	}
+}
+
+void SoundEngine::playOtherEngineSoundAt(float x, float y, float z){
+
+	if(_isActive){
+		ALfloat arr[3] = {x, y, z};
+		alSourcefv(Sources[ENGINE2], AL_POSITION, arr);
+		alSourcePlay(Sources[ENGINE2]);
+	}
 }
 
 bool SoundEngine::isEngineSoundFinished(){
+	ALint value;
+	alGetSourcei(Sources[ENGINE], AL_SOURCE_STATE, &value);
 
-	ALint val;
-	alGetSourcei(Sources[ENGINE], AL_SOURCE_STATE, &val);
-
-	if(val == AL_STOPPED){
+	if(value == AL_STOPPED){
 		return true;
 	}else{
 		return false;
 	}
 }
+
+
+void SoundEngine::setEngineSoundPosition(float x, float y, float z){
+	ALfloat arr[3] = {x, y, z};
+	alSourcefv(Sources[ENGINE], AL_POSITION, arr);
+}
+
+void SoundEngine::changeVolumeMuzzle(float volume){
+	if(volume <= 0){
+		volume =0;
+	}
+
+	alSourcef(Sources[MUZZLE], AL_GAIN, volume);
+}
+
+void SoundEngine::changeVolumeExplosion(float volume){
+	if(volume <= 0){
+		volume =0;
+	}
+
+	alSourcef(Sources[EXPLOSION], AL_GAIN, volume);
+}
+
+void SoundEngine::changeVolumeEngine(float volume){
+	if(volume <= 0){
+		volume =0;
+	}
+
+	alSourcef(Sources[ENGINE], AL_GAIN, volume);
+}
+
+
 
