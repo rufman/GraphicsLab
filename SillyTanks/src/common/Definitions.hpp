@@ -153,7 +153,7 @@ namespace game_space {
 #define SMALLTOWER_MAXPOWER 1
 #define SMALLTOWER_QTYMISSILES 5
 #define SMALLTOWER_QTYROBOTS 5
-#define SMALLTANK_RELOADING_TIME 0.25
+#define SMALLTANK_RELOADING_TIME 10
 
 
 //############################
