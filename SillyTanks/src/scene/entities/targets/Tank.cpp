@@ -34,7 +34,7 @@
 namespace game_space {
 
 Tank::Tank(Scene &scene, bool isAIControlled) :
-		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(0), _isAIControlled(isAIControlled), _selectedWeapon(Tank::BULLET) {
+		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(0), _isAIControlled(isAIControlled), _selectedWeapon(Tank::BULLET),_reloadingTime(SMALLTANK_RELOADING_TIME) {
 
 	if (isAIControlled) {
 		//the ai must know the tank to be able to control it
@@ -111,6 +111,15 @@ void Tank::setDirection(float angle) {
 }
 
 void Tank::update(float seconds) {
+	if(_reloadingTime - seconds >= 0)
+	{
+		_reloadingTime -= seconds;
+	}
+	else
+	{
+		_reloadingTime = 0;
+	}
+
 	float averagedHeight = _scene.getTerrain().getHeight(Point(_position.x - 1, _position.y, _position.z - 1));
 	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x + 1, _position.y, _position.z - 1));
 	averagedHeight += _scene.getTerrain().getHeight(Point(_position.x, _position.y, _position.z + 1));
@@ -176,6 +185,8 @@ TankAI* Tank::getAI() const {
 }
 
 void Tank::fireBullet() {
+	if(_reloadingTime == 0)
+	{
 	Bullet* bullet = new Bullet(_scene);
 	bullet->setPosition(getMuzzlePosition());
 	float velocityScale = 30;
@@ -189,10 +200,12 @@ void Tank::fireBullet() {
 
 	_scene._projectiles.push_back(bullet);
 	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y, _position.z);
+	_reloadingTime = SMALLTANK_RELOADING_TIME;
+	}
 }
 
 void Tank::fireMissile(Point targetPosition) {
-	if (_amountOfMissiles > 0) {
+	if (_amountOfMissiles > 0 && _reloadingTime == 0) {
 		Missile* missile = new Missile(_scene);
 		missile->setPosition(getMuzzlePosition());
 		missile->setTargetPosition(targetPosition);
@@ -207,11 +220,12 @@ void Tank::fireMissile(Point targetPosition) {
 		_scene._projectiles.push_back(missile);
 		_scene.getSoundEngine().playExplosionSoundAt(_position.x, _position.y, _position.z);
 		_amountOfMissiles--;
+		_reloadingTime = SMALLTANK_RELOADING_TIME;
 	}
 }
 
 void Tank::fireRobot() {
-	if(_amountOfRobots > 0)
+	if(_amountOfRobots > 0 && _reloadingTime == 0)
 	{
 	Robot* robot = new Robot(_scene);
 	robot->setPosition(getMuzzlePosition());
@@ -246,6 +260,7 @@ void Tank::fireRobot() {
 	_scene._projectiles.push_back(robot);
 	_scene.getSoundEngine().playMuzzleSoundAt(_position.x, _position.y, _position.z);
 	_amountOfRobots--;
+	_reloadingTime = SMALLTANK_RELOADING_TIME;
 	}
 }
 

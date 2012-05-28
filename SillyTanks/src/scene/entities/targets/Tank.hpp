@@ -33,6 +33,9 @@ public:
 	enum SelectedWeapon {
 		BULLET, MISSILE, ROBOT
 	};
+
+	//delay the shooting a bit
+	float _reloadingTime;
 protected:
 	Turret* _turret;
 

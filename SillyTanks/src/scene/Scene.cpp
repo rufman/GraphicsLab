@@ -714,10 +714,10 @@ void Scene::drawOverlay() {
 	glVertex2f(margin*2.3, margin*1.2);
 
 	glTexCoord2f(_hudReloadbar->getWidth(), _hudReloadbar->getHeight());
-	glVertex2f(margin*2.3 + (_playerTank->_reloadingTime/SMALLTANK_RELOADING_TIME*statusBarBaseSize * ratio), margin*1.2);
+	glVertex2f(margin*2.3 + ((SMALLTANK_RELOADING_TIME-_playerTank->_reloadingTime)/SMALLTANK_RELOADING_TIME*statusBarBaseSize * ratio), margin*1.2);
 
 	glTexCoord2f(_hudReloadbar->getWidth(), 0);
-	glVertex2f(margin*2.3 + (_playerTank->_reloadingTime/SMALLTANK_RELOADING_TIME*statusBarBaseSize * ratio), statusBarBaseSize + margin*1.2);
+	glVertex2f(margin*2.3 + ((SMALLTANK_RELOADING_TIME-_playerTank->_reloadingTime)/SMALLTANK_RELOADING_TIME*statusBarBaseSize * ratio), statusBarBaseSize + margin*1.2);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin*2.3, statusBarBaseSize + margin*1.2);

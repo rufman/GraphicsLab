@@ -32,8 +32,6 @@ public:
 	Target* _currentTarget;
 	std::vector<Point>* _path;
 
-	//delay the shooting a bit
-	float reloadTime;
 public:
 	TankAI(Scene &scene,MessageSubBus* aiMessages);
 	virtual ~TankAI();
@@ -65,7 +63,7 @@ public:
 
 	//helper methods
 	void followPath();
-	void aimAndFire();
+	void aim();
 };
 
 }

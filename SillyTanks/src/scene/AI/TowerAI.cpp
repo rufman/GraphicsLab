@@ -20,7 +20,7 @@ namespace game_space {
 
 TowerAI::TowerAI(Scene &scene, MessageSubBus* aiMessages) :
 		_strategy(TowerAI::EXPLORE), _aiMessages(aiMessages), _currentTarget(
-				NULL), _scene(scene) {
+				NULL), _scene(scene),reloadTime(SMALLTOWER_RELOADING_TIME) {
 
 }
 
@@ -130,7 +130,7 @@ void TowerAI::explore() {
 void TowerAI::hunt() {
 	if (reloadTime < 0) {
 		aimAndFire();
-		reloadTime = SMALLTANK_RELOADING_TIME;
+		reloadTime = SMALLTOWER_RELOADING_TIME;
 	}
 }
 

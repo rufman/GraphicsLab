@@ -28,8 +28,6 @@ TankAI::~TankAI() {
 
 void TankAI::brainTick(float seconds) {
 
-	reloadTime -= seconds;
-
 	//listen closely and watch out for enemies.
 	sense();
 
@@ -142,9 +140,11 @@ void TankAI::hunt() {
 		followPath();
 	}
 
-	if (reloadTime < 0) {
-		aimAndFire();
-		reloadTime = SMALLTANK_RELOADING_TIME;
+	aim();
+	if (_tank->_reloadingTime == 0) {
+		//shoot
+		_tank->fireBullet();
+		_tank->_reloadingTime = SMALLTANK_RELOADING_TIME;
 	}
 }
 
@@ -199,7 +199,7 @@ void TankAI::followPath() {
 	_tank->move(SMALLTANK_SPEED);
 }
 
-void TankAI::aimAndFire() {
+void TankAI::aim() {
 	if (_currentTarget != NULL) {
 		//get the direction of the enemy tank and point towards it (aim azimuth)
 
@@ -225,9 +225,6 @@ void TankAI::aimAndFire() {
 			}
 		}
 		std::cout << "Tank elevation "<< _tank->getElevation() << "\n";
-
-		//shoot
-		_tank->fireBullet();
 	}
 }
 }
