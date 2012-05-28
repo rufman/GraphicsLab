@@ -460,6 +460,11 @@ std::vector<Point>* Terrain::findPath(Point startPoint, Point goalPoint) {
 	Node* start = getNodeFromPoint(startPoint);
 	Node* goal = getNodeFromPoint(goalPoint);
 
+	//if start or end point could not be found on the map we can not find a path
+	if(start == NULL || goal == NULL)
+	{
+		return NULL;
+	}
 	start->_pathState = Node::STARTPOINT;
 	goal->_pathState = Node::ENDPOINT;
 
