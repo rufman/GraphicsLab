@@ -222,9 +222,10 @@ void Water::draw() const {
 	glPolygonMode(GL_FRONT_AND_BACK, _renderingParameters.drawMode == RenderingParameters::WIREFRAME ? GL_LINE : GL_FILL);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
+	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glColor4f(1.0f,1.0f,1.0f,0.5f);         // Full Brightness, 50% Alpha ( NEW )
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);       // Blending Function For Translucency Based On Source Alpha
+	glBlendFunc (GL_ONE, GL_ONE);     // Blending Function For Translucency Based On Source Alpha
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -308,7 +309,7 @@ void Water::draw() const {
 	_texture.setActive(false);
 	glPopMatrix();
 	glDisable(GL_BLEND);
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 }
 
 /**

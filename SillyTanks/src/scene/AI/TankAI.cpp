@@ -219,7 +219,7 @@ void TankAI::aim() {
 			if(angle != -1)
 			{
 				_tank->setElevation(angle);
-				_tank->setShootingPower(i/10);
+				_tank->setShootingPower(i/40);
 				break;
 			}
 		}

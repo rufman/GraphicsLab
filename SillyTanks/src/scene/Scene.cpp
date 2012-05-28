@@ -192,7 +192,7 @@ void Scene::initialize() {
 	//##############################
 	//initialize scene components
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
-	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
+	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 150 * 4, 150 * 4, 50, 50);
 	_water = new Water(*this, parameters.waterHeight, 150 * 4, 150 * 4);
 
 	_hudClockFace = new TGATexture(HUD_CLOCK_TEXTURE);
@@ -341,7 +341,7 @@ void Scene::update(float seconds) {
 	}
 
 //detect collisions
-	std::vector<Target*> targets = _targets;
+	/*std::vector<Target*> targets = _targets;
 	for (std::vector<Target*>::iterator targetIter = targets.begin(); targetIter != targets.end(); ++targetIter) {
 
 		Target* currentTarget = (*targetIter);
@@ -379,7 +379,7 @@ void Scene::update(float seconds) {
 
 		}
 
-	}
+	}*/
 
 	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile *projectile = *projectileIter;
@@ -516,11 +516,14 @@ void Scene::drawScene() {
 	if (_shaderActive) {
 		_shadingEngine.clearShaders();
 	}
+
 	// Draw the sky
 	glTranslatef(0, -80, 0);
 	_skyDome->setRenderingParameters(_renderingParameters);
 	_skyDome->draw();
 	glTranslatef(0, 80, 0);
+
+
 
 	//###############################
 	// Terrain
@@ -534,6 +537,7 @@ void Scene::drawScene() {
 	//draw water
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
+
 
 	//################################
 	// The targets should use toon shading as well
