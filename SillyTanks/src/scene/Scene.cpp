@@ -369,10 +369,12 @@ void Scene::onPaint() {
 
 	//capture a picture for the map
 	// Draw mirror image
-	//drawMap();
+	drawMap();
+
+
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
-	//_hudMap->capture(0, 0, width, height);
+	_hudMap.capture(0, 0, width, height);
 	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -768,27 +770,27 @@ void Scene::drawOverlay() {
 
 	//map
 	glPushMatrix();
-	/*_hudMap->setActive(true);
+	_hudMap.setActive(true);
 	 glBegin(GL_POLYGON);
 	 glColor3f(1, 1, 1);
 
 	 float mapBaseSize = height / 6;
-	 ratio = (float) _hudMap->getWidth() / (float) _hudMap->getHeight();
+	 ratio = (float) _hudMap.getWidth() / (float) _hudMap.getHeight();
 
-	 glTexCoord2f(0, selectedWeapon->getHeight());
+	 glTexCoord2f(0, _hudMap.getHeight());
 	 glVertex2f(width - margin - mapBaseSize * ratio, height-margin);
 
-	 glTexCoord2f(_hudMap->getWidth(), _hudMap->getHeight());
-	 glVertex2f(width - margin, margin);
+	 glTexCoord2f(_hudMap.getWidth(), _hudMap.getHeight());
+	 glVertex2f(width - margin, height-margin);
 
-	 glTexCoord2f(_hudMap->getWidth(), 0);
-	 glVertex2f(width - margin, height - mapBaseSize -margin);
+	 glTexCoord2f(_hudMap.getWidth(), 0);
+	 glVertex2f(width - margin, height-mapBaseSize-margin);
 
 	 glTexCoord2f(0, 0);
 	 glVertex2f(width - margin - mapBaseSize * ratio, height - mapBaseSize - margin);
 	 glEnd();
 
-	 _hudMap->setActive(false);*/
+	 _hudMap.setActive(false);
 	glPopMatrix();
 
 
@@ -1168,10 +1170,10 @@ void Scene::drawMap() {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	int mapZoom = 30;
+	int mapZoom = 50;
 	Vector3D muzzleDirection = Vector3D(0, 0, 1);
-	Utils::rotate(-_playerTank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
-	gluLookAt(_playerTank->getPosition().x, _playerTank->getPosition().y + mapZoom, _playerTank->getPosition().z, _playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z, muzzleDirection.x, muzzleDirection.y, muzzleDirection.z);
+	Vector3D tankDirection = Utils::rotate(-_playerTank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
+	gluLookAt(_playerTank->getPosition().x, _playerTank->getPosition().y + mapZoom, _playerTank->getPosition().z, _playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z, tankDirection.x,tankDirection.y,tankDirection.z);//muzzleDirection.x, muzzleDirection.y, muzzleDirection.z);
 
 	// Set scene parameters
 	glEnable(GL_DEPTH_TEST);
