@@ -1211,7 +1211,7 @@ void Scene::drawMap() {
 	glLoadIdentity();
 	int mapZoom = 50;
 	Vector3D muzzleDirection = Vector3D(0, 0, 1);
-	Vector3D tankDirection = Utils::rotate(_playerTank->getAzimuth(), muzzleDirection, Vector3D(0, 1, 0));
+	Vector3D tankDirection = Utils::rotate(_playerTank->getAzimuth()+180, muzzleDirection, Vector3D(0, 1, 0));
 	gluLookAt(_playerTank->getPosition().x, _playerTank->getPosition().y + mapZoom, _playerTank->getPosition().z, _playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z, tankDirection.x, tankDirection.y, tankDirection.z); //muzzleDirection.x, muzzleDirection.y, muzzleDirection.z);
 
 	// Set scene parameters
