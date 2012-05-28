@@ -347,6 +347,32 @@ void Scene::update(float seconds) {
 			++projectileIter;
 		}
 	}
+
+
+	//detect collisions
+	for(std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end();
+			++targetIter){
+
+		Target* currentTarget = (*targetIter);
+
+		for(std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();
+				++projectileIter){
+
+			Projectile* currentProjectile = (*projectileIter);
+
+
+			//FIXME: Program crashes after several iterations if this code piece is active
+			/*
+			if(currentTarget->checkHit(currentProjectile)){
+				std::cout << "HIT" << std::endl;
+			}else{
+				std::cout << "NO HIT" << std::endl;
+			}
+			*/
+
+		}
+
+	}
 }
 
 void Scene::onPaint() {
