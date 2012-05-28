@@ -103,10 +103,7 @@ void Tank::move(float speed) {
 	_speed = speed;
 
 	if(_scene.getSoundEngine().isEngineSoundFinished()){
-		std::cout << "STOPPED" << std::endl;
 		_scene.getSoundEngine().playEngineSoundAt(_position.x, _position.y, _position.z);
-	}else{
-		std::cout << "NOT STOPPED" << std::endl;
 	}
 
 
