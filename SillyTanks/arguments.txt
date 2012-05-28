@@ -1,2 +1,2 @@
 Arguments are known be working with eclipse debugger gdb
--sky resources/GFX/textures/sky.tga -terrain resources/GFX/levels/scrat -w 10
+-sky resources/GFX/textures/sky.tga -terrain resources/GFX/levels/scrat -w 15
