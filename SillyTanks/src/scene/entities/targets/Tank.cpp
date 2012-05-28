@@ -34,7 +34,8 @@
 namespace game_space {
 
 Tank::Tank(Scene &scene, bool isAIControlled) :
-		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(0), _isAIControlled(isAIControlled), _selectedWeapon(Tank::BULLET),_reloadingTime(SMALLTANK_RELOADING_TIME) {
+		Target(scene, Target::TANK), _velocity(Vector3D(0.0, 0.0, 1.0)), _direction(0), _isAIControlled(isAIControlled),_firstRun(true), _selectedWeapon(Tank::BULLET),_reloadingTime(SMALLTANK_RELOADING_TIME) {
+
 
 	if (isAIControlled) {
 		//the ai must know the tank to be able to control it
@@ -46,6 +47,7 @@ Tank::Tank(Scene &scene, bool isAIControlled) :
 	_tankSmokeParticleEngine = new ParticleEngine<Smoke>(_scene.getCurrentlyActiveCamera(), 20);
 	_tankSmokeParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
 	_tankSmokeParticleEngine->setActive(true);
+
 }
 
 Tank::~Tank() {
@@ -99,6 +101,15 @@ void Tank::setAzimuth(float azimuth) {
 
 void Tank::move(float speed) {
 	_speed = speed;
+
+	if(_scene.getSoundEngine().isEngineSoundFinished()){
+		std::cout << "STOPPED" << std::endl;
+		_scene.getSoundEngine().playEngineSoundAt(_position.x, _position.y, _position.z);
+	}else{
+		std::cout << "NOT STOPPED" << std::endl;
+	}
+
+
 }
 
 float Tank::getDirection() const {
@@ -111,6 +122,8 @@ void Tank::setDirection(float angle) {
 }
 
 void Tank::update(float seconds) {
+
+
 	if(_reloadingTime - seconds >= 0)
 	{
 		_reloadingTime -= seconds;
@@ -154,6 +167,7 @@ void Tank::update(float seconds) {
 
 	_tankSmokeParticleEngine->setStartPosition(_position);
 	_tankSmokeParticleEngine->update(seconds);
+
 }
 
 LookAt Tank::getLookAt() const {
@@ -185,6 +199,13 @@ TankAI* Tank::getAI() const {
 }
 
 void Tank::fireBullet() {
+
+	if(_firstRun){
+		_scene.getSoundEngine().playEngineSoundAt(_position.x, _position.y, _position.z);
+		_firstRun = false;
+	}
+
+
 	if(_reloadingTime == 0)
 	{
 	Bullet* bullet = new Bullet(_scene);

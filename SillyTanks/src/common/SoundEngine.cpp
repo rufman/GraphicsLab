@@ -167,7 +167,7 @@ ALboolean SoundEngine::LoadALData() {
 	alSourcef(Sources[ENGINE], AL_GAIN, 1.0f);
 	alSourcefv(Sources[ENGINE], AL_POSITION, SourcesPos[ENGINE]);
 	alSourcefv(Sources[ENGINE], AL_VELOCITY, SourcesVel[ENGINE]);
-	alSourcei(Sources[ENGINE], AL_LOOPING, AL_TRUE);
+	alSourcei(Sources[ENGINE], AL_LOOPING, AL_FALSE);
 
 
 	// Do another error check and return.

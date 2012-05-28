@@ -53,6 +53,7 @@ protected:
 	int _targetId;
 	TankAI* _controllingAI;
 	bool _isAIControlled;
+	bool _firstRun;
 
 	SelectedWeapon _selectedWeapon;
 
