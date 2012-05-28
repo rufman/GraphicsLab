@@ -1125,7 +1125,7 @@ MessageBus* Scene::getMessageBus() {
 }
 
 /**
- * Water mirroring part
+ * Water environment mapping part
  */
 
 void Scene::drawWaterImage() {
@@ -1151,7 +1151,7 @@ void Scene::drawWaterImage() {
 }
 
 /**
- * Water mirroring part
+ * Water environment mapping part
  */
 
 void Scene::drawMap() {
