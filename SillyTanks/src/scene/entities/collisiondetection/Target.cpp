@@ -7,6 +7,21 @@
 namespace game_space {
 Target::Target(Scene &scene, TargetType type) :
 		Drawable(scene), _targetType(type), _position(Point(0, 0, 0)) {
+	reset();
+}
+
+bool Target::collidesWithOtherTarget(Target* target) {
+	return false;
+}
+
+BoundingBox* Target::getBoundingBox() {
+	return _boundingBox;
+
+}
+void Target::draw() const {
+
+}
+void Target::reset() {
 	switch (_targetType) {
 	case TANK: {
 		_life = SMALLTANK_LIFE;
@@ -25,21 +40,6 @@ Target::Target(Scene &scene, TargetType type) :
 		break;
 	}
 	}
-}
-
-bool Target::collidesWithOtherTarget(Target* target) {
-	return false;
-}
-
-BoundingBox* Target::getBoundingBox() {
-	return _boundingBox;
-
-}
-void Target::draw() const {
-
-}
-void Target::reset() {
-
 }
 
 void Target::setPosition(Point position) {
@@ -82,31 +82,20 @@ uint Target::getQtyRobots() {
 	return _amountOfRobots;
 }
 
-void Target::doDamage(float damage)
-{
-	if(_shield > 0)
-	{
-		if(_shield-damage > 0)
-		{
-		_shield -= damage;
-		}
-		else
-		{
+void Target::doDamage(float damage) {
+	if (_shield > 0) {
+		if (_shield - damage > 0) {
+			_shield -= damage;
+		} else {
 			damage -= _shield;
 			_shield = 0;
 			_life -= damage;
 
-
 		}
-	}
-	else
-	{
-		if(_life - damage > 0)
-		{
-		_life -= damage;
-		}
-		else
-		{
+	} else {
+		if (_life - damage > 0) {
+			_life -= damage;
+		} else {
 			_life = 0;
 		}
 	}

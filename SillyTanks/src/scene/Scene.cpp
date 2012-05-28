@@ -264,6 +264,18 @@ void Scene::reset() {
 			++projectileIter;
 		}
 	}
+
+	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end();++targetIter) {
+			Target* target = *targetIter;
+			if (target->_targetType == Target::TANK) {
+				Tank* tank = static_cast<Tank*>(target);
+				tank->reset();
+			} else if (target->_targetType == Target::TOWER) {
+				Tower * tower = static_cast<Tower*>(target);
+				tower->reset();
+			}
+		}
+
 }
 
 void Scene::update(float seconds) {
@@ -295,8 +307,7 @@ void Scene::update(float seconds) {
 				tank->getAI()->brainTick(seconds);
 			}
 			if (tank->_life < 0) {
-				targetIter = _targets.erase(targetIter);
-				delete tank;
+				tank->reset();
 			} else {
 				++targetIter;
 			}
@@ -307,8 +318,7 @@ void Scene::update(float seconds) {
 				tower->getAI()->brainTick(seconds);
 			}
 			if (tower->_life < 0) {
-				targetIter = _targets.erase(targetIter);
-				delete tower;
+				tower->reset();
 			} else {
 				++targetIter;
 			}

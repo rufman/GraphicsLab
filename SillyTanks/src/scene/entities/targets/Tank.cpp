@@ -59,6 +59,7 @@ void Tank::reset() {
 	_position = _scene.getTerrain().getRandomPointOnMap();
 	_velocity = Vector3D(0.0, 0.0, 1.0);
 	_direction = 0;
+	Target::reset();
 }
 
 void Tank::draw() const {
