@@ -115,7 +115,14 @@ ALboolean SoundEngine::LoadALData() {
 	alBufferData(Buffers[RAYGUN], format, data, size, freq);
 	alutUnloadWAV(format, data, size, freq);
 
-
+#ifdef __APPLE__
+	alutLoadWAVFile((ALbyte*) "resources/sounds/enginerun.wav", &format, &data,
+			&size, &freq);
+#else
+	alutLoadWAVFile((ALbyte*) "resources/sounds/enginerun.wav", &format, &data, &size, &freq, &loop);
+#endif
+	alBufferData(Buffers[ENGINE], format, data, size, freq);
+	alutUnloadWAV(format, data, size, freq);
 
 
 	// Bind buffers into audio sources.
@@ -154,6 +161,13 @@ ALboolean SoundEngine::LoadALData() {
 	alSourcefv(Sources[RAYGUN], AL_VELOCITY, SourcesVel[RAYGUN]);
 	alSourcei(Sources[RAYGUN], AL_LOOPING, AL_FALSE);
 
+
+	alSourcei(Sources[ENGINE], AL_BUFFER, Buffers[ENGINE]);
+	alSourcef(Sources[ENGINE], AL_PITCH, 1.0f);
+	alSourcef(Sources[ENGINE], AL_GAIN, 1.0f);
+	alSourcefv(Sources[ENGINE], AL_POSITION, SourcesPos[ENGINE]);
+	alSourcefv(Sources[ENGINE], AL_VELOCITY, SourcesVel[ENGINE]);
+	alSourcei(Sources[ENGINE], AL_LOOPING, AL_TRUE);
 
 
 	// Do another error check and return.
@@ -226,8 +240,29 @@ void SoundEngine::playRayGunSoundAt(float x, float y, float z){
 	}
 }
 
+void SoundEngine::playEngineSoundAt(float x, float y , float z){
+	if(_active){
+		ALfloat arr[3] = {x,y,z};
+		alSourcefv(Sources[ENGINE], AL_POSITION, arr);
+		alSourcePlay(Sources[ENGINE]);
+	}
+
+}
+
 void SoundEngine::setActive(bool active)
 {
 	_active = active;
+}
+
+bool SoundEngine::isEngineSoundFinished(){
+
+	ALint val;
+	alGetSourcei(Sources[ENGINE], AL_SOURCE_STATE, &val);
+
+	if(val == AL_STOPPED){
+		return true;
+	}else{
+		return false;
+	}
 }
 

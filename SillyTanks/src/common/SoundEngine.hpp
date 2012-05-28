@@ -9,16 +9,17 @@
 #define SOUNDENGINE_HPP_
 
 // Maximum data buffers we will need.
-#define NUM_BUFFERS 4
+#define NUM_BUFFERS 5
 
 // Maximum emissions we will need.
-#define NUM_SOURCES 4
+#define NUM_SOURCES 5
 
 // These index the buffers and sources.
 #define EXPLOSION 0
 #define GUN   1
 #define MUZZLE   2
 #define RAYGUN  3
+#define ENGINE  4
 
 #include <stdlib.h>
 #include <math.h>
@@ -48,10 +49,13 @@ public:
 
 	void playRayGunSoundAt(float x, float y, float z);
 
+	void playEngineSoundAt(float x, float y, float z);
 
 	void setListenerValues(float x, float y, float z);
 
 	void setActive(bool active);
+
+	bool isEngineSoundFinished();
 
 private:
 
