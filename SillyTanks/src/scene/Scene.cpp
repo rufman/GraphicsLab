@@ -23,7 +23,6 @@
 #include "SkyDome.hpp"
 #include "Terrain.hpp"
 #include "Water.hpp"
-#include "Mirror.hpp"
 #include "Fog.hpp"
 
 //illumination includes
@@ -1284,6 +1283,8 @@ void Scene::drawMap() {
 		}
 	}
 }
+
+
 
 Water* Scene::getWater() {
 	return _water;
