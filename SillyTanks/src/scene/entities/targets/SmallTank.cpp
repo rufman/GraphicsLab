@@ -186,6 +186,11 @@ void SmallTank::setNeighbors() const {
 
 bool Target::checkHit(Projectile* projectile_) {
 
+	//you can not shoot yourself
+	if(projectile_->_projectileOwner == this)
+	{
+		return false;
+	}
 	Point projectilePosition = projectile_->getPosition();
 
 	//max and min to store the highest and smallest value temporary

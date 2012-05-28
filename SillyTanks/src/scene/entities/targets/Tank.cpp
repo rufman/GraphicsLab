@@ -207,6 +207,7 @@ void Tank::fireBullet() {
 	{
 	Bullet* bullet = new Bullet(_scene);
 	bullet->setPosition(getMuzzlePosition());
+	bullet->_projectileOwner = this;
 	float velocityScale = 30;
 
 	Vector3D velocity(-velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::sin(Utils::toRadian(-getAzimuth())), velocityScale * getShootingPower() * std::sin(Utils::toRadian(getElevation())), -velocityScale * getShootingPower() * std::cos(Utils::toRadian(getElevation())) * std::cos(Utils::toRadian(-getAzimuth())));
@@ -226,6 +227,7 @@ void Tank::fireMissile(Point targetPosition) {
 	if (_amountOfMissiles > 0 && _reloadingTime == 0) {
 		Missile* missile = new Missile(_scene);
 		missile->setPosition(getMuzzlePosition());
+		missile->_projectileOwner = this;
 		missile->setTargetPosition(targetPosition);
 
 		Vector3D velocity(
@@ -255,6 +257,7 @@ void Tank::fireRobot() {
 	{
 	Robot* robot = new Robot(_scene);
 	robot->setPosition(getMuzzlePosition());
+	robot->_projectileOwner = this;
 
 	int anim = rand() % 3;
 	std::string animFile;

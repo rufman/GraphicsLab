@@ -60,7 +60,7 @@ namespace game_space {
 #define TURRET_MODEL "resources/GFX/models/turret.ply"
 #define SMALLTANK_SPEED 8
 #define SMALLTANK_VISION_DISTANCE 120
-#define SMALLTANK_ESPACE_DISTANCE 80
+#define SMALLTANK_ESCAPE_DISTANCE 80
 
 #define SHOOTING_DISTANCE 30
 
@@ -145,7 +145,7 @@ namespace game_space {
 #define SMALLTANK_MAXPOWER 1
 #define SMALLTANK_QTYMISSILES 5
 #define SMALLTANK_QTYROBOTS 5
-#define SMALLTOWER_RELOADING_TIME 3
+#define SMALLTANK_RELOADING_TIME 1
 
 
 #define SMALLTOWER_LIFE 200
@@ -153,7 +153,8 @@ namespace game_space {
 #define SMALLTOWER_MAXPOWER 1
 #define SMALLTOWER_QTYMISSILES 5
 #define SMALLTOWER_QTYROBOTS 5
-#define SMALLTANK_RELOADING_TIME 10
+#define SMALLTOWER_RELOADING_TIME 3
+
 
 
 //############################

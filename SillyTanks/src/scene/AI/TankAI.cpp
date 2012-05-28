@@ -155,7 +155,7 @@ void TankAI::escape() {
 		Point randomGoal;
 		do {
 			randomGoal = _scene.getTerrain().getRandomPointOnMap();
-		} while (Utils::distance(_currentTarget->getPosition(), randomGoal) > SMALLTANK_ESPACE_DISTANCE);
+		} while (Utils::distance(_currentTarget->getPosition(), randomGoal) > SMALLTANK_ESCAPE_DISTANCE);
 		_path = _scene.getTerrain().findPath(_tank->getPosition(), randomGoal);
 	}
 

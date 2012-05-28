@@ -194,7 +194,7 @@ void Scene::initialize() {
 	//initialize scene components
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
 	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 100 * 4, 100 * 4, 50, 50);
-	_water = new Water(*this, parameters.waterHeight, 100 * 4, 100 * 4);
+	_water = new Water(*this, parameters.waterHeight, 150 * 4, 150 * 4);
 
 	_hudClockFace = new TGATexture(HUD_CLOCK_TEXTURE);
 	_hudBullet = new TGATexture(HUD_BULLET_TEXTURE);
@@ -213,7 +213,7 @@ void Scene::initialize() {
 	_targets.push_back(_playerTank);
 
 	//add some AI tanks to the scene
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 10; i++) {
 		Tank* tank = new SmallTank(*this, true);
 		tank->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tank);
@@ -475,16 +475,7 @@ void Scene::drawScene() {
 	// Draw scene
 	glMatrixMode(GL_MODELVIEW);
 
-	//#############################
-	// Sky dome and water
-	//The Sky dome and water should not use toon shading
-	if (_shaderActive) {
-		_shadingEngine.clearShaders();
-	}
 
-	// Draw the sky
-	_skyDome->setRenderingParameters(_renderingParameters);
-	_skyDome->draw();
 
 	//draw water
 	_water->setRenderingParameters(_renderingParameters);
@@ -500,6 +491,20 @@ void Scene::drawScene() {
 	// Draw the terrain
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
+
+
+	//#############################
+	// Sky dome and water
+	//The Sky dome and water should not use toon shading
+	if (_shaderActive) {
+		_shadingEngine.clearShaders();
+	}
+
+	// Draw the sky
+	glTranslatef(0,-80,0);
+	_skyDome->setRenderingParameters(_renderingParameters);
+	_skyDome->draw();
+	glTranslatef(0,80,0);
 
 	//################################
 	// The targets should use toon shading as well
