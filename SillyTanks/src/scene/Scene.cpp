@@ -82,9 +82,14 @@ void VMatMult(GLmatrix16f M, Point v) {
 	v.w = res[3]; // Homogenous Coordinate
 }
 
-Scene::Scene(Window &window) :
-		_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(false), _fogActive(false), _shaderActive(false), _soundActive(false), _shadersAlreadyCompiled(false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)), _hudClockFace(NULL), _hudBullet(
-				NULL), _hudMissile(NULL), _hudRobot(NULL), _hudStatusBars(NULL), _rotation(0) {
+Scene::Scene(Window &window) :_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(
+				NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(
+				false), _fogActive(false), _shaderActive(false), _soundActive(
+				false), _shadersAlreadyCompiled(false), _chooseTarget(false), _sunLight(
+				NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _fog(NULL), _targetChooser(
+				Point(0, 0, 0)), _hudClockFace(NULL), _hudBullet(NULL), _hudMissile(
+				NULL), _hudRobot(NULL), _hudStatusBars(NULL) {
+
 
 	//create the soundengine
 	_soundEngine = SoundEngine();
@@ -105,7 +110,8 @@ Scene::~Scene() {
 	delete _fog;
 
 	// delete lights
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		delete light;
 	}
@@ -120,13 +126,15 @@ Scene::~Scene() {
 
 	//delete targets
 	delete _playerTank;
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		delete target;
 	}
 
 	//delete projectiles
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile* projectile = *projectileIter;
 		delete projectile;
 	}
@@ -176,13 +184,17 @@ void Scene::initialize() {
 	glutSetCursor(GLUT_CURSOR_NONE);
 
 	//move the pointer to the middle of the panel
-	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
+	glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2,
+			glutGet(GLUT_WINDOW_HEIGHT) / 2);
 
 	Application &application = Application::getInstance();
 	const Application::Parameters &parameters = application.getParameters();
 
-	glClearColor(parameters.fogRed, parameters.fogGreen, parameters.fogBlue, 0.0);
-	_fog = new Fog(parameters.fogDensity, parameters.fogStart, parameters.fogEnd, parameters.fogRed, parameters.fogGreen, parameters.fogBlue);
+	glClearColor(parameters.fogRed, parameters.fogGreen, parameters.fogBlue,
+			0.0);
+	_fog = new Fog(parameters.fogDensity, parameters.fogStart,
+			parameters.fogEnd, parameters.fogRed, parameters.fogGreen,
+			parameters.fogBlue);
 
 	// Initialize cameras
 	_overlayCam = new Camera2D(*this);
@@ -193,7 +205,8 @@ void Scene::initialize() {
 	//##############################
 	//initialize scene components
 	_skyDome = new SkyDome(*this, parameters.skyTextureFile, 500, 50, 50);
-	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 150 * 4, 150 * 4, 50, 50);
+	_terrain = new Terrain(*this, parameters.terrainFilePrefix, 150 * 4,
+			150 * 4, 50, 50);
 	_water = new Water(*this, parameters.waterHeight, 150 * 4, 150 * 4);
 
 	_hudClockFace = new TGATexture(HUD_CLOCK_TEXTURE);
@@ -245,7 +258,8 @@ void Scene::reset() {
 	_skyDome->reset();
 	_water->reset();
 
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
@@ -266,16 +280,17 @@ void Scene::reset() {
 		}
 	}
 
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end();++targetIter) {
-			Target* target = *targetIter;
-			if (target->_targetType == Target::TANK) {
-				Tank* tank = static_cast<Tank*>(target);
-				tank->reset();
-			} else if (target->_targetType == Target::TOWER) {
-				Tower * tower = static_cast<Tower*>(target);
-				tower->reset();
-			}
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); ++targetIter) {
+		Target* target = *targetIter;
+		if (target->_targetType == Target::TANK) {
+			Tank* tank = static_cast<Tank*>(target);
+			tank->reset();
+		} else if (target->_targetType == Target::TOWER) {
+			Tower * tower = static_cast<Tower*>(target);
+			tower->reset();
 		}
+	}
 
 }
 
@@ -288,7 +303,8 @@ void Scene::update(float seconds) {
 	}
 
 	//soundengine listener position update
-	_soundEngine.setListenerValues(_playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z);
+	_soundEngine.setListenerValues(_playerTank->getPosition().x,
+			_playerTank->getPosition().y, _playerTank->getPosition().z);
 
 	handleKeyboardInput();
 
@@ -300,7 +316,8 @@ void Scene::update(float seconds) {
 		_targetChooser.y = _terrain->getHeight(_targetChooser);
 	}
 
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end();) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end();) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
@@ -327,7 +344,9 @@ void Scene::update(float seconds) {
 		}
 	}
 
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end(); ++projectileIter) {
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();
+			++projectileIter) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
@@ -344,13 +363,16 @@ void Scene::update(float seconds) {
 
 //detect collisions
 	std::vector<Target*> targets = _targets;
-	for (std::vector<Target*>::iterator targetIter = targets.begin(); targetIter != targets.end(); ++targetIter) {
+	for (std::vector<Target*>::iterator targetIter = targets.begin();
+			targetIter != targets.end(); ++targetIter) {
 
 		Target* currentTarget = (*targetIter);
 
 		std::vector<Projectile*> projectiles = _projectiles;
 
-		for (std::vector<Projectile*>::iterator projectileIter = projectiles.begin(); projectileIter != projectiles.end(); ++projectileIter) {
+		for (std::vector<Projectile*>::iterator projectileIter =
+				projectiles.begin(); projectileIter != projectiles.end();
+				++projectileIter) {
 
 			Projectile* currentProjectile = (*projectileIter);
 
@@ -382,15 +404,20 @@ void Scene::update(float seconds) {
 
 	}
 
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
 
 			if (bullet->isDetonated()) {
 				projectileIter = _projectiles.erase(projectileIter);
-				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-					_messageBus->sendMessageTo(DetonationSoundMessage(bullet->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+				for (std::vector<Target*>::iterator targetIter =
+						_targets.begin(); targetIter != _targets.end();
+						targetIter++) {
+					_messageBus->sendMessageTo(
+							DetonationSoundMessage(bullet->getPosition(),
+									BULLET_DETONATIONSTRENGTH), *targetIter);
 				}
 				delete bullet;
 			} else {
@@ -400,8 +427,12 @@ void Scene::update(float seconds) {
 			Missile* missile = static_cast<Missile*>(projectile);
 			if (missile->isDetonated()) {
 				projectileIter = _projectiles.erase(projectileIter);
-				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-					_messageBus->sendMessageTo(DetonationSoundMessage(missile->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+				for (std::vector<Target*>::iterator targetIter =
+						_targets.begin(); targetIter != _targets.end();
+						targetIter++) {
+					_messageBus->sendMessageTo(
+							DetonationSoundMessage(missile->getPosition(),
+									BULLET_DETONATIONSTRENGTH), *targetIter);
 				}
 				delete missile;
 			} else {
@@ -412,8 +443,12 @@ void Scene::update(float seconds) {
 
 			if (robot->isDetonated()) {
 				projectileIter = _projectiles.erase(projectileIter);
-				for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
-					_messageBus->sendMessageTo(DetonationSoundMessage(robot->getPosition(), BULLET_DETONATIONSTRENGTH), *targetIter);
+				for (std::vector<Target*>::iterator targetIter =
+						_targets.begin(); targetIter != _targets.end();
+						targetIter++) {
+					_messageBus->sendMessageTo(
+							DetonationSoundMessage(robot->getPosition(),
+									BULLET_DETONATIONSTRENGTH), *targetIter);
 				}
 				delete robot;
 			} else {
@@ -453,7 +488,13 @@ void Scene::onPaint() {
 	_hudMap.capture(0, 0, width, height);
 	// Clear the screen
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
+	if (_mirrorActive) {
+		drawMirrorScene();
+		_mirror.capture(0, 0, width, height);
+		glClear(
+				GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT
+						| GL_STENCIL_BUFFER_BIT);
+	}
 	// Draw screen
 	drawScene();
 
@@ -477,15 +518,33 @@ void Scene::drawScene() {
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_currentlyActiveCamera = _overviewCam;
 
-		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(), Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
-		Vector3D velocity(-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::sin(Utils::toRadian(-_playerTank->getAzimuth())), _playerTank->getShootingPower() * std::sin(Utils::toRadian(_playerTank->getElevation())),
-				-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::cos(Utils::toRadian(-_playerTank->getAzimuth())));
+		Vector3D _tankDirection = Utils::rotate(_playerTank->getAzimuth(),
+				Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
+		Vector3D velocity(
+				-_playerTank->getShootingPower()
+						* std::cos(Utils::toRadian(_playerTank->getElevation()))
+						* std::sin(Utils::toRadian(-_playerTank->getAzimuth())),
+				_playerTank->getShootingPower()
+						* std::sin(
+								Utils::toRadian(_playerTank->getElevation())),
+				-_playerTank->getShootingPower()
+						* std::cos(Utils::toRadian(_playerTank->getElevation()))
+						* std::cos(
+								Utils::toRadian(-_playerTank->getAzimuth())));
 
 		Point lookTo;
 		lookTo.x = _playerTank->getPosition().x + velocity.x * 50;
 		lookTo.y = _playerTank->getPosition().y + velocity.y * 50;
 		lookTo.z = _playerTank->getPosition().z + velocity.z * 50;
-		_currentlyActiveCamera->setLookAt(LookAt(Point(_playerTank->getPosition().x + _tankDirection.x * 50, _playerTank->getPosition().y + 50, _playerTank->getPosition().z + _tankDirection.z * 50), lookTo, Vector3D(0, 1, 0)));
+		_currentlyActiveCamera->setLookAt(
+				LookAt(
+						Point(
+								_playerTank->getPosition().x
+										+ _tankDirection.x * 50,
+								_playerTank->getPosition().y + 50,
+								_playerTank->getPosition().z
+										+ _tankDirection.z * 50), lookTo,
+						Vector3D(0, 1, 0)));
 	}
 
 	// OpenGL camera
@@ -499,7 +558,8 @@ void Scene::drawScene() {
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}
@@ -524,8 +584,6 @@ void Scene::drawScene() {
 	_skyDome->draw();
 	glTranslatef(0, 80, 0);
 
-
-
 	//###############################
 	// Terrain
 	if (_shaderActive) {
@@ -539,7 +597,6 @@ void Scene::drawScene() {
 	_water->setRenderingParameters(_renderingParameters);
 	_water->draw();
 
-
 	glDisable(GL_BLEND);
 	//################################
 	// The targets should use toon shading as well
@@ -548,7 +605,8 @@ void Scene::drawScene() {
 	}
 
 	//Draw the targets
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		if (target->_targetType == Target::TANK) {
 			Tank* tank = static_cast<Tank*>(target);
@@ -573,7 +631,9 @@ void Scene::drawScene() {
 	if (_shaderActive) {
 		_shadingEngine.clearShaders();
 	}
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end(); ++projectileIter) {
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();
+			++projectileIter) {
 		Projectile *projectile = *projectileIter;
 		if (projectile->_projectileType == Projectile::BULLET) {
 			Bullet* bullet = static_cast<Bullet*>(projectile);
@@ -586,14 +646,16 @@ void Scene::drawScene() {
 			missile->draw();
 		}
 	}
-	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end(); ++projectileIter) {
-			Projectile *projectile = *projectileIter;
-			if (projectile->_projectileType == Projectile::ROBOT) {
-				Robot* robot = static_cast<Robot*>(projectile);
-				robot->setRenderingParameters(_renderingParameters);
-				robot->draw();
-			}
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();
+			++projectileIter) {
+		Projectile *projectile = *projectileIter;
+		if (projectile->_projectileType == Projectile::ROBOT) {
+			Robot* robot = static_cast<Robot*>(projectile);
+			robot->setRenderingParameters(_renderingParameters);
+			robot->draw();
 		}
+	}
 
 	//##################################
 	// Shadowing
@@ -634,6 +696,136 @@ void Scene::drawScene() {
 		}
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_fog->remove();
+	}
+}
+
+void Scene::drawMirrorScene() {
+
+	int width = glutGet(GLUT_WINDOW_WIDTH);
+	int height = glutGet(GLUT_WINDOW_HEIGHT);
+
+	LookAt lookAt = _playerTank->getLookAt();
+	lookAt.to.x = -lookAt.to.x;
+	lookAt.to.z = -lookAt.to.z;
+	lookAt.to.y = lookAt.from.y;
+
+	_currentlyActiveCamera = _tankCam;
+	_currentlyActiveCamera->setLookAt(lookAt);
+
+	// OpenGL camera
+	_currentlyActiveCamera->setViewport(Viewport(0, 0, width, height));
+	_currentlyActiveCamera->applyViewport();
+	_currentlyActiveCamera->applyProjection();
+	_currentlyActiveCamera->applyModelview();
+
+	// Set scene parameters
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glDisable(GL_BLEND);
+
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
+		Light *light = *lightIter;
+		light->apply();
+	}
+
+	// draw sun light
+	_sunLight->setPosition(_skyDome->getSunPosition());
+	_sunLight->apply();
+
+	// Draw scene
+	glMatrixMode(GL_MODELVIEW);
+
+	//#############################
+	// Sky dome and water
+	//The Sky dome and water should not use toon shading
+	if (_shaderActive) {
+		_shadingEngine.clearShaders();
+	}
+
+	// Draw the sky
+	glTranslatef(0, -80, 0);
+	_skyDome->setRenderingParameters(_renderingParameters);
+	_skyDome->draw();
+	glTranslatef(0, 80, 0);
+
+	//###############################
+	// Terrain
+	if (_shaderActive) {
+		_shadingEngine.clearShaders();
+	}
+	// Draw the terrain
+	_terrain->setRenderingParameters(_renderingParameters);
+	_terrain->draw();
+
+	//draw water
+	_water->setRenderingParameters(_renderingParameters);
+	_water->draw();
+
+	glDisable(GL_BLEND);
+	//################################
+	// The targets should use toon shading as well
+	if (_shaderActive) {
+		_shadingEngine.applyToonShader();
+	}
+
+	//Draw the targets
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
+		Target* target = *targetIter;
+		if (target->_targetType == Target::TANK) {
+			Tank* tank = static_cast<Tank*>(target);
+			tank->draw();
+		}
+		if (target->_targetType == Target::TOWER) {
+			Tower* tower = static_cast<Tower*>(target);
+			tower->draw();
+		}
+	}
+
+	//##################################
+	// Projectiles
+	//the projectiles should not use toon shading
+	if (_shaderActive) {
+		_shadingEngine.clearShaders();
+	}
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();
+			++projectileIter) {
+		Projectile *projectile = *projectileIter;
+		if (projectile->_projectileType == Projectile::BULLET) {
+			Bullet* bullet = static_cast<Bullet*>(projectile);
+			bullet->setRenderingParameters(_renderingParameters);
+			bullet->draw();
+		}
+		if (projectile->_projectileType == Projectile::MISSILE) {
+			Missile* missile = static_cast<Missile*>(projectile);
+			missile->setRenderingParameters(_renderingParameters);
+			missile->draw();
+		}
+	}
+	for (std::vector<Projectile*>::iterator projectileIter =
+			_projectiles.begin(); projectileIter != _projectiles.end();
+			++projectileIter) {
+		Projectile *projectile = *projectileIter;
+		if (projectile->_projectileType == Projectile::ROBOT) {
+			Robot* robot = static_cast<Robot*>(projectile);
+			robot->setRenderingParameters(_renderingParameters);
+			robot->draw();
+		}
+	}
+
+	glEnable(GL_LIGHTING); // Enable Lighting
+	glDepthMask(GL_TRUE); // Enable Depth Mask
+
+	//############################
+	// Fog
+	if (_cameraMode == TANK_CAM) {
+		if (_fogActive) {
+			_fog->apply();
+		} else {
+			_fog->remove();
+		}
 	}
 }
 
@@ -702,7 +894,8 @@ void Scene::drawOverlay() {
 	glColor3f(1, 1, 1);
 
 	float statusBarsBaseSize = height / 6;
-	float ratio = (float) _hudStatusBars->getWidth() / (float) _hudStatusBars->getHeight();
+	float ratio = (float) _hudStatusBars->getWidth()
+			/ (float) _hudStatusBars->getHeight();
 
 	glTexCoord2f(0, _hudStatusBars->getHeight());
 	glVertex2f(margin, margin);
@@ -711,7 +904,8 @@ void Scene::drawOverlay() {
 	glVertex2f(margin + statusBarsBaseSize * ratio, margin);
 
 	glTexCoord2f(_hudStatusBars->getWidth(), 0);
-	glVertex2f(margin + statusBarsBaseSize * ratio, statusBarsBaseSize + margin);
+	glVertex2f(margin + statusBarsBaseSize * ratio,
+			statusBarsBaseSize + margin);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin, statusBarsBaseSize + margin);
@@ -731,10 +925,16 @@ void Scene::drawOverlay() {
 	glVertex2f(margin * 2.3, margin * 5.2);
 
 	glTexCoord2f(_hudLifebar->getWidth(), _hudLifebar->getHeight());
-	glVertex2f(margin * 2.3 + (_playerTank->_life / SMALLTANK_LIFE * statusBarBaseSize * ratio), margin * 5.2);
+	glVertex2f(
+			margin * 2.3
+					+ (_playerTank->_life / SMALLTANK_LIFE * statusBarBaseSize
+							* ratio), margin * 5.2);
 
 	glTexCoord2f(_hudLifebar->getWidth(), 0);
-	glVertex2f(margin * 2.3 + (_playerTank->_life / SMALLTANK_LIFE * statusBarBaseSize * ratio), statusBarBaseSize + margin * 5.2);
+	glVertex2f(
+			margin * 2.3
+					+ (_playerTank->_life / SMALLTANK_LIFE * statusBarBaseSize
+							* ratio), statusBarBaseSize + margin * 5.2);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin * 2.3, statusBarBaseSize + margin * 5.2);
@@ -748,16 +948,24 @@ void Scene::drawOverlay() {
 	glBegin(GL_POLYGON);
 	glColor3f(1, 1, 1);
 
-	ratio = (float) _hudShieldbar->getWidth() / (float) _hudShieldbar->getHeight();
+	ratio = (float) _hudShieldbar->getWidth()
+			/ (float) _hudShieldbar->getHeight();
 
 	glTexCoord2f(0, _hudShieldbar->getHeight());
 	glVertex2f(margin * 2.3, margin * 4);
 
 	glTexCoord2f(_hudShieldbar->getWidth(), _hudShieldbar->getHeight());
-	glVertex2f(margin * 2.3 + (_playerTank->_shield / SMALLTANK_SHIELD * statusBarBaseSize * ratio), margin * 4);
+	glVertex2f(
+			margin * 2.3
+					+ (_playerTank->_shield / SMALLTANK_SHIELD
+							* statusBarBaseSize * ratio), margin * 4);
 
 	glTexCoord2f(_hudShieldbar->getWidth(), 0);
-	glVertex2f(margin * 2.3 + (_playerTank->_shield / SMALLTANK_SHIELD * statusBarBaseSize * ratio), statusBarBaseSize + margin * 4);
+	glVertex2f(
+			margin * 2.3
+					+ (_playerTank->_shield / SMALLTANK_SHIELD
+							* statusBarBaseSize * ratio),
+			statusBarBaseSize + margin * 4);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin * 2.3, statusBarBaseSize + margin * 4);
@@ -771,16 +979,24 @@ void Scene::drawOverlay() {
 	glBegin(GL_POLYGON);
 	glColor3f(1, 1, 1);
 
-	ratio = (float) _hudEnergybar->getWidth() / (float) _hudEnergybar->getHeight();
+	ratio = (float) _hudEnergybar->getWidth()
+			/ (float) _hudEnergybar->getHeight();
 
 	glTexCoord2f(0, _hudEnergybar->getHeight());
 	glVertex2f(margin * 2.3, margin * 2.4);
 
 	glTexCoord2f(_hudEnergybar->getWidth(), _hudEnergybar->getHeight());
-	glVertex2f(margin * 2.3 + (_playerTank->getShootingPower() / SMALLTANK_MAXPOWER * statusBarBaseSize * ratio), margin * 2.4);
+	glVertex2f(
+			margin * 2.3
+					+ (_playerTank->getShootingPower() / SMALLTANK_MAXPOWER
+							* statusBarBaseSize * ratio), margin * 2.4);
 
 	glTexCoord2f(_hudEnergybar->getWidth(), 0);
-	glVertex2f(margin * 2.3 + (_playerTank->getShootingPower() / SMALLTANK_MAXPOWER * statusBarBaseSize * ratio), statusBarBaseSize + margin * 2.4);
+	glVertex2f(
+			margin * 2.3
+					+ (_playerTank->getShootingPower() / SMALLTANK_MAXPOWER
+							* statusBarBaseSize * ratio),
+			statusBarBaseSize + margin * 2.4);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin * 2.3, statusBarBaseSize + margin * 2.4);
@@ -794,16 +1010,25 @@ void Scene::drawOverlay() {
 	glBegin(GL_POLYGON);
 	glColor3f(1, 1, 1);
 
-	ratio = (float) _hudReloadbar->getWidth() / (float) _hudReloadbar->getHeight();
+	ratio = (float) _hudReloadbar->getWidth()
+			/ (float) _hudReloadbar->getHeight();
 
 	glTexCoord2f(0, _hudReloadbar->getHeight());
 	glVertex2f(margin * 2.3, margin * 1.2);
 
 	glTexCoord2f(_hudReloadbar->getWidth(), _hudReloadbar->getHeight());
-	glVertex2f(margin * 2.3 + ((SMALLTANK_RELOADING_TIME - _playerTank->_reloadingTime) / SMALLTANK_RELOADING_TIME * statusBarBaseSize * ratio), margin * 1.2);
+	glVertex2f(
+			margin * 2.3
+					+ ((SMALLTANK_RELOADING_TIME - _playerTank->_reloadingTime)
+							/ SMALLTANK_RELOADING_TIME * statusBarBaseSize
+							* ratio), margin * 1.2);
 
 	glTexCoord2f(_hudReloadbar->getWidth(), 0);
-	glVertex2f(margin * 2.3 + ((SMALLTANK_RELOADING_TIME - _playerTank->_reloadingTime) / SMALLTANK_RELOADING_TIME * statusBarBaseSize * ratio), statusBarBaseSize + margin * 1.2);
+	glVertex2f(
+			margin * 2.3
+					+ ((SMALLTANK_RELOADING_TIME - _playerTank->_reloadingTime)
+							/ SMALLTANK_RELOADING_TIME * statusBarBaseSize
+							* ratio), statusBarBaseSize + margin * 1.2);
 
 	glTexCoord2f(0, 0);
 	glVertex2f(margin * 2.3, statusBarBaseSize + margin * 1.2);
@@ -834,7 +1059,8 @@ void Scene::drawOverlay() {
 	glColor3f(1, 1, 1);
 
 	float selectedWeaponBaseSize = height / 6;
-	ratio = (float) selectedWeapon->getWidth() / (float) selectedWeapon->getHeight();
+	ratio = (float) selectedWeapon->getWidth()
+			/ (float) selectedWeapon->getHeight();
 
 	glTexCoord2f(0, selectedWeapon->getHeight());
 	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, margin);
@@ -846,7 +1072,8 @@ void Scene::drawOverlay() {
 	glVertex2f(width - margin, selectedWeaponBaseSize + margin);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio,
+			selectedWeaponBaseSize + margin);
 	glEnd();
 
 	selectedWeapon->setActive(false);
@@ -902,11 +1129,40 @@ void Scene::drawOverlay() {
 	glVertex2f(width - margin, height - mapBaseSize - margin);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(width - margin - mapBaseSize * ratio, height - mapBaseSize - margin);
+	glVertex2f(width - margin - mapBaseSize * ratio,
+			height - mapBaseSize - margin);
 	glEnd();
 
 	_hudMap.setActive(false);
 	glPopMatrix();
+
+	//Mirror
+	if (_mirrorActive) {
+		glPushMatrix();
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		_mirror.setActive(true);
+		glBegin(GL_POLYGON);
+		glColor3f(1, 1, 1);
+
+		ratio = (float) _mirror.getWidth() / (float) _mirror.getHeight();
+
+		glTexCoord2f(0, _mirror.getHeight());
+		glVertex2f(width / 2, height - margin);
+
+		glTexCoord2f(_mirror.getWidth(), _mirror.getHeight());
+		glVertex2f(width / 2 + mapBaseSize * ratio, height - margin);
+
+		glTexCoord2f(_mirror.getWidth(), 0);
+		glVertex2f(width / 2 + mapBaseSize * ratio,
+				height - mapBaseSize - margin);
+
+		glTexCoord2f(0, 0);
+		glVertex2f(width / 2, height - mapBaseSize - margin);
+		glEnd();
+
+		_mirror.setActive(false);
+		glPopMatrix();
+	}
 
 
 	std::stringstream bulletTextStr;
@@ -932,20 +1188,30 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudBullet->getWidth() / (float) _hudBullet->getHeight();
 
 	glTexCoord2f(0, _hudBullet->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
+	glVertex2f(
+			width - margin - selectedWeaponBaseSize * ratio
+					- iconBasesize * ratio,
+			selectedWeaponBaseSize - iconBasesize + margin);
 
 	glTexCoord2f(_hudBullet->getWidth(), _hudBullet->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio,
+			selectedWeaponBaseSize - iconBasesize + margin);
 
 	glTexCoord2f(_hudBullet->getWidth(), 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio,
+			selectedWeaponBaseSize + margin);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize + margin);
+	glVertex2f(
+			width - margin - selectedWeaponBaseSize * ratio
+					- iconBasesize * ratio, selectedWeaponBaseSize + margin);
 	glEnd();
 	_hudBullet->setActive(false);
 
-	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * 1.7 * ratio, selectedWeaponBaseSize - iconBasesize / 2 + margin, 0);
+	glTranslatef(
+			width - margin - selectedWeaponBaseSize * ratio
+					- iconBasesize * 1.7 * ratio,
+			selectedWeaponBaseSize - iconBasesize / 2 + margin, 0);
 	bulletText.draw();
 	glPopMatrix();
 
@@ -958,19 +1224,30 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudMissile->getWidth() / (float) _hudMissile->getHeight();
 
 	glTexCoord2f(0, _hudMissile->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
+	glVertex2f(
+			width - margin - selectedWeaponBaseSize * ratio
+					- iconBasesize * ratio,
+			selectedWeaponBaseSize - iconBasesize * 2 + margin);
 
 	glTexCoord2f(_hudMissile->getWidth(), _hudMissile->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio,
+			selectedWeaponBaseSize - iconBasesize * 2 + margin);
 
 	glTexCoord2f(_hudMissile->getWidth(), 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio,
+			selectedWeaponBaseSize - iconBasesize + margin);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize + margin);
+	glVertex2f(
+			width - margin - selectedWeaponBaseSize * ratio
+					- iconBasesize * ratio,
+			selectedWeaponBaseSize - iconBasesize + margin);
 	glEnd();
 	_hudMissile->setActive(false);
-	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * 1.7 * ratio, selectedWeaponBaseSize - iconBasesize * 3 / 2 + margin, 0);
+	glTranslatef(
+			width - margin - selectedWeaponBaseSize * ratio
+					- iconBasesize * 1.7 * ratio,
+			selectedWeaponBaseSize - iconBasesize * 3 / 2 + margin, 0);
 	missileText.draw();
 	glPopMatrix();
 
@@ -983,19 +1260,30 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudRobot->getWidth() / (float) _hudRobot->getHeight();
 
 	glTexCoord2f(0, _hudRobot->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize * 3 + margin);
+	glVertex2f(
+			width - margin - selectedWeaponBaseSize * ratio
+					- iconBasesize * ratio,
+			selectedWeaponBaseSize - iconBasesize * 3 + margin);
 
 	glTexCoord2f(_hudRobot->getWidth(), _hudRobot->getHeight());
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize * 3 + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio,
+			selectedWeaponBaseSize - iconBasesize * 3 + margin);
 
 	glTexCoord2f(_hudRobot->getWidth(), 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
+	glVertex2f(width - margin - selectedWeaponBaseSize * ratio,
+			selectedWeaponBaseSize - iconBasesize * 2 + margin);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * ratio, selectedWeaponBaseSize - iconBasesize * 2 + margin);
+	glVertex2f(
+			width - margin - selectedWeaponBaseSize * ratio
+					- iconBasesize * ratio,
+			selectedWeaponBaseSize - iconBasesize * 2 + margin);
 	glEnd();
 	_hudRobot->setActive(false);
-	glTranslatef(width - margin - selectedWeaponBaseSize * ratio - iconBasesize * 1.7 * ratio, selectedWeaponBaseSize - iconBasesize * 5 / 2 + margin, 0);
+	glTranslatef(
+			width - margin - selectedWeaponBaseSize * ratio
+					- iconBasesize * 1.7 * ratio,
+			selectedWeaponBaseSize - iconBasesize * 5 / 2 + margin, 0);
 	robotText.draw();
 	glPopMatrix();
 
@@ -1065,7 +1353,8 @@ void Scene::handleKeyboardInput() {
 	if (_window.keyHit('4')) {
 		if (_renderingParameters.normalMode == RenderingParameters::OFF) {
 			_renderingParameters.normalMode = RenderingParameters::VERTEX;
-		} else if (_renderingParameters.normalMode == RenderingParameters::VERTEX) {
+		} else if (_renderingParameters.normalMode
+				== RenderingParameters::VERTEX) {
 			_renderingParameters.normalMode = RenderingParameters::TRIANGLE;
 		} else {
 			_renderingParameters.normalMode = RenderingParameters::OFF;
@@ -1091,6 +1380,10 @@ void Scene::handleKeyboardInput() {
 	if (_window.keyHit('8')) {
 		_soundActive = !_soundActive;
 		_soundEngine.setActive(_soundActive);
+	}
+
+	if (_window.keyHit('9')) {
+		_mirrorActive = !_mirrorActive;
 	}
 }
 
@@ -1175,13 +1468,20 @@ void Scene::onMousePassiveMove(int x, int y) {
 	}
 
 	if (!_chooseTarget) {
-		_playerTank->setElevation(_playerTank->getElevation() - yMove * MOUSE_SENSITIVITY);
-		_playerTank->setAzimuth(_playerTank->getAzimuth() + xMove * MOUSE_SENSITIVITY);
+		_playerTank->setElevation(
+				_playerTank->getElevation() - yMove * MOUSE_SENSITIVITY);
+		_playerTank->setAzimuth(
+				_playerTank->getAzimuth() + xMove * MOUSE_SENSITIVITY);
 	} else {
-		Vector3D _tankDirection = Utils::rotate(-_playerTank->getAzimuth(), Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
+		Vector3D _tankDirection = Utils::rotate(-_playerTank->getAzimuth(),
+				Vector3D(0.0, 0.0, 1.0), Vector3D(0.0, 1.0, 0.0));
 		Vector3D _cross = Utils::cross(_tankDirection, Vector3D(0, 1, 0));
-		_targetChooser.x = _targetChooser.x - _tankDirection.x * yMove * MOUSE_SENSITIVITY / 2 - _cross.x * xMove * MOUSE_SENSITIVITY / 2;
-		_targetChooser.z = _targetChooser.z + _tankDirection.z * yMove * MOUSE_SENSITIVITY / 2 + _cross.z * xMove * MOUSE_SENSITIVITY / 2;
+		_targetChooser.x = _targetChooser.x
+				- _tankDirection.x * yMove * MOUSE_SENSITIVITY / 2
+				- _cross.x * xMove * MOUSE_SENSITIVITY / 2;
+		_targetChooser.z = _targetChooser.z
+				+ _tankDirection.z * yMove * MOUSE_SENSITIVITY / 2
+				+ _cross.z * xMove * MOUSE_SENSITIVITY / 2;
 	}
 	glutPostRedisplay();
 }
@@ -1199,7 +1499,12 @@ void Scene::onIdle() {
 }
 
 void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
-	Point from(radius * std::cos(Utils::toRadian(elevation)) * std::sin(Utils::toRadian(azimuth)) * -1, radius * std::sin(Utils::toRadian(elevation)), radius * std::cos(Utils::toRadian(elevation)) * std::cos(Utils::toRadian(azimuth)) * -1);
+	Point from(
+			radius * std::cos(Utils::toRadian(elevation))
+					* std::sin(Utils::toRadian(azimuth)) * -1,
+			radius * std::sin(Utils::toRadian(elevation)),
+			radius * std::cos(Utils::toRadian(elevation))
+					* std::cos(Utils::toRadian(azimuth)) * -1);
 
 	Vector3D up(0.0, 1.0, 0.0);
 	Vector3D dir(-from.x, -from.y, -from.z);
@@ -1210,7 +1515,8 @@ void Scene::FreeCameraParameters::applyToCamera(Camera3D &camera) {
 	Vector3D upMove = up;
 	upMove *= moveY;
 
-	Point newFrom(from.x + normalMove.x + upMove.x, from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
+	Point newFrom(from.x + normalMove.x + upMove.x,
+			from.y + normalMove.y + upMove.y, from.z + normalMove.z + upMove.z);
 	Point to(newFrom.x - from.x, newFrom.y - from.y, newFrom.z - from.z);
 
 	camera.setLookAt(LookAt(newFrom, to, up));
@@ -1260,7 +1566,8 @@ void Scene::drawWaterImage() {
 	glEnable(GL_LIGHTING);
 	glDisable(GL_BLEND);
 
-	for (LightVector::iterator lightIter = _lights.begin(); lightIter != _lights.end(); ++lightIter) {
+	for (LightVector::iterator lightIter = _lights.begin();
+			lightIter != _lights.end(); ++lightIter) {
 		Light *light = *lightIter;
 		light->apply();
 	}
@@ -1292,8 +1599,13 @@ void Scene::drawMap() {
 	glLoadIdentity();
 	int mapZoom = 50;
 	Vector3D muzzleDirection = Vector3D(0, 0, 1);
-	Vector3D tankDirection = Utils::rotate(_playerTank->getAzimuth() + 180, muzzleDirection, Vector3D(0, 1, 0));
-	gluLookAt(_playerTank->getPosition().x, _playerTank->getPosition().y + mapZoom, _playerTank->getPosition().z, _playerTank->getPosition().x, _playerTank->getPosition().y, _playerTank->getPosition().z, tankDirection.x, tankDirection.y, tankDirection.z); //muzzleDirection.x, muzzleDirection.y, muzzleDirection.z);
+	Vector3D tankDirection = Utils::rotate(_playerTank->getAzimuth() + 180,
+			muzzleDirection, Vector3D(0, 1, 0));
+	gluLookAt(_playerTank->getPosition().x,
+			_playerTank->getPosition().y + mapZoom,
+			_playerTank->getPosition().z, _playerTank->getPosition().x,
+			_playerTank->getPosition().y, _playerTank->getPosition().z,
+			tankDirection.x, tankDirection.y, tankDirection.z); //muzzleDirection.x, muzzleDirection.y, muzzleDirection.z);
 
 	// Set scene parameters
 	glEnable(GL_DEPTH_TEST);
@@ -1303,7 +1615,8 @@ void Scene::drawMap() {
 	// Draw scene
 	glMatrixMode(GL_MODELVIEW);
 
-	for (std::vector<Target*>::iterator targetIter = _targets.begin(); targetIter != _targets.end(); targetIter++) {
+	for (std::vector<Target*>::iterator targetIter = _targets.begin();
+			targetIter != _targets.end(); targetIter++) {
 		Target* target = *targetIter;
 		if(target->_targetType == Target::TANK)
 		{
@@ -1318,6 +1631,7 @@ void Scene::drawMap() {
 		}
 		else
 		{
+
 			glPushMatrix();
 			glColor3f(0, 0.4, 0);
 			glTranslatef(target->getPosition().x, target->getPosition().y, target->getPosition().z);
@@ -1326,8 +1640,6 @@ void Scene::drawMap() {
 		}
 	}
 }
-
-
 
 Water* Scene::getWater() {
 	return _water;

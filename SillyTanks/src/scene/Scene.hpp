@@ -114,6 +114,7 @@ private:
 	void drawWaterImage();
 	void drawMap();
 	void drawScene();
+	void drawMirrorScene();
 	void drawOverlay();
 
 	void handleKeyboardInput();
@@ -171,6 +172,7 @@ private:
 	bool _fogActive;
 	bool _shaderActive;
 	bool _soundActive;
+	bool _mirrorActive;
 
 	bool _shadersAlreadyCompiled;
 
@@ -214,7 +216,8 @@ private:
 	TGATexture* _hudReloadbar;
 	ScreenTexture _hudMap;
 	TGATexture* _hudRadar;
-	float _rotation;
+
+	ScreenTexture _mirror;
 
 
 }; // class Scene
