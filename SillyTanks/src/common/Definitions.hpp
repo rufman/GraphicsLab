@@ -176,6 +176,7 @@ namespace game_space {
 #define HUD_ENERGYBAR_TEXTURE "resources/GFX/textures/HUD/energybar.tga"
 #define HUD_RELOADBAR_TEXTURE "resources/GFX/textures/HUD/reloadbar.tga"
 #define HUD_CLOCK_TEXTURE "resources/GFX/textures/HUD/clockface.tga"
+#define HUD_RADAR_TEXTURE "resources/GFX/textures/HUD/radar.tga"
 
 
 #endif // GAME_DEFS_HPP

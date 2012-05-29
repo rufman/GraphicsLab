@@ -84,7 +84,7 @@ void VMatMult(GLmatrix16f M, Point v) {
 
 Scene::Scene(Window &window) :
 		_window(window), _firstUpdate(true), _cameraMode(TANK_CAM), _overlayCam(NULL), _tankCam(NULL), _overviewCam(NULL), _shadowsActive(false), _fogActive(false), _shaderActive(false), _soundActive(false), _shadersAlreadyCompiled(false), _chooseTarget(false), _sunLight(NULL), _skyDome(NULL), _terrain(NULL), _water(NULL), _fog(NULL), _targetChooser(Point(0, 0, 0)), _hudClockFace(NULL), _hudBullet(
-				NULL), _hudMissile(NULL), _hudRobot(NULL), _hudStatusBars(NULL) {
+				NULL), _hudMissile(NULL), _hudRobot(NULL), _hudStatusBars(NULL), _rotation(0) {
 
 	//create the soundengine
 	_soundEngine = SoundEngine();
@@ -205,6 +205,7 @@ void Scene::initialize() {
 	_hudShieldbar = new TGATexture(HUD_SHIELDBAR_TEXTURE);
 	_hudEnergybar = new TGATexture(HUD_ENERGYBAR_TEXTURE);
 	_hudReloadbar = new TGATexture(HUD_RELOADBAR_TEXTURE);
+	_hudRadar = new TGATexture(HUD_RADAR_TEXTURE);
 
 	//create human player's tank
 	_playerTank = new SmallTank(*this, false);
@@ -851,13 +852,44 @@ void Scene::drawOverlay() {
 	selectedWeapon->setActive(false);
 	glPopMatrix();
 
+	glPushMatrix();
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		_hudRadar->setActive(true);
+		glBegin(GL_POLYGON);
+
+
+		float texBaseSize = height / 5;
+
+		float left =1.85;
+		float up = 0.95;
+
+		ratio = (float) _hudRadar->getWidth() / (float) _hudRadar->getHeight();
+
+		glTexCoord2f(0, _hudRadar->getHeight());
+		glVertex2f(width - margin*left - texBaseSize * ratio, height - margin*up);
+
+		glTexCoord2f(_hudRadar->getWidth(), _hudRadar->getHeight());
+		glVertex2f(width - margin*left, height - margin*up);
+
+		glTexCoord2f(_hudRadar->getWidth(), 0);
+		glVertex2f(width - margin*left, height - texBaseSize - margin*up);
+
+		glTexCoord2f(0, 0);
+		glVertex2f(width - margin*left - texBaseSize * ratio, height - texBaseSize - margin*up);
+		glEnd();
+
+		_hudRadar->setActive(false);
+	glPopMatrix();
+
 	//map
 	glPushMatrix();
+	glBlendFunc(GL_ONE,GL_ONE);
 	_hudMap.setActive(true);
 	glBegin(GL_POLYGON);
-	glColor3f(1, 1, 1);
 
 	float mapBaseSize = height / 6;
+
+
 	ratio = (float) _hudMap.getWidth() / (float) _hudMap.getHeight();
 
 	glTexCoord2f(0, _hudMap.getHeight());
@@ -876,6 +908,7 @@ void Scene::drawOverlay() {
 	_hudMap.setActive(false);
 	glPopMatrix();
 
+
 	std::stringstream bulletTextStr;
 	bulletTextStr << "inf.";
 	std::stringstream missileTextStr;
@@ -886,6 +919,8 @@ void Scene::drawOverlay() {
 	TextBox missileText(*this, missileTextStr.str().c_str(), 17, 1);
 	TextBox robotText(*this, robotTextStr.str().c_str(), 17, 1);
 
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//number of other weapons
 	glPushMatrix();
 	//bullet
@@ -1273,7 +1308,7 @@ void Scene::drawMap() {
 		if(target->_targetType == Target::TANK)
 		{
 		glPushMatrix();
-		glColor3f(0, 1, 0);
+		glColor3f(0, 0.4, 0);
 		glTranslatef(target->getPosition().x, target->getPosition().y, target->getPosition().z);
 		glutSolidSphere(0.5, 12, 12);
 		glRotatef(90,1,0,0);
@@ -1284,7 +1319,7 @@ void Scene::drawMap() {
 		else
 		{
 			glPushMatrix();
-			glColor3f(0, 1, 0);
+			glColor3f(0, 0.4, 0);
 			glTranslatef(target->getPosition().x, target->getPosition().y, target->getPosition().z);
 			glutSolidCube(5);
 			glPopMatrix();

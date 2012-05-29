@@ -213,6 +213,8 @@ private:
 	TGATexture* _hudEnergybar;
 	TGATexture* _hudReloadbar;
 	ScreenTexture _hudMap;
+	TGATexture* _hudRadar;
+	float _rotation;
 
 
 }; // class Scene
