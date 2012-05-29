@@ -127,7 +127,7 @@ float Utils::getElevation(Point startPosition, Point targetPosition, float veloc
 	}
 
 
-	return abs(Utils::toDegree(atan(a1)));
+	return std::abs(Utils::toDegree(atan(a1)));
 
 }
 }
