@@ -19,7 +19,7 @@ Explosion::~Explosion() {
 void Explosion::resetParticle(Point startPosition,Vector3D startAcceleration)
 {
 	timeToLive = 1.0f; // Give it new life
-	fade = 0.5;// fade value
+	fade = 1.0f;// fade value
 	x = startPosition.x;
 	y = startPosition.y;
 	z = startPosition.z;
@@ -32,7 +32,7 @@ void Explosion::resetParticle(Point startPosition,Vector3D startAcceleration)
 	r = 0;
 	g = 1.0;
 	b = 0;
-	size = 40;
+	size = 3;
 }
 
 void Explosion::update(float seconds) {

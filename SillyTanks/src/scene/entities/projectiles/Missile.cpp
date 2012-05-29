@@ -83,6 +83,9 @@ void Missile::draw() const {
 	glPushMatrix();
 	_missileSmokeParticleEngine->draw();
 	glPopMatrix();
+	glPushMatrix();
+	_missileExplosionParticleEngine->draw();
+	glPopMatrix();
 }
 
 void Missile::setVelocity(const Vector3D &velocity) {
