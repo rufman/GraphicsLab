@@ -228,7 +228,7 @@ void TankAI::aim() {
 			float angle = Utils::getElevation(_tank->getPosition(), _currentTarget->getPosition(), i, false, 1);
 			if (angle != -1) {
 				std::cout << angle << "\n";
-				_tank->setElevation(rand()%10-5+angle-10);
+				_tank->setElevation(rand()%10-5+angle-10+_tank->currentTilt);
 				_tank->setShootingPower(i / 30);
 				break;
 			}
