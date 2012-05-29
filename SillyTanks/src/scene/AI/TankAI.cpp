@@ -211,17 +211,24 @@ void TankAI::aim() {
 
 		Vector3D muzzleDirection = Vector3D(0, 0, 1);
 
+		Vector3D c = Utils::cross(enemyDirection, muzzleDirection);
+		Utils::normalize(c);
 
-		_tank->setAzimuth(180+Utils::toDegree(acos(Utils::dot(enemyDirection,muzzleDirection))));
+		float azimuth = 180 + Utils::toDegree(acos(Utils::dot(enemyDirection, muzzleDirection)));
+
+		if (c.y > 0.0f) {
+			_tank->setAzimuth(azimuth);
+		} else {
+			_tank->setAzimuth(-azimuth);
+		}
 
 
-		for(float i = 1; i < 30;i++)
-		{
-			float angle = Utils::getElevation(_tank->getPosition(), _currentTarget->getPosition(),i ,false,1);
-			if(angle != -1)
-			{
-				_tank->setElevation(3+angle);
-				_tank->setShootingPower(i/10);
+
+		for (float i = 1; i < 30; i++) {
+			float angle = Utils::getElevation(_tank->getPosition(), _currentTarget->getPosition(), i, false, 1);
+			if (angle != -1) {
+				_tank->setElevation(angle);
+				_tank->setShootingPower(i / 9);
 				break;
 			}
 		}
