@@ -226,14 +226,14 @@ void Scene::initialize() {
 	_targets.push_back(_playerTank);
 
 	//add some AI tanks to the scene
-	for (int i = 0; i < 12; i++) {
+	for (int i = 0; i < ENEMY_TANKS; i++) {
 		Tank* tank = new SmallTank(*this, true);
 		tank->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tank);
 	}
 
 	//add some  AI towers to the scene
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < ENEMY_TOWERS; i++) {
 		Tower* tower = new SmallTower(*this, true);
 		tower->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tower);
@@ -380,10 +380,7 @@ void Scene::update(float seconds) {
 			}
 
 			if (currentTarget->checkHit(currentProjectile)) {
-				_messageBus->sendMessageTo(
-						AttackedByMessage(currentProjectile->_projectileOwner),
-						currentTarget);
-				std::cout << "HIT" << std::endl;
+				_messageBus->sendMessageTo(AttackedByMessage(currentProjectile->_projectileOwner),currentTarget);
 				switch (currentProjectile->_projectileType) {
 				case Projectile::BULLET: {
 
