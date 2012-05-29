@@ -141,28 +141,27 @@ void TowerAI::aimAndFire() {
 	if (_currentTarget != NULL) {
 		//get the direction of the enemy tank and point towards it (aim azimuth)
 		Vector3D enemyDirection;
-		enemyDirection.x = _currentTarget->getPosition().x
-				- _tower->getPosition().x;
-		enemyDirection.y = _currentTarget->getPosition().y
-				- _tower->getPosition().y;
-		enemyDirection.z = _currentTarget->getPosition().z
-				- _tower->getPosition().z;
-		Utils::normalize(enemyDirection);
+				enemyDirection.x = _currentTarget->getPosition().x - _tower->getPosition().x;
+				enemyDirection.y = _currentTarget->getPosition().y - _tower->getPosition().y;
+				enemyDirection.z = _currentTarget->getPosition().z - _tower->getPosition().z;
+				Utils::normalize(enemyDirection);
 
-		Vector3D muzzleDirection = Vector3D(1, 1, 0);
-		Utils::rotate(-_tower->getAzimuth(), muzzleDirection,
-				Vector3D(0, 0, 1));
-		_tower->setAzimuth(Utils::toDegree(Utils::dot(muzzleDirection, enemyDirection)));
-		/*
-		 //get the elevation
-		 _tower->setElevation(
-		 Utils::toDegree(Utils::getElevation(_tower->getPosition(),
-		 _currentTarget->getPosition(),
-		 _tower->getShootingPower())));*/
+				Vector3D muzzleDirection = Vector3D(0, 0, 1);
 
-		_tower->setElevation(45);
+				Vector3D c = Utils::cross(enemyDirection, muzzleDirection);
+				Utils::normalize(c);
+
+				float azimuth = 180 + Utils::toDegree(acos(Utils::dot(enemyDirection, muzzleDirection)));
+
+				if (c.y > 0.0f) {
+					_tower->setAzimuth(rand()%3-1.5+azimuth);
+				} else {
+					_tower->setAzimuth(rand()%3-1.5-azimuth);
+				}
+
 		//shoot
 		_tower->fireMissile(_currentTarget->getPosition());
+		_tower->setElevation(45);
 	}
 }
 

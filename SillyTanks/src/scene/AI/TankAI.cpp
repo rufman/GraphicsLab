@@ -72,7 +72,7 @@ void TankAI::sense() {
 		case Message::ATTACKED_BY: {
 			AttackedByMessage* abMessage = static_cast<AttackedByMessage*>(message);
 			std::cout << "Tank " << " is attacked by Target " << abMessage->_attackingEnemy;
-			switchStrategy(ESCAPE, _currentTarget);
+			switchStrategy(ESCAPE, abMessage->_attackingEnemy);
 			break;
 		}
 		case Message::DETONATION_SOUND: {
@@ -110,6 +110,12 @@ void TankAI::sense() {
 		if (Utils::distance(_tank->getPosition(), _currentTarget->getPosition()) > SMALLTANK_VISION_DISTANCE) {
 			_currentTarget = NULL;
 		}
+	}
+
+	// the enemy tank does not have enough life left, he tries to escape to regain shield
+	if(_tank->_life/SMALLTANK_LIFE < 1/4 && _tank->_shield/SMALLTANK_SHIELD < 1/4 )
+	{
+		switchStrategy(ESCAPE, _currentTarget);
 	}
 }
 
