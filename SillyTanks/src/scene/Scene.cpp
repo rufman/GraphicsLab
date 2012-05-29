@@ -1287,7 +1287,7 @@ void Scene::drawMap() {
 			glPushMatrix();
 			glColor3f(0, 1, 0);
 			glTranslatef(target->getPosition().x, target->getPosition().y, target->getPosition().z);
-			glutSolidCube(3);
+			glutSolidCube(5);
 			glPopMatrix();
 		}
 	}
