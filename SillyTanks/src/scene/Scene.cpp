@@ -347,9 +347,7 @@ void Scene::update(float seconds) {
 		Target* currentTarget = (*targetIter);
 
 		std::vector<Projectile*> projectiles = _projectiles;
-		if (_projectiles.size() != 0) {
-			//std::cout << "A projectile!";
-		}
+
 		for (std::vector<Projectile*>::iterator projectileIter = projectiles.begin(); projectileIter != projectiles.end(); ++projectileIter) {
 
 			Projectile* currentProjectile = (*projectileIter);
@@ -539,6 +537,7 @@ void Scene::drawScene() {
 	_water->draw();
 
 
+	glDisable(GL_BLEND);
 	//################################
 	// The targets should use toon shading as well
 	if (_shaderActive) {
