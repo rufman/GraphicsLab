@@ -127,7 +127,7 @@ float Utils::getElevation(Point startPosition, Point targetPosition, float veloc
 	}
 
 
-	return Utils::toDegree(atan(tan(a1) * flatDistance));
+	return abs(Utils::toDegree(atan(a1)));
 
 }
 }

@@ -4,11 +4,12 @@
  */
 
 #include "AttackedByMessage.hpp"
+#include "../entities/collisiondetection/Target.hpp"
 
 namespace game_space {
 
-AttackedByMessage::AttackedByMessage(int attackingEnemyID) :
-		Message(Message::ATTACKED_BY), _attackingEnemyID(attackingEnemyID) {
+AttackedByMessage::AttackedByMessage(Target* attackingEnemy) :
+		Message(Message::ATTACKED_BY), _attackingEnemy(attackingEnemy) {
 }
 
 AttackedByMessage::~AttackedByMessage() {

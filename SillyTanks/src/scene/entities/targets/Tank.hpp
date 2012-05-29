@@ -36,6 +36,7 @@ public:
 
 	//delay the shooting a bit
 	float _reloadingTime;
+	float currentTilt;
 protected:
 	Turret* _turret;
 
@@ -60,6 +61,7 @@ protected:
 	ParticleEngine<Smoke> *_tankSmokeParticleEngine;
 
 	float _secToShieldReload;
+
 
 public:
 	Tank(Scene &scene,bool isAIControlled);

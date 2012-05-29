@@ -236,7 +236,8 @@ void Tank::fireBullet() {
 	Vector3D normal = _scene.getTerrain().getNormal(_position);
 	float dot = Utils::dot(Vector3D(0, 1, 0), normal);
 	Vector3D cross = Utils::cross(Vector3D(0, 1, 0), normal);
-	velocity = Utils::rotate(-Utils::toDegree(acos(dot)), velocity, cross);
+	currentTilt = -Utils::toDegree(acos(dot));
+	velocity = Utils::rotate(currentTilt, velocity, cross);
 	bullet->setVelocity(velocity);
 
 	_scene._projectiles.push_back(bullet);

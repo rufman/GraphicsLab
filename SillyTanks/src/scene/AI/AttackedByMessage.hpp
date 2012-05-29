@@ -9,11 +9,13 @@
 
 namespace game_space {
 
+class Target;
+
 class AttackedByMessage: public Message {
 public:
-	int _attackingEnemyID;
+	Target* _attackingEnemy;
 public:
-	AttackedByMessage(int attackingEnemyID);
+	AttackedByMessage(Target* attackingEnemy);
 	virtual ~AttackedByMessage();
 };
 

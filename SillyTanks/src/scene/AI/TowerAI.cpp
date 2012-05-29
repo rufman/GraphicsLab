@@ -72,7 +72,7 @@ void TowerAI::sense() {
 					static_cast<AttackedByMessage*>(message);
 			std::cout << "Tower at" << _tower->getPosition().x << ", "
 					<< _tower->getPosition().z << " is attacked by Target "
-					<< abMessage->_attackingEnemyID;
+					<< abMessage->_attackingEnemy;
 			break;
 		}
 		case Message::DETONATION_SOUND: {

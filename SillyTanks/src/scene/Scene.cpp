@@ -58,6 +58,7 @@
 #include "illumination/shading/ShadingEngine.hpp"
 
 #include "AI/DetonationSoundMessage.hpp"
+#include "AI/AttackedByMessage.hpp"
 
 //std includes
 #include <sstream>
@@ -212,18 +213,18 @@ void Scene::initialize() {
 	_targets.push_back(_playerTank);
 
 	//add some AI tanks to the scene
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 12; i++) {
 		Tank* tank = new SmallTank(*this, true);
 		tank->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tank);
 	}
 
 	//add some  AI towers to the scene
-	/*for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 10; i++) {
 		Tower* tower = new SmallTower(*this, true);
 		tower->setPosition(_terrain->getRandomPointOnMap());
 		_targets.push_back(tower);
-	}*/
+	}
 
 	// reset the scene
 	reset();
@@ -341,7 +342,7 @@ void Scene::update(float seconds) {
 	}
 
 //detect collisions
-	/*std::vector<Target*> targets = _targets;
+	std::vector<Target*> targets = _targets;
 	for (std::vector<Target*>::iterator targetIter = targets.begin(); targetIter != targets.end(); ++targetIter) {
 
 		Target* currentTarget = (*targetIter);
@@ -357,9 +358,11 @@ void Scene::update(float seconds) {
 			}
 
 			if (currentTarget->checkHit(currentProjectile)) {
+				_messageBus->sendMessageTo(AttackedByMessage(currentProjectile->_projectileOwner),currentTarget);
 				std::cout << "HIT" << std::endl;
 				switch (currentProjectile->_projectileType) {
 				case Projectile::BULLET: {
+
 					currentTarget->doDamage(BULLET_DAMAGE);
 					break;
 				}
@@ -377,7 +380,7 @@ void Scene::update(float seconds) {
 
 		}
 
-	}*/
+	}
 
 	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end();) {
 		Projectile *projectile = *projectileIter;
