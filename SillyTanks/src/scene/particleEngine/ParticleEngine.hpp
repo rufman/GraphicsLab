@@ -151,6 +151,7 @@ public:
 			Particle* particle = *particleIterator;
 			// If the particle is active
 			if (particle->active) {
+				glPushMatrix();
 				// Draw the particle using the RGB values, fade the particle based on its time to live
 				glColor4f(particle->r, particle->g,particle->b,particle->timeToLive);
 
@@ -173,8 +174,9 @@ public:
 				glEnd();
 				_particleTexture->setActive(false);
 
-				Utils::applyGLRotation(getDirectionOfCamera(),Vector3D(0,0,1));
-				glTranslatef(-particle->x,-particle->y,-particle->z);
+				//Utils::applyGLRotation(getDirectionOfCamera(),Vector3D(0,0,1));
+				//glTranslatef(-particle->x,-particle->y,-particle->z);
+				glPopMatrix();
 				_numberOfRenderedParticles++;
 			}
 		}

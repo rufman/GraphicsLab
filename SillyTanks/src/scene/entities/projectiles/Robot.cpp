@@ -100,13 +100,20 @@ Robot::Robot( Scene &scene ) :
 	_animation.frames[frame.id] = frame;
 
     reset();
+
+    _sparkleParticleEngine = new ParticleEngine<Sparkle>(_scene.getTankCam(), 30);
+    _sparkleParticleEngine->setStartAcceleration(Vector3D(0, 0, 0));
+    _sparkleParticleEngine->setActive(true);
 }
 
 Robot::~Robot()
 {
 	//nothing to do here!	0,,
 	//9gag.com			   DO
-}	//					  *//
+	//					  *//
+delete _sparkleParticleEngine;
+}
+
 
 void Robot::reset()
 {
@@ -163,6 +170,9 @@ void Robot::move( float seconds )
 	{
 		_animation.currentFrame++;
 	}
+
+	_sparkleParticleEngine->setStartPosition(_position);
+	_sparkleParticleEngine->update(seconds);
 }
 
 void Robot::loadAnimation( const std::string &animationFile )
@@ -324,6 +334,11 @@ void Robot::loadAnimation( const std::string &animationFile )
 
 void Robot::draw() const
 {
+
+	glPushMatrix();
+	_sparkleParticleEngine->draw();
+	glPopMatrix();
+
 	glShadeModel( ( _renderingParameters.shadeMode == RenderingParameters::FLAT ) ? GL_FLAT : GL_SMOOTH );
 		glPolygonMode( GL_FRONT_AND_BACK, ( _renderingParameters.drawMode == RenderingParameters::WIREFRAME ) ? GL_LINE : GL_FILL );
 
@@ -637,6 +652,7 @@ void Robot::draw() const
 				glPopMatrix();
 			glPopMatrix();
 		glPopMatrix();
+
 }
 
 bool Robot::isDetonated()

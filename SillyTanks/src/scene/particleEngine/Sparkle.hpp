@@ -6,11 +6,15 @@
 
 namespace game_space {
 
-class Sparkle  {
+class Point;
+class Vector3D;
+
+class Sparkle:virtual public Particle {
 public:
 	Sparkle();
 	virtual ~Sparkle();
-	void update();
+	virtual void resetParticle(Point startPosition,Vector3D startAcceleration);
+	virtual void update(float seconds);
 };
 
 }

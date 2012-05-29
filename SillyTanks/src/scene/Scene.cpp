@@ -585,12 +585,15 @@ void Scene::drawScene() {
 			missile->setRenderingParameters(_renderingParameters);
 			missile->draw();
 		}
-		if (projectile->_projectileType == Projectile::ROBOT) {
-			Robot* robot = static_cast<Robot*>(projectile);
-			robot->setRenderingParameters(_renderingParameters);
-			robot->draw();
-		}
 	}
+	for (std::vector<Projectile*>::iterator projectileIter = _projectiles.begin(); projectileIter != _projectiles.end(); ++projectileIter) {
+			Projectile *projectile = *projectileIter;
+			if (projectile->_projectileType == Projectile::ROBOT) {
+				Robot* robot = static_cast<Robot*>(projectile);
+				robot->setRenderingParameters(_renderingParameters);
+				robot->draw();
+			}
+		}
 
 	//##################################
 	// Shadowing

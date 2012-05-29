@@ -16,6 +16,10 @@
 // Includes
 #include "../../../common/Material.hpp"
 
+//particle engine includes
+#include "../../particleEngine/ParticleEngine.hpp"
+#include "../../particleEngine/Sparkle.hpp"
+
 #include <string>
 #include <map>
 
@@ -163,6 +167,8 @@ private:
 	Vector3D _acceleration;
 
 	float _timeToLive;
+
+	ParticleEngine<Sparkle> *_sparkleParticleEngine;
 
 
 }; // class Robot
