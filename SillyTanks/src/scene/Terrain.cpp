@@ -207,6 +207,10 @@ void Terrain::buildDisplayLists() {
 	// Flat shading
 	glNewList(_displayLists, GL_COMPILE);
 
+	glEnable(GL_LIGHTING);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+
 	glShadeModel(GL_FLAT);
 
 	_material.setActive();
@@ -239,6 +243,10 @@ void Terrain::buildDisplayLists() {
 	// Smooth shading
 	glNewList(_displayLists + 1, GL_COMPILE);
 
+
+	glEnable(GL_LIGHTING);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 	glShadeModel(GL_SMOOTH);
 
 	_material.setActive();

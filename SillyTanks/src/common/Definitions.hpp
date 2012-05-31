@@ -49,9 +49,9 @@ namespace game_space {
 // Gravitational acceleration constant in m/s2
 #define GRAVITATIONAL_ACCELERATION (-9.81)
 
-#define ENEMY_TANKS 12
+#define ENEMY_TANKS 0
 
-#define ENEMY_TOWERS 4
+#define ENEMY_TOWERS 12
 
 //#################
 // Tank definitions
