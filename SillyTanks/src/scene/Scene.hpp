@@ -96,7 +96,7 @@ public:
 	void setPlayerTank(Tank* tank);
 	Tank* getPlayerTank();
 	Camera3D* getTankCam();
-	Camera3D* getCurrentlyActiveCamera();
+	Camera3D** getCurrentlyActiveCamera();
 	MessageBus* getMessageBus();
 	Water* getWater();
 	std::vector<Target*> getTargets();

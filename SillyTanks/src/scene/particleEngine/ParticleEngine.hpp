@@ -25,13 +25,13 @@ namespace game_space {
 template <class T>
 class ParticleEngine {
 public:
-	ParticleEngine(Camera3D* camera,int maxNumberOfParticles):_numberOfRenderedParticles(maxNumberOfParticles) {
+	ParticleEngine(Camera3D** camera,int maxNumberOfParticles):_numberOfRenderedParticles(maxNumberOfParticles) {
 		_startPosition = Point(0,0,0);
 		_startAcceleration = Vector3D(0,1,0);
 		_engineActive = false;
 
 		_camera = camera;
-		Point from(_camera->getLookAt().from);
+		Point from((*_camera)->getLookAt().from);
 		_directionOfCamera = from - _startPosition;
 
 		_maxNumberOfParticles = maxNumberOfParticles;
@@ -65,7 +65,7 @@ public:
 	void setStartPosition(Point position)
 	{
 		_startPosition = position;
-		Point from(_camera->getLookAt().from);
+		Point from((*_camera)->getLookAt().from);
 		_directionOfCamera = from - _startPosition;
 	}
 
@@ -89,11 +89,6 @@ public:
 		return Vector3D(_directionOfCamera.x,_directionOfCamera.y,_directionOfCamera.z);
 	}
 
-	void setCamera(Camera3D* camera)
-	{
-		_camera = camera;
-	}
-
 	void setActive(bool active)
 	{
 		_engineActive = active;
@@ -101,6 +96,12 @@ public:
 
 	void update(float seconds)
 	{
+
+		//update the position of view of the currently active camera
+		Point from((*_camera)->getLookAt().from);
+		_directionOfCamera = from - _startPosition;
+
+
 		// Loop through all the particles
 		for (std::vector<Particle*>::iterator particleIterator = _particles.begin();particleIterator != _particles.end(); ++particleIterator) {
 			Particle* particle = *particleIterator;
@@ -193,7 +194,7 @@ private:
 	std::vector<Particle*> _particles;
 
 	Point _directionOfCamera;
-	Camera3D* _camera;
+	Camera3D** _camera;
 
 	Point _startPosition;
 	Vector3D _startAcceleration;

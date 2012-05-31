@@ -101,7 +101,7 @@ Robot::Robot( Scene &scene ) :
 
     reset();
 
-    _sparkleParticleEngine = new ParticleEngine<Sparkle>(_scene.getTankCam(), 30);
+    _sparkleParticleEngine = new ParticleEngine<Sparkle>(_scene.getCurrentlyActiveCamera(), 30);
     _sparkleParticleEngine->setStartAcceleration(Vector3D(1, 1, 1));
     _sparkleParticleEngine->setActive(true);
 }

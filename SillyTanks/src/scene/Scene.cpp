@@ -1545,8 +1545,8 @@ Camera3D* Scene::getTankCam() {
 	return _tankCam;
 }
 
-Camera3D* Scene::getCurrentlyActiveCamera() {
-	return _currentlyActiveCamera;
+Camera3D** Scene::getCurrentlyActiveCamera() {
+	return &_currentlyActiveCamera;
 }
 
 MessageBus* Scene::getMessageBus() {
