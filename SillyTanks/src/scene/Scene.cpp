@@ -593,9 +593,6 @@ void Scene::drawScene() {
 	_terrain->setRenderingParameters(_renderingParameters);
 	_terrain->draw();
 
-	//draw water
-	_water->setRenderingParameters(_renderingParameters);
-	_water->draw();
 
 	glDisable(GL_BLEND);
 	//################################
@@ -697,6 +694,10 @@ void Scene::drawScene() {
 	} else if (_cameraMode == OVERVIEW_CAM) {
 		_fog->remove();
 	}
+
+	//draw water
+	_water->setRenderingParameters(_renderingParameters);
+	_water->draw();
 }
 
 void Scene::drawMirrorScene() {
