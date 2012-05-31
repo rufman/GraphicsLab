@@ -429,6 +429,17 @@ void Terrain::doDamageAt(const Point &point, float damageStrength) {
 		_vertices.at(_triangles[triangleIndex].vertex2) = secondPoint;
 		_vertices.at(_triangles[triangleIndex].vertex3) = thirdPoint;
 
+		for(std::vector<PLYModel*>::iterator treeIter = _trees.begin();treeIter != _trees.end();++treeIter)
+		{
+			PLYModel* tree = *treeIter;
+			if(Utils::distance(tree->getPosition(),point) < 50)
+			{
+				Point newPoint(tree->getPosition().x,getHeight(tree->getPosition()),tree->getPosition().z);
+				tree->setPosition(newPoint);
+			}
+		}
+
+
 		//refresh/redraw terrain
 		buildDisplayLists();
 	}
