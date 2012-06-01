@@ -96,7 +96,7 @@ Scene::Scene(Window &window) :
 	//i can not remove it because the game crashes...strange bug...
 	_endNode = new Node(Point(1, 2, 1), *this);
 
-	glClearColor(0,0,0,0);
+	glClearColor(0, 0, 0, 0);
 
 }
 
@@ -643,7 +643,6 @@ void Scene::drawMirrorScene() {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-
 	Vector3D velocity(-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::sin(Utils::toRadian(-_playerTank->getAzimuth())), _playerTank->getShootingPower() * std::sin(Utils::toRadian(_playerTank->getElevation())),
 			-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::cos(Utils::toRadian(-_playerTank->getAzimuth())));
 
@@ -654,13 +653,12 @@ void Scene::drawMirrorScene() {
 
 	LookAt lookAt = _playerTank->getLookAt();
 	lookAt.from.x = _playerTank->getPosition().x;
-	lookAt.from.y = _playerTank->getPosition().y+10;
+	lookAt.from.y = _playerTank->getPosition().y + 10;
 	lookAt.from.z = _playerTank->getPosition().z;
 
-	lookAt.to.x = lookTo.x ;
+	lookAt.to.x = lookTo.x;
 	lookAt.to.z = lookTo.z;
 	lookAt.to.y = lookAt.from.y;
-
 
 	_currentlyActiveCamera = _tankCam;
 	_currentlyActiveCamera->setLookAt(lookAt);
@@ -1029,16 +1027,16 @@ void Scene::drawOverlay() {
 	ratio = (float) _hudMap.getWidth() / (float) _hudMap.getHeight();
 
 	glTexCoord2f(0, _hudMap.getHeight());
-	glVertex2f(width - 2*margin - mapBaseSize * ratio, height - margin);
+	glVertex2f(width - 2 * margin - mapBaseSize * ratio, height - margin);
 
 	glTexCoord2f(_hudMap.getWidth(), _hudMap.getHeight());
-	glVertex2f(width - 2*margin, height - margin);
+	glVertex2f(width - 2 * margin, height - margin);
 
 	glTexCoord2f(_hudMap.getWidth(), 0);
-	glVertex2f(width - 2*margin, height - mapBaseSize - margin);
+	glVertex2f(width - 2 * margin, height - mapBaseSize - margin);
 
 	glTexCoord2f(0, 0);
-	glVertex2f(width - 2*margin - mapBaseSize * ratio, height - mapBaseSize - margin);
+	glVertex2f(width - 2 * margin - mapBaseSize * ratio, height - mapBaseSize - margin);
 	glEnd();
 
 	_hudMap.setActive(false);
@@ -1277,9 +1275,11 @@ void Scene::onMouseClick(int button, int state, int x, int y) {
 					break;
 				}
 				case Tank::MISSILE: {
-					_cameraMode = OVERVIEW_CAM;
-					_targetChooser = _playerTank->getPosition();
-					_chooseTarget = true;
+					if (_playerTank->_amountOfMissiles != 0) {
+						_cameraMode = OVERVIEW_CAM;
+						_targetChooser = _playerTank->getPosition();
+						_chooseTarget = true;
+					}
 
 					break;
 				}
