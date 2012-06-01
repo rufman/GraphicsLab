@@ -335,6 +335,8 @@ void Robot::draw() const
 	_sparkleParticleEngine->draw();
 	glPopMatrix();
 
+
+
 		glShadeModel( ( _renderingParameters.shadeMode == RenderingParameters::FLAT ) ? GL_FLAT : GL_SMOOTH );
 		glPolygonMode( GL_FRONT_AND_BACK, ( _renderingParameters.drawMode == RenderingParameters::WIREFRAME ) ? GL_LINE : GL_FILL );
 
@@ -439,6 +441,8 @@ void Robot::draw() const
 
 		glMatrixMode( GL_MODELVIEW );
 
+
+
 		//the body is the highest in the hierarchy
 		_bodyMaterial.setActive();
 		glPushMatrix();
@@ -456,7 +460,6 @@ void Robot::draw() const
 			glRotatef(90,1.0,0.0,0.0);
 			gluCylinder(quadric,bodyWidth,bodyWidth,bodyHeight,50,30);
 
-
 			glPushMatrix();
 				//ANIMATION OF THE HEAD (Tilt,rotate, look at, move up/down)
 				glRotatef(rHeadX,1.0,0,0);
@@ -467,6 +470,7 @@ void Robot::draw() const
 				//draw the head
 				glRotatef(-90,1.0,0.0,0.0);
 				glutSolidSphere(bodyWidth,30,30);
+
 
 				_eyeMaterial.setActive();
 				//draw the eyes
@@ -497,6 +501,7 @@ void Robot::draw() const
 					gluCylinder(quadric,bodyWidth/15,bodyWidth/15,antennaLength,12,12);
 				glPopMatrix();
 
+
 				//draw the second antenna
 				glPushMatrix();
 					glTranslatef(antennaLength*1.5*sin(Utils::toRadian(antennaAngle)),antennaLength*1.5*cos(Utils::toRadian(antennaAngle)),0.0);
@@ -504,6 +509,8 @@ void Robot::draw() const
 					glRotatef(-90,1.0,0.0,0.0);
 					gluCylinder(quadric,bodyWidth/15,bodyWidth/15,antennaLength,12,12);
 				glPopMatrix();
+
+
 
 				_mustacheMaterial.setActive();
 				//draw the mustache
@@ -536,12 +543,13 @@ void Robot::draw() const
 				glPopMatrix();
 				glPopMatrix();
 
+
+
 				_topHatMaterial.setActive();
 				//draw the tophat
 				glPushMatrix();
 					//ANIMATION OF THE TOP Hat (move up/down)
 					glRotatef(rTopHatX,0,0,1.0);
-					glRotatef(-90,1.0,0.0,0.0);
 					glTranslatef(0,mTopHatY,0);
 
 
@@ -549,6 +557,7 @@ void Robot::draw() const
 					glTranslatef(0,bodyWidth*7/8,0);
 					glRotatef(90,1.0,0.0,0.0);
 					gluCylinder(quadric,topHatWidth,topHatWidth,topHatBrimHeight,30,1);
+
 
 					//close the brim on the upper side
 					glPushMatrix();
@@ -576,8 +585,12 @@ void Robot::draw() const
 						glRotatef(90,0,0,1.0);
 						glutSolidCone(topHatWidth/2,0.01,30,1);
 					glPopMatrix();
+
 				glPopMatrix();
 			glPopMatrix();
+
+
+
 
 			_bodyMaterial.setActive();
 			//draw the left arm
@@ -648,6 +661,9 @@ void Robot::draw() const
 				glPopMatrix();
 			glPopMatrix();
 		glPopMatrix();
+
+		//FIXME:this should not be necessary
+	glPopMatrix();
 
 }
 
