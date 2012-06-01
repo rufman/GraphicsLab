@@ -166,7 +166,7 @@ void Scene::initialize() {
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
 	//ambient light of the scene
-	float ambientLight[4] = { 0.5, 0.5, 0.5, 1.0 };
+	float ambientLight[4] = { 0.2, 0.2, 0.2, 1.0 };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
