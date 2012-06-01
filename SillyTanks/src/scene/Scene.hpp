@@ -35,6 +35,7 @@ class ShadingEngine;
 //illumination forward declarations
 class Light;
 class DirectionalLight;
+class PositionalLight;
 
 //scene forward declarations
 class Tank;

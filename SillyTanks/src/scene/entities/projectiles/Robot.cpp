@@ -243,12 +243,10 @@ void Robot::loadAnimation( const std::string &animationFile )
 
 		if ( frame.id == 0 )
 		{
-			std::cout << "Loading first frame.\n";
 			_animation.frames[frame.id] = frame;
 		}
 		else
 		{
-			std::cout << "Start creating frames";
 			const Animation::Frame &lastFrame = _animation.frames.rbegin()->second;
 
 			for ( uint id = ( lastFrame.id + 1 ); id <= frame.id; id++ )
@@ -327,8 +325,6 @@ void Robot::loadAnimation( const std::string &animationFile )
 				_animation.frames[f.id] = f;
 			}
 		}
-		std::cout << "Animation created.\n";
-
 	}
 }
 
@@ -339,7 +335,7 @@ void Robot::draw() const
 	_sparkleParticleEngine->draw();
 	glPopMatrix();
 
-	glShadeModel( ( _renderingParameters.shadeMode == RenderingParameters::FLAT ) ? GL_FLAT : GL_SMOOTH );
+		glShadeModel( ( _renderingParameters.shadeMode == RenderingParameters::FLAT ) ? GL_FLAT : GL_SMOOTH );
 		glPolygonMode( GL_FRONT_AND_BACK, ( _renderingParameters.drawMode == RenderingParameters::WIREFRAME ) ? GL_LINE : GL_FILL );
 
 		const Animation::Frame &frame = ( _animation.frames.find( _animation.currentFrame ) )->second;

@@ -129,7 +129,6 @@ public:
 		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
 		glClearDepth(1.0f);                         // Depth Buffer Setup
 		glDepthMask(GL_FALSE);                      // Disables Depth Testing
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);// Black background
 		glEnable(GL_BLEND);// Enable blending
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);// Type of blending to perform
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);// Really nice perspective calculations

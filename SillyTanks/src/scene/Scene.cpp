@@ -96,6 +96,8 @@ Scene::Scene(Window &window) :
 	//i can not remove it because the game crashes...strange bug...
 	_endNode = new Node(Point(1, 2, 1), *this);
 
+	glClearColor(0,0,0,0);
+
 }
 
 Scene::~Scene() {
@@ -140,9 +142,9 @@ Scene::~Scene() {
 void Scene::initialize() {
 
 	// Initialize lights
-	Color lightAmbient(0.4, 0.4, 0.4);
-	Color lightSpecular(0.8, 0.8, 0.8);
-	Color lightDiffuse(0.8, 0.8, 0.8);
+	Color lightAmbient(1.0, 1.0, 1.0);
+	Color lightSpecular(1.0, 1.0, 1.0);
+	Color lightDiffuse(1.0, 1.0, 1.0);
 
 	Light *light = new DirectionalLight(*this);
 	light->setAmbient(lightAmbient);
@@ -181,7 +183,6 @@ void Scene::initialize() {
 	Application &application = Application::getInstance();
 	const Application::Parameters &parameters = application.getParameters();
 
-	glClearColor(parameters.fogRed, parameters.fogGreen, parameters.fogBlue, 0.0);
 	_fog = new Fog(parameters.fogDensity, parameters.fogStart, parameters.fogEnd, parameters.fogRed, parameters.fogGreen, parameters.fogBlue);
 
 	// Initialize cameras
