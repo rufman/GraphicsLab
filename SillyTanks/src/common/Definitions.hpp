@@ -51,7 +51,7 @@ namespace game_space {
 
 #define ENEMY_TANKS 0
 
-#define ENEMY_TOWERS 12
+#define ENEMY_TOWERS 0
 
 //#################
 // Tank definitions

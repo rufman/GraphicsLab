@@ -642,10 +642,24 @@ void Scene::drawMirrorScene() {
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 
+
+	Vector3D velocity(-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::sin(Utils::toRadian(-_playerTank->getAzimuth())), _playerTank->getShootingPower() * std::sin(Utils::toRadian(_playerTank->getElevation())),
+			-_playerTank->getShootingPower() * std::cos(Utils::toRadian(_playerTank->getElevation())) * std::cos(Utils::toRadian(-_playerTank->getAzimuth())));
+
+	Point lookTo;
+	lookTo.x = _playerTank->getPosition().x + -velocity.x * 50;
+	lookTo.y = _playerTank->getPosition().y + -velocity.y * 50;
+	lookTo.z = _playerTank->getPosition().z + -velocity.z * 50;
+
 	LookAt lookAt = _playerTank->getLookAt();
-	lookAt.to.x = -lookAt.to.x;
-	lookAt.to.z = -lookAt.to.z;
+	lookAt.from.x = _playerTank->getPosition().x;
+	lookAt.from.y = _playerTank->getPosition().y+10;
+	lookAt.from.z = _playerTank->getPosition().z;
+
+	lookAt.to.x = lookTo.x ;
+	lookAt.to.z = lookTo.z;
 	lookAt.to.y = lookAt.from.y;
+
 
 	_currentlyActiveCamera = _tankCam;
 	_currentlyActiveCamera->setLookAt(lookAt);
