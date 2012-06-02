@@ -285,6 +285,7 @@ void Scene::update(float seconds) {
 	//compile shader only when used and only once
 	if (_shaderActive && !_shadersAlreadyCompiled) {
 		_shadingEngine = ShadingEngine();
+		_shadingEngine.compileShaders();
 		_shadersAlreadyCompiled = true;
 	}
 

@@ -12,7 +12,7 @@
 namespace game_space {
 
 ShadingEngine::ShadingEngine() {
-	compileShaders();
+
 }
 
 ShadingEngine::~ShadingEngine() {

@@ -21,9 +21,9 @@ public:
 	void applyToonShader();
 	void clearShaders();
 	void setTextureForShader(GLuint i);
+	void compileShaders();
 private:
 	char* readInShader(char* fn);
-	void compileShaders();
 	// printShaderInfoLog
 	// From OpenGL Shading Language 3rd Edition, p215-216
 	// Display (hopefully) useful error messages if shader fails to compile
